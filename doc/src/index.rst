@@ -50,7 +50,7 @@ The class template :cpp:class:`new_type` takes as a third template argument an i
 Derivation clauses make it possible to let the implementation derive certain operations automatically.
 For example, the derivation tag :cpp:var:`Arithmetic` enables automatic derivation of arithmetic operations for a given instance of :cpp:class:`new_type` (see :ref:`new-type-usage-deriving-arithmetic` below).
 
-.. code-block:: c++
+.. code-block::
    :linenos:
    :name: new-type-usage-deriving-arithmetic
    :caption: Automatically deriving arithmetic operations
@@ -70,6 +70,16 @@ Synopsis
      class new_type
      {
      public:
+
+       // Type aliases
+
+       using base_type = BaseType;
+       using tag_type = TagType;
+       using derivation_clause_type = decltype(DerivationClause);
+
+       // Derivation clause access
+
+       auto constexpr static derivation_clause = DerivationClause;
 
        // Constructors
 
@@ -98,7 +108,7 @@ Synopsis
        auto constexpr operator->() const noexcept -> std::enable_if_t<DerivationClause(nt::Indirection), BaseType const *>;
 
      private:
-       BaseType m_value;
+       BaseType m_value; // exposition only
      };
 
      // Equality comparison operators
@@ -151,4 +161,46 @@ Synopsis
                                new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
                                -> bool;
 
+    // Stream input/output operators
+
+     template<typename BaseType,
+              typename TagType,
+              auto DerivationClause,
+              typename CharType,
+              typename StreamTraits,
+              typename = std::enable_if_t<DerivationClause(nt::Show)>
+     auto operator<<(std::basic_ostream<CharType, StreamTraits> &&,
+                     new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
+                     -> std::basic_ostream<CharType, StreamTraits> &;
+
+     template<typename BaseType,
+              typename TagType,
+              auto DerivationClause,
+              typename CharType,
+              typename StreamTraits,
+              typename = std::enable_if_t<DerivationClause(nt::Read)>
+     auto operator>>(std::basic_istream<CharType, StreamTraits> &&,
+                     new_type<BaseType, TagType, DerivationClause> &&) noexcept(/*see below*/)
+                     -> std::basic_istream<CharType, StreamTraits> &;
    }
+
+Member Type Aliases
+~~~~~~~~~~~~~~~~~~~
+
+Static Data Members
+~~~~~~~~~~~~~~~~~~~
+
+Special Member Functions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Free Equality Comparison Operators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Free Relational Operators
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Free Stream Input/Ouput Operators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Unit Tests
+==========
