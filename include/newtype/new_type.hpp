@@ -36,7 +36,15 @@ namespace nt
       {
       }
 
-    protected:
+      /**
+       * Retrieve the base type value contained in this @p new_type
+       */
+      auto constexpr decay() const noexcept -> BaseType
+      {
+        return m_value;
+      }
+
+    private:
       BaseType m_value{};
     };
 
@@ -64,7 +72,15 @@ namespace nt
       {
       }
 
-    protected:
+      /**
+       * Retrieve the base type value contained in this @p new_type
+       */
+      auto constexpr decay() const noexcept -> BaseType
+      {
+        return m_value;
+      }
+
+    private:
       BaseType m_value;
     };
 
@@ -87,14 +103,6 @@ namespace nt
 
   public:
     /**
-     * Retrieve the base type value contained in this @p new_type
-     */
-    auto constexpr decay() const noexcept -> BaseType
-    {
-      return this->m_value;
-    }
-
-    /**
      * Convert this instance into the equivalent base type value
      *
      * @note This overload participates only in overload resolution if the derication clause of this @p new_type contains
@@ -103,7 +111,7 @@ namespace nt
     template<typename NewType = new_type, std::enable_if_t<NewType::derivations(nt::ImplicitConversion)> * = nullptr>
     constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
     {
-      return decay();
+      return this->decay();
     }
 
     /**
@@ -115,7 +123,7 @@ namespace nt
     template<typename NewType = new_type, std::enable_if_t<!NewType::derivations(nt::ImplicitConversion)> * = nullptr>
     explicit constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
     {
-      return decay();
+      return this->decay();
     }
   };
 
