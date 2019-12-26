@@ -102,6 +102,8 @@ namespace nt
     auto constexpr static derivations = DerivationClause;
 
   public:
+    using impl::new_type_storage<BaseType, TagType>::decay;
+
     /**
      * Convert this instance into the equivalent base type value
      *
@@ -111,7 +113,7 @@ namespace nt
     template<typename NewType = new_type, std::enable_if_t<NewType::derivations(nt::ImplicitConversion)> * = nullptr>
     constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
     {
-      return this->decay();
+      return decay();
     }
 
     /**
@@ -123,7 +125,7 @@ namespace nt
     template<typename NewType = new_type, std::enable_if_t<!NewType::derivations(nt::ImplicitConversion)> * = nullptr>
     explicit constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
     {
-      return this->decay();
+      return decay();
     }
   };
 

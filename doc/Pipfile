@@ -7,8 +7,6 @@ verify_ssl = true
 
 [packages]
 sphinx = "*"
-breathe = "*"
-sphinx-better-theme = "*"
 
 [requires]
 python_version = "3"
