@@ -107,7 +107,7 @@ namespace nt
     /**
      * Convert this instance into the equivalent base type value
      *
-     * @note This overload participates only in overload resolution if the derication clause of this @p new_type contains
+     * @note This overload participates only in overload resolution if the derivation clause of this @p new_type contains
      * nt::ImplicitConversion
      */
     template<typename NewType = new_type, std::enable_if_t<NewType::derivations(nt::ImplicitConversion)> * = nullptr>
@@ -119,7 +119,7 @@ namespace nt
     /**
      * Convert this instance into the equivalent base type value
      *
-     * @note This overload participates only in overload resolution if the derication clause of this @p new_type does not contain
+     * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does not contain
      * nt::ImplicitConversion
      */
     template<typename NewType = new_type, std::enable_if_t<!NewType::derivations(nt::ImplicitConversion)> * = nullptr>
@@ -128,6 +128,26 @@ namespace nt
       return decay();
     }
   };
+
+  /**
+   * Compare two objects for equality
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(lhs.decay() == rhs.decay())) -> bool
+  {
+    return lhs.decay() == rhs.decay();
+  }
+
+  /**
+   * Compare two objects for non-equality
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(!(lhs == rhs))) -> bool
+  {
+    return !(lhs == rhs);
+  }
 
 }  // namespace nt
 
