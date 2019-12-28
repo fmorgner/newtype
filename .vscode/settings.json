@@ -60,7 +60,9 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "*.ipp": "cpp",
+        "bitset": "cpp"
     },
     "cmake.configureArguments": "-DCMAKE_EXPORT_COMPILE_COMMANDS=YES",
     "cmake.cpptools.intelliSenseMode": "gcc-x64",
