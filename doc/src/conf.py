@@ -14,6 +14,8 @@ release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 
+master_doc = 'new_type'
+
 extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.githubpages',
