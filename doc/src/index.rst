@@ -50,7 +50,7 @@ The class template :cpp:class:`new_type` takes as a third template argument an i
 Derivation clauses make it possible to let the implementation derive certain operations automatically.
 For example, the derivation tag :cpp:var:`Arithmetic` enables automatic derivation of arithmetic operations for a given instance of :cpp:class:`new_type` (see :ref:`new-type-usage-deriving-arithmetic` below).
 
-.. code-block::
+.. code-block:: c++
    :linenos:
    :name: new-type-usage-deriving-arithmetic
    :caption: Automatically deriving arithmetic operations
@@ -62,7 +62,7 @@ For example, the derivation tag :cpp:var:`Arithmetic` enables automatic derivati
 Synopsis
 ~~~~~~~~
 
-.. code-block::
+.. code-block:: c++
 
    namespace nt
    {
