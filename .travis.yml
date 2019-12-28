@@ -1,0 +1,31 @@
+os: linux
+language: python
+python: "3.7"
+dist: bionic
+
+addons:
+  apt:
+    sources:
+      - sourceline: "ppa:ubuntu-toolchain-r/test"
+    packages: ['g++-9']
+
+compiler:
+  - gcc
+
+env:
+  - CXX=g++-9
+
+cache:
+  directories:
+    - $HOME/.conan/data
+
+install:
+  - pip install conan
+  - conan user
+
+script:
+  - mkdir -p build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=ON .. 
+  - cmake --build . --target all
+  - ctest
