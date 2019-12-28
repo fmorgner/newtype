@@ -89,6 +89,9 @@ namespace nt
   }  // namespace impl
 
   /**
+   * The class template nt::new_type is designed to allow the creation of new types based on existing types. Similarly to the Haskell newtype,
+   * this class template creates a new type that is layout equivalent to the underlying type.
+   *
    * @tparam BaseType An existing type that shall aliased
    * @tparam TagType A unique type to identify this nt::new_type
    * @tparam DervivationClause An nt::derivation_clause describing which features shall be automatically derived for the new type alias
@@ -99,11 +102,6 @@ namespace nt
     using storage = impl::new_type_storage<BaseType, TagType>;
 
     using storage::storage;
-
-    using base_type = BaseType;
-    using tag_type = TagType;
-
-    auto constexpr static derivations = DerivationClause;
 
     template<typename BaseTypeT,
              typename TagTypeT,
@@ -118,6 +116,26 @@ namespace nt
         -> std::basic_istream<CharType, StreamTraits> &;
 
   public:
+    /**
+     * The base type of this nt::new_type
+     */
+    using base_type = BaseType;
+
+    /**
+     * The tag type of this nt::new_type
+     */
+    using tag_type = TagType;
+
+    /**
+     * The type of the derivation clause of this nt::newtype
+     */
+    using derivation_clause_type = decltype(DerivationClause);
+
+    /**
+     * The derivation clause fo this nt::new_type
+     */
+    auto constexpr static derivation_clause = DerivationClause;
+
     using storage::decay;
 
     /**
@@ -126,7 +144,7 @@ namespace nt
      * @note This overload participates only in overload resolution if the derivation clause of this @p new_type contains
      * nt::ImplicitConversion
      */
-    template<typename NewType = new_type, std::enable_if_t<NewType::derivations(nt::ImplicitConversion)> * = nullptr>
+    template<typename NewType = new_type, std::enable_if_t<NewType::derivation_clause(nt::ImplicitConversion)> * = nullptr>
     constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
     {
       return decay();
@@ -138,7 +156,7 @@ namespace nt
      * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does not contain
      * nt::ImplicitConversion
      */
-    template<typename NewType = new_type, std::enable_if_t<!NewType::derivations(nt::ImplicitConversion)> * = nullptr>
+    template<typename NewType = new_type, std::enable_if_t<!NewType::derivation_clause(nt::ImplicitConversion)> * = nullptr>
     explicit constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
     {
       return decay();
