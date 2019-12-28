@@ -1,3 +1,4 @@
+#include "conversion_suite.hpp"
 #include "derivation_clause_suite.hpp"
 #include "new_type_constructor_suite.hpp"
 
@@ -27,9 +28,7 @@ auto get_test_selectors(suite_list const & suites) -> std::vector<std::string>
 
   for_each(cbegin(suites), cend(suites), [&](auto descriptor) {
     auto const & [suite, name] = descriptor;
-    transform(cbegin(suite), cend(suite), std::back_inserter(selectors), [&, name = name](auto test) {
-      return name + "#" + test.name();
-    });
+    transform(cbegin(suite), cend(suite), std::back_inserter(selectors), [&, name = name](auto test) { return name + "#" + test.name(); });
   });
 
   return selectors;
@@ -51,6 +50,7 @@ int main(int argc, char ** argv)
   auto suites = std::vector{
       derivation_clause_suite(),
       new_type_constructor_suite(),
+      conversion_suite(),
   };
 
   auto selectors = get_test_selectors(suites);

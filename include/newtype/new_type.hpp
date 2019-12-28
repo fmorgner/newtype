@@ -39,7 +39,7 @@ namespace nt
       /**
        * Retrieve the base type value contained in this @p new_type
        */
-      auto constexpr decay() const noexcept -> BaseType
+      auto constexpr decay() const noexcept(std::is_nothrow_copy_constructible_v<BaseType>) -> BaseType
       {
         return m_value;
       }
@@ -75,7 +75,7 @@ namespace nt
       /**
        * Retrieve the base type value contained in this @p new_type
        */
-      auto constexpr decay() const noexcept -> BaseType
+      auto constexpr decay() const noexcept(std::is_nothrow_copy_constructible_v<BaseType>) -> BaseType
       {
         return m_value;
       }

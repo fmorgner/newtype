@@ -50,6 +50,7 @@ if(BUILD_TESTING)
     "${PROJECT_SOURCE_DIR}/test/src/driver.cpp"
 
     "${PROJECT_SOURCE_DIR}/test/src/derivation_clause_suite.cpp"
+    "${PROJECT_SOURCE_DIR}/test/src/conversion_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/new_type_constructor_suite.cpp"
     )
 

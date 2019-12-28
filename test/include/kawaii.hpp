@@ -17,7 +17,7 @@ namespace nt::test
   namespace impl
   {
     auto constexpr prepositions = std::array{"a", "an", "and", "as", "at", "by", "for", "in", "of", "on", "or", "the", "to"};
-
+    auto constexpr keywords = std::array{"noexcept"};
     auto constexpr type_names = std::array{"new_type", "derivation_clause"};
 
     auto inline replace_template_argument_syntax(std::string const & name) -> std::string
@@ -103,8 +103,9 @@ namespace nt::test
       while (stream >> word && word != "[")
       {
         auto is_preposition = std::find(cbegin(prepositions), cend(prepositions), word) != cend(prepositions);
+        auto is_keyword = std::find(cbegin(keywords), cend(keywords), word) != cend(keywords);
         auto is_type_name = std::find(cbegin(type_names), cend(type_names), word) != cend(type_names);
-        if ((!is_preposition || buffer.empty()) && !is_type_name)
+        if ((!(is_preposition || is_keyword) || buffer.empty()) && !is_type_name)
         {
           word.front() = std::toupper(word.front());
         }
