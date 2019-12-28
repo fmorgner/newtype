@@ -1,5 +1,6 @@
 #include "conversion_suite.hpp"
 #include "derivation_clause_suite.hpp"
+#include "equality_comparison_suite.hpp"
 #include "new_type_constructor_suite.hpp"
 
 #include <cute/cute.h>
@@ -51,6 +52,7 @@ int main(int argc, char ** argv)
       derivation_clause_suite(),
       new_type_constructor_suite(),
       conversion_suite(),
+      equality_comparison_suite(),
   };
 
   auto selectors = get_test_selectors(suites);

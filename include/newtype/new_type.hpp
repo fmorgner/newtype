@@ -134,7 +134,9 @@ namespace nt
    */
   template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
-                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(lhs.decay() == rhs.decay())) -> bool
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() ==
+                                                                                                         std::declval<BaseType const &>()))
+      -> bool
   {
     return lhs.decay() == rhs.decay();
   }
@@ -144,9 +146,11 @@ namespace nt
    */
   template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
-                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(!(lhs == rhs))) -> bool
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() !=
+                                                                                                         std::declval<BaseType const &>()))
+      -> bool
   {
-    return !(lhs == rhs);
+    return lhs.decay() != rhs.decay();
   }
 
 }  // namespace nt
