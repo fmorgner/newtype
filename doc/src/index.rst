@@ -132,7 +132,7 @@ Synopsis
      template<typename BaseType,
               typename TagType,
               auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>
+              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
      auto constexpr operator<(new_type<BaseType, TagType, DerivationClause> const &,
                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
                               -> bool;
@@ -140,7 +140,7 @@ Synopsis
      template<typename BaseType,
               typename TagType,
               auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>
+              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
      auto constexpr operator>(new_type<BaseType, TagType, DerivationClause> const &,
                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
                               -> bool;
@@ -148,7 +148,7 @@ Synopsis
      template<typename BaseType,
               typename TagType,
               auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>
+              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
      auto constexpr operator<=(new_type<BaseType, TagType, DerivationClause> const &,
                                new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
                                -> bool;
@@ -156,7 +156,7 @@ Synopsis
      template<typename BaseType,
               typename TagType,
               auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>
+              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
      auto constexpr operator>=(new_type<BaseType, TagType, DerivationClause> const &,
                                new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
                                -> bool;
@@ -168,7 +168,7 @@ Synopsis
               auto DerivationClause,
               typename CharType,
               typename StreamTraits,
-              typename = std::enable_if_t<DerivationClause(nt::Show)>
+              typename = std::enable_if_t<DerivationClause(nt::Show)>>
      auto operator<<(std::basic_ostream<CharType, StreamTraits> &&,
                      new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
                      -> std::basic_ostream<CharType, StreamTraits> &;
@@ -178,7 +178,7 @@ Synopsis
               auto DerivationClause,
               typename CharType,
               typename StreamTraits,
-              typename = std::enable_if_t<DerivationClause(nt::Read)>
+              typename = std::enable_if_t<DerivationClause(nt::Read)>>
      auto operator>>(std::basic_istream<CharType, StreamTraits> &&,
                      new_type<BaseType, TagType, DerivationClause> &&) noexcept(/*see below*/)
                      -> std::basic_istream<CharType, StreamTraits> &;

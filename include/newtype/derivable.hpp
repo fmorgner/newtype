@@ -50,6 +50,13 @@ namespace nt
     auto constexpr Read = derivable<struct read_tag>{};
 
     /**
+     * A tag to enable derivation of the relational operators
+     *
+     * @since 1.0.0
+     */
+    auto constexpr Relational = derivable<struct relational_tag>{};
+
+    /**
      * A tag to enable derivation of the stream output operator
      *
      * @since 1.0.0

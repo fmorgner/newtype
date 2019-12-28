@@ -53,6 +53,7 @@ if(BUILD_TESTING)
     "${PROJECT_SOURCE_DIR}/test/src/conversion_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/equality_comparison_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/new_type_constructor_suite.cpp"
+    "${PROJECT_SOURCE_DIR}/test/src/relational_operators_suite.cpp"
     )
 
   target_include_directories("${PROJECT_NAME}_tests" PRIVATE

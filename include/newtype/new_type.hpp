@@ -153,6 +153,70 @@ namespace nt
     return lhs.decay() != rhs.decay();
   }
 
+  /**
+   * Check if one nt::new_type object is less-than an other
+   *
+   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
+   * nt::Relational
+   * @return true iff. the object contained by lhs is less-than the one contained by rhs
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  auto constexpr operator<(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                           new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() <
+                                                                                                        std::declval<BaseType const &>()))
+      -> bool
+  {
+    return lhs.decay() < rhs.decay();
+  }
+
+  /**
+   * Check if one nt::new_type object is greater-than an other
+   *
+   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
+   * nt::Relational
+   * @return true iff. the object contained by lhs is greater-than the one contained by rhs
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  auto constexpr operator>(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                           new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() >
+                                                                                                        std::declval<BaseType const &>()))
+      -> bool
+  {
+    return lhs.decay() > rhs.decay();
+  }
+
+  /**
+   * Check if one nt::new_type object is less-than or equal-to an other
+   *
+   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
+   * nt::Relational
+   * @return true iff. the object contained by lhs is less-than or equal-to the one contained by rhs
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  auto constexpr operator<=(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() <=
+                                                                                                         std::declval<BaseType const &>()))
+      -> bool
+  {
+    return lhs.decay() <= rhs.decay();
+  }
+
+  /**
+   * Check if one nt::new_type object is greater-than or equal-to an other
+   *
+   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
+   * nt::Relational
+   * @return true iff. the object contained by lhs is greater-than or equal-to the one contained by rhs
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  auto constexpr operator>=(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() >=
+                                                                                                         std::declval<BaseType const &>()))
+      -> bool
+  {
+    return lhs.decay() >= rhs.decay();
+  }
+
 }  // namespace nt
 
 #endif

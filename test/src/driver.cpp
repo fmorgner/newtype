@@ -2,6 +2,7 @@
 #include "derivation_clause_suite.hpp"
 #include "equality_comparison_suite.hpp"
 #include "new_type_constructor_suite.hpp"
+#include "relational_operators_suite.hpp"
 
 #include <cute/cute.h>
 #include <cute/cute_runner.h>
@@ -53,6 +54,7 @@ int main(int argc, char ** argv)
       new_type_constructor_suite(),
       conversion_suite(),
       equality_comparison_suite(),
+      relational_operators_suite(),
   };
 
   auto selectors = get_test_selectors(suites);
