@@ -14,7 +14,7 @@ It provides detailed descriptions of the types and functions designed to be used
 Additionally, this section provides usage examples that demonstrate the use and properties of the public API.
 
 Class template :cpp:class:`new_type`
-----------------------------------------
+------------------------------------
 
 .. cpp:class:: template<typename BaseType, typename TagType, auto DerivationClause = deriving()> \
                new_type
@@ -24,7 +24,7 @@ Class template :cpp:class:`new_type`
 
    :tparam BaseType: The underlying type of the new strong alias
    :tparam TagType: A type uniquely identifying this string alias
-   :tparam DerivationClause: A :cpp:struct:`derivation_clause` listing all features that shall be automatically derived.
+   :tparam DerivationClause: A :cpp:class:`derivation_clause` listing all features that shall be automatically derived.
 
 
 Usage
@@ -201,6 +201,63 @@ Free Relational Operators
 
 Free Stream Input/Ouput Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Class template :cpp:class:`derivation_clause`
+---------------------------------------------
+
+.. cpp:class:: template<typename... DerivableTags> \
+               derivation_clause
+
+   Derivation clauses are used by :cpp:class:`new_type` to allow users to specify a set of automatically derived support functions.
+
+   :tparam DerivableTags: A (possibly empty) list of derivation tags to mark automatically derived features
+
+Synopsis
+~~~~~~~~
+
+.. code-block:: c++
+
+   namespace nt
+   {
+     template<typename... DerivableTags>
+     class derivation_clause
+     {
+     public:
+       // Constructors
+
+       constexpr derivation_clause(derivable<DerivableTags>...) noexcept;
+   
+       // Evaluation functions
+
+       template<typename DerivableTag>
+       auto constexpr operator()(derivable<DerivableTag>) const noexcept -> bool;
+   
+       template<typename DerivableTag, typename... RemainingDerivableTags>
+       auto constexpr operator()(derivable<DerivableTag>, derivable<RemainingDerivableTags>...) const noexcept -> bool;
+
+       // Equality comparison operators
+
+       template<typename... OtherDerivableTags>
+       auto constexpr operator==(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+
+       template<typename... OtherDerivableTags>
+       auto constexpr operator!=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+
+       // Relational operators
+
+       template<typename... OtherDerivableTags>
+       auto constexpr operator<(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+   
+       template<typename... OtherDerivableTags>
+       auto constexpr operator>(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+   
+       template<typename... OtherDerivableTags>
+       auto constexpr operator<=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+
+       template<typename... OtherDerivableTags>
+       auto constexpr operator>=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+     };
+   }
 
 Unit Tests
 ==========
