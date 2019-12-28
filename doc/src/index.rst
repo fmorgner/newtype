@@ -85,6 +85,10 @@ Synopsis
 
        constexpr explicit new_type() noexcept(std::is_nothrow_default_constructible_v<BaseType>) = /*see below*/;
 
+       constexpr explicit new_type(new_type const &) noexcept(std::is_nothrow_copy_constructible_v<BaseType>) = /*see below*/;
+
+       constexpr explicit new_type(new_type      &&) noexcept(std::is_nothrow_move_constructible_v<BaseType>) = /*see below*/;
+
        constexpr explicit new_type(BaseType const &) noexcept(std::is_nothrow_copy_constructible_v<BaseType>);
 
        constexpr explicit new_type(BaseType      &&) noexcept(std::is_nothrow_move_constructible_v<BaseType>);
