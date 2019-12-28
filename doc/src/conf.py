@@ -14,7 +14,7 @@ release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 
-master_doc = 'new_type'
+master_doc = 'index'
 
 extensions = [
     'sphinx.ext.todo',
