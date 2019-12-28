@@ -5,6 +5,8 @@
 #include "newtype/deriving.hpp"
 #include "newtype/type.hpp"
 
+#include <istream>
+#include <ostream>
 #include <type_traits>
 
 namespace nt
@@ -44,7 +46,7 @@ namespace nt
         return m_value;
       }
 
-    private:
+    protected:
       BaseType m_value{};
     };
 
@@ -80,7 +82,7 @@ namespace nt
         return m_value;
       }
 
-    private:
+    protected:
       BaseType m_value;
     };
 
@@ -94,15 +96,29 @@ namespace nt
   template<typename BaseType, typename TagType, auto DerivationClause = deriving()>
   class new_type : public impl::new_type_storage<BaseType, TagType>
   {
-    using impl::new_type_storage<BaseType, TagType>::new_type_storage;
+    using storage = impl::new_type_storage<BaseType, TagType>;
+
+    using storage::storage;
 
     using base_type = BaseType;
     using tag_type = TagType;
 
     auto constexpr static derivations = DerivationClause;
 
+    template<typename BaseTypeT,
+             typename TagTypeT,
+             auto DerivationClauseV,
+             typename CharType,
+             typename StreamTraits,
+             typename Enablement,
+             typename StreamType>
+    auto friend operator>>(std::basic_istream<CharType, StreamTraits> & input,
+                           new_type<BaseTypeT, TagTypeT, DerivationClauseV> & target) noexcept(noexcept(std::declval<StreamType &>() >>
+                                                                                                        std::declval<BaseTypeT &>()))
+        -> std::basic_istream<CharType, StreamTraits> &;
+
   public:
-    using impl::new_type_storage<BaseType, TagType>::decay;
+    using storage::decay;
 
     /**
      * Convert this instance into the equivalent base type value
@@ -217,6 +233,33 @@ namespace nt
     return lhs.decay() >= rhs.decay();
   }
 
+  template<typename BaseType,
+           typename TagType,
+           auto DerivationClause,
+           typename CharType,
+           typename StreamTraits,
+           typename = std::enable_if_t<DerivationClause(nt::Show)>,
+           typename StreamType = std::basic_ostream<CharType, StreamTraits>>
+  auto operator<<(std::basic_ostream<CharType, StreamTraits> & output,
+                  new_type<BaseType, TagType, DerivationClause> const & source) noexcept(noexcept(std::declval<StreamType &>()
+                                                                                                  << std::declval<BaseType const &>()))
+      -> std::basic_ostream<CharType, StreamTraits> &
+  {
+    return output << source.decay();
+  }
+
+  template<typename BaseType,
+           typename TagType,
+           auto DerivationClause,
+           typename CharType,
+           typename StreamTraits,
+           typename = std::enable_if_t<DerivationClause(nt::Read)>,
+           typename StreamType = std::basic_istream<CharType, StreamTraits>>
+  auto operator>>(std::basic_istream<CharType, StreamTraits> & input, new_type<BaseType, TagType, DerivationClause> & target) noexcept(
+      noexcept(std::declval<StreamType &>() >> std::declval<BaseType &>())) -> std::basic_istream<CharType, StreamTraits> &
+  {
+    return input >> target.m_value;
+  }
 }  // namespace nt
 
 #endif

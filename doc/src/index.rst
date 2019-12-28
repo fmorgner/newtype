@@ -169,7 +169,7 @@ Synopsis
               typename CharType,
               typename StreamTraits,
               typename = std::enable_if_t<DerivationClause(nt::Show)>>
-     auto operator<<(std::basic_ostream<CharType, StreamTraits> &&,
+     auto operator<<(std::basic_ostream<CharType, StreamTraits> &,
                      new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
                      -> std::basic_ostream<CharType, StreamTraits> &;
 
@@ -179,8 +179,8 @@ Synopsis
               typename CharType,
               typename StreamTraits,
               typename = std::enable_if_t<DerivationClause(nt::Read)>>
-     auto operator>>(std::basic_istream<CharType, StreamTraits> &&,
-                     new_type<BaseType, TagType, DerivationClause> &&) noexcept(/*see below*/)
+     auto operator>>(std::basic_istream<CharType, StreamTraits> &,
+                     new_type<BaseType, TagType, DerivationClause> &) noexcept(/*see below*/)
                      -> std::basic_istream<CharType, StreamTraits> &;
    }
 

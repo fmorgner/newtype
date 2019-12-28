@@ -1,6 +1,7 @@
 #include "conversion_suite.hpp"
 #include "derivation_clause_suite.hpp"
 #include "equality_comparison_suite.hpp"
+#include "io_operators_suite.hpp"
 #include "new_type_constructor_suite.hpp"
 #include "relational_operators_suite.hpp"
 
@@ -55,6 +56,7 @@ int main(int argc, char ** argv)
       conversion_suite(),
       equality_comparison_suite(),
       relational_operators_suite(),
+      io_operators_suite(),
   };
 
   auto selectors = get_test_selectors(suites);
