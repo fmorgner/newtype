@@ -9,6 +9,7 @@ project("newtype"
 set(CMAKE_CXX_STANDARD "20")
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 
 include("CTest")
 include("CMakePackageConfigHelpers")

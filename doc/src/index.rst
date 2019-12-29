@@ -1,5 +1,11 @@
 .. cpp:namespace-push:: nt
 
+.. toctree::
+   :maxdepth: 5
+
+.. contents:: Table of Contents
+   :depth: 5
+
 #############
 Documentation
 #############
@@ -23,6 +29,7 @@ Starting from the bottom, :literal:`unsigned int` can normally be shifted on to 
 Since printing values, among other things, is a common scenario, ``newtype`` provides facilities to support automatic derivation of supporting functions.
 
 .. literalinclude:: ../../examples/src/basic_usage_with_show.cpp
+   :emphasize-lines: 1,2,9
    :language: c++
    :linenos:
    :name: new-type-usage-basic-show
@@ -32,6 +39,7 @@ Since printing values, among other things, is a common scenario, ``newtype`` pro
 Similarly, it is possible to derive the stream input operators of :literal:`Width` and :literal:`Height`, as shown in :ref:`new-type-usage-basic-read` below.
 
 .. literalinclude:: ../../examples/src/basic_usage_with_read.cpp
+   :emphasize-lines: 7,8,31,32,34
    :language: c++
    :linenos:
    :name: new-type-usage-basic-read
@@ -52,11 +60,11 @@ This header contains the definitions of the class template :cpp:class:`new_type`
 Class template :cpp:class:`new_type`
 ------------------------------------
 
-The class template :cpp:class:`new_type` is designed to allow the creation of new types based on existing types.
-Similarly to the Haskell newtype, this class template creates a new type that is layout equivalent to the underlying type.
-
 .. cpp:class:: template<typename BaseType, typename TagType, auto DerivationClause = deriving()> \
                new_type
+
+   The class template :cpp:class:`new_type` is designed to allow the creation of new types based on existing types.
+   Similarly to the Haskell newtype, this class template creates a new type that is layout equivalent to the underlying type.
 
    **Member Type Aliases**
 
@@ -145,8 +153,8 @@ Similarly to the Haskell newtype, this class template creates a new type that is
 
       **enablement:** This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`Indirection`
 
-Namespace-level functions and function templates
-------------------------------------------------
+:literal:`namespace`-level functions and function templates
+-----------------------------------------------------------
 
 The functions and functions templates described in this section provide additional functionality for the class template :cpp:class:`new_type` that is not part of the class itself.
 
@@ -159,7 +167,7 @@ Equality Comparison Operators
                   constexpr bool operator==(new_type<BaseType, TagType, DerivationClause> const &,\
                                             new_type<BaseType, TagType, DerivationClause> const &)
 
-   **noexcept specification:** This conversion operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow equals-comparable.
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow equals-comparable.
 
    **enablement:** This operator shall be available iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`==`
 
@@ -169,7 +177,7 @@ Equality Comparison Operators
                   constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const &,\
                                             new_type<BaseType, TagType, DerivationClause> const &)
 
-   **noexcept specification:** This conversion operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow not-equals-comparable.
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow not-equals-comparable.
 
    **enablement:** This operator shall be available iff. this :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`!=`
 
@@ -182,11 +190,19 @@ Relational Comparison Operators
                   constexpr bool operator<(new_type<BaseType, TagType, DerivationClause> const &, \
                                            new_type<BaseType, TagType, DerivationClause> const &)
 
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow less-than-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`<` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
                   constexpr bool operator>(new_type<BaseType, TagType, DerivationClause> const &, \
                                            new_type<BaseType, TagType, DerivationClause> const &)
+
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow greater-than-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
 
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
@@ -194,11 +210,19 @@ Relational Comparison Operators
                   constexpr bool operator<=(new_type<BaseType, TagType, DerivationClause> const &, \
                                             new_type<BaseType, TagType, DerivationClause> const &)
 
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow less-than-or-equal-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`<=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
                   constexpr bool operator>=(new_type<BaseType, TagType, DerivationClause> const &, \
                                             new_type<BaseType, TagType, DerivationClause> const &)
+
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow greater-than-or-equal-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`>=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
 
 Stream I/O Operators
 ~~~~~~~~~~~~~~~~~~~~
@@ -209,7 +233,11 @@ Stream I/O Operators
                   typename CharType, \
                   typename StreamTraits> \
                   std::basic_ostream<CharType, StreamTraits> & operator<<(std::basic_ostream<CharType, StreamTraits> &, \
-                                                                         new_type<BaseType, TagType, DerivationClause> const &)
+                                                                          new_type<BaseType, TagType, DerivationClause> const &)
+
+   **noexcept specification:** This output operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow output streamable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being output to a stream using the operator :literal:`<<` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Show`.
 
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
@@ -217,7 +245,16 @@ Stream I/O Operators
                   typename CharType, \
                   typename StreamTraits> \
                   std::basic_istream<CharType, StreamTraits> & operator>>(std::basic_istream<CharType, StreamTraits> &, \
-                                                                         new_type<BaseType, TagType, DerivationClause> &)
+                                                                          new_type<BaseType, TagType, DerivationClause> &)
+
+   **noexcept specification:** This input operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow input streamable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being read from a stream using the operator :literal:`>>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Reads`.
+
+Header :literal:`<newtype/derivation_clause.hpp>`
+=================================================
+
+This header contains the definition of the class template :cpp:class:`derivation_clause`
 
 Class template :cpp:class:`derivation_clause`
 ---------------------------------------------
@@ -227,54 +264,36 @@ Class template :cpp:class:`derivation_clause`
 
    Derivation clauses are used by :cpp:class:`new_type` to allow users to specify a set of automatically derived support functions.
 
-   :tparam DerivableTags: A (possibly empty) list of derivation tags to mark automatically derived features
+   **Constructors**
 
-Synopsis
-~~~~~~~~
+   .. cpp:function:: constexpr derivation_clause(derivable<DerivableTags>...) noexcept
 
-.. code-block:: c++
+   **Evaluation Functions**
 
-   namespace nt
-   {
-     template<typename... DerivableTags>
-     class derivation_clause
-     {
-     public:
-       // Constructors
-
-       constexpr derivation_clause(derivable<DerivableTags>...) noexcept;
+   .. cpp:function:: template<typename DerivableTag> \
+                     constexpr bool operator()(derivable<DerivableTag>) const noexcept
    
-       // Evaluation functions
+   .. cpp:function:: template<typename DerivableTag, typename... RemainingDerivableTags> \
+                     constexpr bool operator()(derivable<DerivableTag>, derivable<RemainingDerivableTags>...) const noexcept
 
-       template<typename DerivableTag>
-       auto constexpr operator()(derivable<DerivableTag>) const noexcept -> bool;
+   **Equality Comparison Operators**
+
+   .. cpp:function:: template<typename... OtherDerivableTags> \
+       constexpr bool operator==(derivation_clause<OtherDerivableTags...> other) const noexcept
+
+   .. cpp:function:: template<typename... OtherDerivableTags> \
+       constexpr bool operator!=(derivation_clause<OtherDerivableTags...> other) const noexcept
+
+   **Relational Comparison Operators**
+
+   .. cpp:function:: template<typename... OtherDerivableTags> \
+       constexpr bool operator<(derivation_clause<OtherDerivableTags...> other) const noexcept
    
-       template<typename DerivableTag, typename... RemainingDerivableTags>
-       auto constexpr operator()(derivable<DerivableTag>, derivable<RemainingDerivableTags>...) const noexcept -> bool;
-
-       // Equality comparison operators
-
-       template<typename... OtherDerivableTags>
-       auto constexpr operator==(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
-
-       template<typename... OtherDerivableTags>
-       auto constexpr operator!=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
-
-       // Relational operators
-
-       template<typename... OtherDerivableTags>
-       auto constexpr operator<(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+   .. cpp:function:: template<typename... OtherDerivableTags> \
+       constexpr bool operator>(derivation_clause<OtherDerivableTags...> other) const noexcept
    
-       template<typename... OtherDerivableTags>
-       auto constexpr operator>(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
-   
-       template<typename... OtherDerivableTags>
-       auto constexpr operator<=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
+   .. cpp:function:: template<typename... OtherDerivableTags> \
+       constexpr bool operator<=(derivation_clause<OtherDerivableTags...> other) const noexcept
 
-       template<typename... OtherDerivableTags>
-       auto constexpr operator>=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool;
-     };
-   }
-
-Unit Tests
-==========
+   .. cpp:function:: template<typename... OtherDerivableTags> \
+       constexpr bool operator>=(derivation_clause<OtherDerivableTags...> other) const noexcept
