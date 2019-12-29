@@ -3,6 +3,7 @@
 
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
+#include "newtype/impl/new_type_storage.hpp"
 #include "newtype/type.hpp"
 
 #include <istream>
@@ -12,131 +13,9 @@
 namespace nt
 {
 
-  namespace impl
-  {
-
-    template<typename BaseType, typename TagType>
-    struct new_type_storage
-    {
-      constexpr new_type_storage() noexcept(std::is_nothrow_default_constructible_v<BaseType>)
-          : m_value{}
-      {
-      }
-
-      template<typename ArgumentType>
-      constexpr explicit new_type_storage(ArgumentType && value) noexcept(std::is_nothrow_constructible_v<BaseType, ArgumentType>)
-          : m_value{std::forward<ArgumentType>(value)}
-      {
-      }
-
-      BaseType m_value;
-    };
-
-    template<typename BaseType, typename TagType, bool = std::is_default_constructible_v<BaseType>>
-    struct new_type_constructor : new_type_storage<BaseType, TagType>
-    {
-      using new_type_storage<BaseType, TagType>::new_type_storage;
-    };
-
-    template<typename BaseType, typename TagType>
-    struct new_type_constructor<BaseType, TagType, false> : new_type_storage<BaseType, TagType>
-    {
-      using new_type_storage<BaseType, TagType>::new_type_storage;
-
-      new_type_constructor() = delete;
-    };
-
-    template<typename BaseType, typename TagType, bool = std::is_copy_constructible_v<BaseType>>
-    struct new_type_copy_constructor : new_type_constructor<BaseType, TagType>
-    {
-      using new_type_constructor<BaseType, TagType>::new_type_constructor;
-
-      constexpr new_type_copy_constructor(new_type_copy_constructor const &) = default;
-      constexpr new_type_copy_constructor(new_type_copy_constructor &&) = default;
-      auto constexpr operator=(new_type_copy_constructor &) -> new_type_copy_constructor & = default;
-      auto constexpr operator=(new_type_copy_constructor &&) -> new_type_copy_constructor & = default;
-    };
-
-    template<typename BaseType, typename TagType>
-    struct new_type_copy_constructor<BaseType, TagType, false> : new_type_constructor<BaseType, TagType>
-    {
-      using new_type_constructor<BaseType, TagType>::new_type_constructor;
-
-      constexpr new_type_copy_constructor(new_type_copy_constructor const &) = delete;
-      constexpr new_type_copy_constructor(new_type_copy_constructor &&) = default;
-      auto constexpr operator=(new_type_copy_constructor &) -> new_type_copy_constructor & = default;
-      auto constexpr operator=(new_type_copy_constructor &&) -> new_type_copy_constructor & = default;
-    };
-
-    template<typename BaseType, typename TagType, bool = std::is_move_constructible_v<BaseType>>
-    struct new_type_move_constructor : new_type_copy_constructor<BaseType, TagType>
-    {
-      using new_type_copy_constructor<BaseType, TagType>::new_type_copy_constructor;
-
-      constexpr new_type_move_constructor(new_type_move_constructor const &) = default;
-      constexpr new_type_move_constructor(new_type_move_constructor &&) = default;
-      auto constexpr operator=(new_type_move_constructor &) -> new_type_move_constructor & = default;
-      auto constexpr operator=(new_type_move_constructor &&) -> new_type_move_constructor & = default;
-    };
-
-    template<typename BaseType, typename TagType>
-    struct new_type_move_constructor<BaseType, TagType, false> : new_type_copy_constructor<BaseType, TagType>
-    {
-      using new_type_copy_constructor<BaseType, TagType>::new_type_copy_constructor;
-
-      constexpr new_type_move_constructor(new_type_move_constructor const &) = default;
-      constexpr new_type_move_constructor(new_type_move_constructor &&) = delete;
-      auto constexpr operator=(new_type_move_constructor &) -> new_type_move_constructor & = default;
-      auto constexpr operator=(new_type_move_constructor &&) -> new_type_move_constructor & = default;
-    };
-
-    template<typename BaseType, typename TagType, bool = std::is_copy_assignable_v<BaseType>>
-    struct new_type_copy_assignment : new_type_move_constructor<BaseType, TagType>
-    {
-      using new_type_move_constructor<BaseType, TagType>::new_type_move_constructor;
-
-      constexpr new_type_copy_assignment(new_type_copy_assignment const &) = default;
-      constexpr new_type_copy_assignment(new_type_copy_assignment &&) = default;
-      auto constexpr operator=(new_type_copy_assignment &) -> new_type_copy_assignment & = default;
-      auto constexpr operator=(new_type_copy_assignment &&) -> new_type_copy_assignment & = default;
-    };
-
-    template<typename BaseType, typename TagType>
-    struct new_type_copy_assignment<BaseType, TagType, false> : new_type_move_constructor<BaseType, TagType>
-    {
-      using new_type_move_constructor<BaseType, TagType>::new_type_move_constructor;
-
-      constexpr new_type_copy_assignment(new_type_copy_assignment const &) = default;
-      constexpr new_type_copy_assignment(new_type_copy_assignment &&) = default;
-      auto constexpr operator=(new_type_copy_assignment &) -> new_type_copy_assignment & = default;
-      auto constexpr operator=(new_type_copy_assignment &&) -> new_type_copy_assignment & = delete;
-    };
-
-    template<typename BaseType, typename TagType, bool = std::is_move_assignable_v<BaseType>>
-    struct new_type_move_assignment : new_type_copy_assignment<BaseType, TagType>
-    {
-      using new_type_copy_assignment<BaseType, TagType>::new_type_copy_assignment;
-
-      constexpr new_type_move_assignment(new_type_move_assignment const &) = default;
-      constexpr new_type_move_assignment(new_type_move_assignment &&) = default;
-      auto constexpr operator=(new_type_move_assignment &) -> new_type_move_assignment & = default;
-      auto constexpr operator=(new_type_move_assignment &&) -> new_type_move_assignment & = default;
-    };
-
-    template<typename BaseType, typename TagType>
-    struct new_type_move_assignment<BaseType, TagType, false> : new_type_copy_assignment<BaseType, TagType>
-    {
-      using new_type_copy_assignment<BaseType, TagType>::new_type_copy_assignment;
-
-      constexpr new_type_move_assignment(new_type_move_assignment const &) = default;
-      constexpr new_type_move_assignment(new_type_move_assignment &&) = default;
-      auto constexpr operator=(new_type_move_assignment &) -> new_type_move_assignment & = default;
-      auto constexpr operator=(new_type_move_assignment &&) -> new_type_move_assignment & = delete;
-    };
-
-  }  // namespace impl
-
   /**
+   * @brief Create a new type based on an existing one
+   *
    * The class template nt::new_type is designed to allow the creation of new types based on existing types. Similarly to the Haskell newtype,
    * this class template creates a new type that is layout equivalent to the underlying type.
    *
@@ -147,71 +26,108 @@ namespace nt
   template<typename BaseType, typename TagType, auto DerivationClause = deriving()>
   class new_type : impl::new_type_move_assignment<BaseType, TagType>
   {
-    using super = impl::new_type_move_assignment<BaseType, TagType>;
+    static_assert(!std::is_reference_v<BaseType>, "The base type must not be a reference type");
+    static_assert(!std::is_void_v<std::remove_cv_t<BaseType>>, "The base type must not be possibly cv-qualified void");
 
-    template<typename BaseTypeT,
-             typename TagTypeT,
-             auto DerivationClauseV,
-             typename CharType,
-             typename StreamTraits,
-             typename Enablement,
-             typename StreamType>
-    auto friend operator>>(std::basic_istream<CharType, StreamTraits> & input,
-                           new_type<BaseTypeT, TagTypeT, DerivationClauseV> & target) noexcept(noexcept(std::declval<StreamType &>() >>
-                                                                                                        std::declval<BaseTypeT &>()))
-        -> std::basic_istream<CharType, StreamTraits> &;
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV, typename CharType, typename StreamTraits>
+    auto friend
+    operator>>(std::basic_istream<CharType, StreamTraits> & input, new_type<BaseTypeT, TagTypeT, DerivationClauseV> & target) noexcept(
+        noexcept(std::declval<std::basic_istream<CharType, StreamTraits> &>() >> std::declval<BaseTypeT &>()))
+        -> std::enable_if_t<DerivationClauseV(nt::Read), std::basic_istream<CharType, StreamTraits>> &;
+
+    using super = impl::new_type_move_assignment<BaseType, TagType>;
 
   public:
     /**
-     * The base type of this nt::new_type
+     * @brief The base type of this nt::new_type
+     *
+     * This type alias provides convenient access to the contained objects type
      */
     using base_type = BaseType;
 
     /**
-     * The tag type of this nt::new_type
+     * @brief The tag type of this nt::new_type
+     *
+     * This type alias provides convenient access to the tag type of this nt::new_type instance
      */
     using tag_type = TagType;
 
     /**
-     * The type of the derivation clause of this nt::newtype
+     * @brief The type of the derivation clause of this nt::newtype
+     *
+     * This type alias provides convenient access to the type of the derivation clause of this nt::new_type instance
      */
     using derivation_clause_type = decltype(DerivationClause);
 
     /**
-     * The derivation clause fo this nt::new_type
+     * @brief The derivation clause fo this nt::new_type
+     *
+     * This static data-member provides conevient access to the derivation clause of this nt::new_type instance
      */
     auto constexpr static derivation_clause = DerivationClause;
 
+    using super::super;
+
+    /**
+     * @brief Construct an instance of this nt::new_type by default initializing the contained object
+     *
+     * @note This constructor is available iff. the base type is default-constructible. Otherwise is is defined as deleted.
+     * @throw This constructor throws any exception thrown the base type constructor. It is noexcept iff. the base type constructor is noexcept
+     */
     constexpr new_type() noexcept(std::is_nothrow_default_constructible_v<BaseType>) = default;
 
+    /**
+     * @brief Copy-construct an instance of this nt::new_type from an existing one
+     *
+     * @note This constructor is available iff. the base type is copy-constructible. Otherwise is is defined as deleted.
+     * @throw This constructor throws any exception thrown the base type copy-constructor. It is noexcept iff. the base type copy-constructor
+     * is noexcept
+     */
     constexpr new_type(new_type const &) noexcept(std::is_nothrow_copy_constructible_v<BaseType>) = default;
 
+    /**
+     * @brief Move-construct an instance of this nt::new_type from an existing one
+     *
+     * @note This constructor is available iff. the base type is move-constructible. Otherwise is is defined as deleted.
+     * @throw This constructor throws any exception thrown the base type move-constructor. It is noexcept iff. the base types move-constructor
+     * is noexcept
+     */
     constexpr new_type(new_type &&) noexcept(std::is_nothrow_move_constructible_v<BaseType>) = default;
 
-    constexpr explicit new_type(BaseType const & value) noexcept(std::is_nothrow_copy_constructible_v<BaseType>)
-        : super{value}
-    {
-    }
-
-    constexpr explicit new_type(BaseType const && value) noexcept(std::is_nothrow_move_constructible_v<BaseType>)
-        : super{std::move(value)}
-    {
-    }
-
+    /**
+     * @brief Copy-assign the value of an existing instance of this nt::new_type to this instance
+     *
+     * @note This assignment operator is available iff. the base type is copy-assignable. Otherwise it is defined as deleted.
+     * @throw This assignment operator throws any exception thrown by the base type copy-assignment operator. It is noexcept iff. the base type
+     * copy-assignment operator is noexcept.
+     * @return A reference to this instance
+     */
     auto constexpr operator=(new_type const &) noexcept(std::is_nothrow_copy_assignable_v<BaseType>) -> new_type & = default;
 
+    /**
+     * @brief Move-assign the value of an existing instance of this nt::new_type to this instance
+     *
+     * @note This assignment operator is available iff. the base type is move-assignable. Otherwise it is defined as deleted.
+     * @throw This assignment operator throws any exception thrown by the base type move-assignment operator. It is noexcept iff. the base type
+     * move-assignment operator is noexcept.
+     * @return A reference to this instance
+     */
     auto constexpr operator=(new_type &&) noexcept(std::is_nothrow_move_assignable_v<BaseType>) -> new_type & = default;
 
+    /**
+     * @brief Obtain a copy of the contained base type object
+     *
+     * @return BaseType
+     */
     auto constexpr decay() const noexcept(std::is_nothrow_copy_constructible_v<BaseType>) -> BaseType
     {
       return this->m_value;
     }
 
     /**
-     * Convert this instance into the equivalent base type value
+     * @brief Convert this instance into the equivalent base type value
      *
-     * @note This overload participates only in overload resolution if the derivation clause of this @p new_type contains
-     * nt::ImplicitConversion
+     * @note This is only available if the derivation clause of this nt::new_type contains nt::ImplicitConversion
      */
     template<typename NewType = new_type, std::enable_if_t<NewType::derivation_clause(nt::ImplicitConversion)> * = nullptr>
     constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
@@ -220,20 +136,45 @@ namespace nt
     }
 
     /**
-     * Convert this instance into the equivalent base type value
+     * @brief Convert this instance into the equivalent base type value
      *
-     * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does not contain
-     * nt::ImplicitConversion
+     * @note This overload is only avalaible if the derivation clause of this nt::new_type does not contain nt::ImplicitConversion
      */
     template<typename NewType = new_type, std::enable_if_t<!NewType::derivation_clause(nt::ImplicitConversion)> * = nullptr>
     explicit constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
     {
       return decay();
     }
+
+    /**
+     * @brief Perform an access to a member of the base type
+     *
+     * @return A pointer to the contained base type object
+     */
+    template<typename NewType = new_type>
+    auto constexpr operator-> () noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType *>
+    {
+      return std::addressof(this->m_value);
+    }
+
+    /**
+     * @brief Perform an access to a member of the base type
+     *
+     * @return A pointer to the contained base type object
+     */
+    template<typename NewType = new_type>
+    auto constexpr operator-> () const noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType const *>
+    {
+      return std::addressof(this->m_value);
+    }
   };
 
   /**
-   * Compare two objects for equality
+   * @brief Compare two objects for equality
+   *
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
    */
   template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
@@ -245,7 +186,11 @@ namespace nt
   }
 
   /**
-   * Compare two objects for non-equality
+   * @brief Compare two objects for non-equality
+   *
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
    */
   template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
@@ -257,93 +202,127 @@ namespace nt
   }
 
   /**
-   * Check if one nt::new_type object is less-than an other
+   * @brief Check if one nt::new_type object is less-than an other
    *
-   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
-   * nt::Relational
-   * @return true iff. the object contained by lhs is less-than the one contained by rhs
+   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational. Otherwise is is
+   * defined as deleted.
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
    */
-  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator<(new_type<BaseType, TagType, DerivationClause> const & lhs,
                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() <
                                                                                                         std::declval<BaseType const &>()))
-      -> bool
+      -> std::enable_if_t<DerivationClause(nt::Relational), bool>
   {
     return lhs.decay() < rhs.decay();
   }
 
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator<(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                           new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() <
+                                                                                                        std::declval<BaseType const &>()))
+      -> std::enable_if_t<!DerivationClause(nt::Relational), bool> = delete;
+
   /**
    * Check if one nt::new_type object is greater-than an other
    *
-   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
-   * nt::Relational
-   * @return true iff. the object contained by lhs is greater-than the one contained by rhs
+   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational. Otherwise is is
+   * defined as deleted.
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
    */
-  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator>(new_type<BaseType, TagType, DerivationClause> const & lhs,
                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() >
                                                                                                         std::declval<BaseType const &>()))
-      -> bool
+      -> std::enable_if_t<DerivationClause(nt::Relational), bool>
   {
     return lhs.decay() > rhs.decay();
   }
 
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator>(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                           new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() >
+                                                                                                        std::declval<BaseType const &>()))
+      -> std::enable_if_t<!DerivationClause(nt::Relational), bool> = delete;
+
   /**
    * Check if one nt::new_type object is less-than or equal-to an other
    *
-   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
-   * nt::Relational
-   * @return true iff. the object contained by lhs is less-than or equal-to the one contained by rhs
+   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
    */
-  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator<=(new_type<BaseType, TagType, DerivationClause> const & lhs,
                             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() <=
                                                                                                          std::declval<BaseType const &>()))
-      -> bool
+      -> std::enable_if_t<DerivationClause(nt::Relational), bool>
   {
     return lhs.decay() <= rhs.decay();
   }
 
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator<=(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() <=
+                                                                                                         std::declval<BaseType const &>()))
+      -> std::enable_if_t<!DerivationClause(nt::Relational), bool> = delete;
+
   /**
    * Check if one nt::new_type object is greater-than or equal-to an other
    *
-   * @note This overload participates only in overload resolution if the derivation clause of this @p new_type does contain
-   * nt::Relational
-   * @return true iff. the object contained by lhs is greater-than or equal-to the one contained by rhs
+   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
    */
-  template<typename BaseType, typename TagType, auto DerivationClause, typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+  template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr operator>=(new_type<BaseType, TagType, DerivationClause> const & lhs,
                             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() >=
                                                                                                          std::declval<BaseType const &>()))
-      -> bool
+      -> std::enable_if_t<DerivationClause(nt::Relational), bool>
   {
     return lhs.decay() >= rhs.decay();
   }
 
-  template<typename BaseType,
-           typename TagType,
-           auto DerivationClause,
-           typename CharType,
-           typename StreamTraits,
-           typename = std::enable_if_t<DerivationClause(nt::Show)>,
-           typename StreamType = std::basic_ostream<CharType, StreamTraits>>
-  auto operator<<(std::basic_ostream<CharType, StreamTraits> & output,
-                  new_type<BaseType, TagType, DerivationClause> const & source) noexcept(noexcept(std::declval<StreamType &>()
-                                                                                                  << std::declval<BaseType const &>()))
-      -> std::basic_ostream<CharType, StreamTraits> &
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator>=(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(noexcept(std::declval<BaseType const &>() >=
+                                                                                                         std::declval<BaseType const &>()))
+      -> std::enable_if_t<!DerivationClause(nt::Relational), bool> = delete;
+
+  /**
+   * @brief Write the contained base type object to a standard output stream
+   *
+   * @note This operator is only available if the derivation clause of the passed in nt::new_type object contains nt::Show.
+   * @param output The output stream to write to
+   * @param source An instance of an nt::new_type that shall be written to the stream
+   * @return The a reference to the output stream
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename CharType, typename StreamTraits>
+  auto operator<<(std::basic_ostream<CharType, StreamTraits> & output, new_type<BaseType, TagType, DerivationClause> const & source) noexcept(
+      noexcept(std::declval<std::basic_ostream<CharType, StreamTraits> &>() << std::declval<BaseType const &>()))
+      -> std::enable_if_t<DerivationClause(nt::Show), std::basic_ostream<CharType, StreamTraits>> &
   {
     return output << source.decay();
   }
 
-  template<typename BaseType,
-           typename TagType,
-           auto DerivationClause,
-           typename CharType,
-           typename StreamTraits,
-           typename = std::enable_if_t<DerivationClause(nt::Read)>,
-           typename StreamType = std::basic_istream<CharType, StreamTraits>>
+  /**
+   * @brief Read an object of the base type from a standard input stream
+   *
+   * @note This operator is only available if the derivation clause of the passed in nt::new_type object contains nt::Read.
+   * @param output The input stream to read from
+   * @param source An instance of an nt::new_type that shall be read from the stream
+   * @return The a reference to the input stream
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename CharType, typename StreamTraits>
   auto operator>>(std::basic_istream<CharType, StreamTraits> & input, new_type<BaseType, TagType, DerivationClause> & target) noexcept(
-      noexcept(std::declval<StreamType &>() >> std::declval<BaseType &>())) -> std::basic_istream<CharType, StreamTraits> &
+      noexcept(std::declval<std::basic_istream<CharType, StreamTraits> &>() >> std::declval<BaseType &>()))
+      -> std::enable_if_t<DerivationClause(nt::Read), std::basic_istream<CharType, StreamTraits>> &
   {
     return input >> target.m_value;
   }
