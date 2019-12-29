@@ -13,9 +13,9 @@ namespace nt
    * Create a new derivation clause with the given derivables
    */
   template<typename... DerivableTags>
-  auto constexpr deriving(derivable<DerivableTags>... request) -> derivation_clause<DerivableTags...>
+  auto constexpr deriving(derivable<DerivableTags>... features) noexcept -> derivation_clause<DerivableTags...>
   {
-    return {request...};
+    return {features...};
   }
 
 }  // namespace nt

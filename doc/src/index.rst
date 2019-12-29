@@ -15,6 +15,10 @@ The ``newtype`` library provides types and functions to facilitate the creation 
 Example Usage
 #############
 
+.. note::
+
+   All examples shown in this section can be found in the directory :literal:`examples/src` within the source root.
+
 :ref:`new-type-usage-basic` below demonstrates the basic usage of :cpp:class:`new_type`.
 In it, :cpp:class:`new_type` is used to create thre new strong aliases :literal:`Width`, :literal:`Height`, and :literal:`Area` that all alias :literal:`unsigned int`.
 
@@ -262,6 +266,8 @@ Alias template :cpp:type:`derivable`
 .. cpp:type:: template<typename NameTag> \
               derivable = type<NameTag>
 
+.. _sec-standard-derivation-tags:
+
 Standard derivation tags
 ------------------------
 
@@ -294,6 +300,20 @@ Standard derivation tags
 .. cpp:var:: auto constexpr Show = derivable<struct show_tag>{}
 
    This tag enables the derivation of the "stream input" operator :cpp:func:`operator>>`
+
+Header :literal:`<newtype/deriving.hpp>`
+========================================
+
+This header contains the definition of the function template :cpp:func:`deriving`.
+
+Function template :cpp:func:`deriving`
+--------------------------------------
+
+.. cpp:function:: template<typename... DerivableTags> \
+                  constexpr derivation_clause<DerivableTags...> deriving(derivable<DerivableTags>... features) noexcept
+   
+   This function can be used to create a new :cpp:class:`derivation_clause` for use in the definitions of instances of :cpp:class:`new_type`.
+   See :ref:`sec-standard-derivation-tags` for a list of standard derivation tags.
 
 Header :literal:`<newtype/derivation_clause.hpp>`
 =================================================
