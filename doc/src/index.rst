@@ -1,10 +1,9 @@
 .. cpp:namespace-push:: nt
 
-.. toctree::
-   :maxdepth: 5
+.. only:: html
 
-.. contents:: Table of Contents
-   :depth: 5
+   .. contents:: Table of Contents
+      :depth: 5
 
 #############
 Documentation
@@ -69,6 +68,8 @@ Class template :cpp:class:`new_type`
 
    The class template :cpp:class:`new_type` is designed to allow the creation of new types based on existing types.
    Similarly to the Haskell newtype, this class template creates a new type that is layout equivalent to the underlying type.
+
+   .. versionadded:: 1.0.0
 
    **Member Type Aliases**
 
@@ -175,6 +176,8 @@ Equality Comparison Operators
 
    **enablement:** This operator shall be available iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`==`
 
+   .. versionadded:: 1.0.0
+
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
@@ -184,6 +187,8 @@ Equality Comparison Operators
    **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow not-equals-comparable.
 
    **enablement:** This operator shall be available iff. this :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`!=`
+
+   .. versionadded:: 1.0.0
 
 Relational Comparison Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -198,6 +203,8 @@ Relational Comparison Operators
 
    **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`<` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
 
+   .. versionadded:: 1.0.0
+
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
@@ -207,6 +214,8 @@ Relational Comparison Operators
    **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow greater-than-comparable.
 
    **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+
+   .. versionadded:: 1.0.0
 
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
@@ -218,6 +227,8 @@ Relational Comparison Operators
 
    **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`<=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
 
+   .. versionadded:: 1.0.0
+
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
@@ -227,6 +238,8 @@ Relational Comparison Operators
    **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow greater-than-or-equal-comparable.
 
    **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`>=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+
+   .. versionadded:: 1.0.0
 
 Stream I/O Operators
 ~~~~~~~~~~~~~~~~~~~~
@@ -243,6 +256,8 @@ Stream I/O Operators
 
    **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being output to a stream using the operator :literal:`<<` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Show`.
 
+   .. versionadded:: 1.0.0
+
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause, \
@@ -255,6 +270,8 @@ Stream I/O Operators
 
    **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being read from a stream using the operator :literal:`>>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Read`.
 
+   .. versionadded:: 1.0.0
+
 Header :literal:`<newtype/derivable.hpp>`
 =========================================
 
@@ -266,6 +283,8 @@ Alias template :cpp:type:`derivable`
 .. cpp:type:: template<typename NameTag> \
               derivable = type<NameTag>
 
+   .. versionadded:: 1.0.0
+
 .. _sec-standard-derivation-tags:
 
 Standard derivation tags
@@ -275,31 +294,45 @@ Standard derivation tags
 
    This tag enables the derivation of the arithmetic operators :cpp:func:`operator+`, :cpp:func:`operator-`, :cpp:func:`operator*`, :cpp:func:`operator/`, :cpp:func:`operator+=`, :cpp:func:`operator-=`, :cpp:func:`operator*=`, and :cpp:func:`operator/=`
 
+   .. versionadded:: 1.0.0
+
 .. cpp:var:: auto constexpr EqBase = derivable<struct eq_base_tag>{}
 
    This tag enables the derivation of "Equality comparison with base type" operators :literal:`==` and :literal:`!=`
    By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
+
+   .. versionadded:: 1.0.0
 
 .. cpp:var:: auto constexpr ImplicitConversion = derivable<struct implicit_conversion_tag>{}
 
    This tag enables the derivation of the implicit "conversion to base type" operator.
    By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
 
+   .. versionadded:: 1.0.0
+
 .. cpp:var:: auto constexpr Indirection = derivable<struct indirection_tag>{}
 
    This tag enables the derivation of the "member access through pointer" operators :cpp:func:`new_type::operator->`
+
+   .. versionadded:: 1.0.0
 
 .. cpp:var:: auto constexpr Read = derivable<struct read_tag>{}
 
    This tag enables the derivation of the "stream output" operator :cpp:func:`operator<<`
 
+   .. versionadded:: 1.0.0
+
 .. cpp:var:: auto constexpr Relational = derivable<struct relational_tag>{}
 
    This tag enables the derivation of the relational operators :cpp:func:`operator<`, :cpp:func:`operator>`, :cpp:func:`operator<=`, and :cpp:func:`operator>=`
 
+   .. versionadded:: 1.0.0
+
 .. cpp:var:: auto constexpr Show = derivable<struct show_tag>{}
 
    This tag enables the derivation of the "stream input" operator :cpp:func:`operator>>`
+
+   .. versionadded:: 1.0.0
 
 Header :literal:`<newtype/deriving.hpp>`
 ========================================
@@ -313,7 +346,10 @@ Function template :cpp:func:`deriving`
                   constexpr derivation_clause<DerivableTags...> deriving(derivable<DerivableTags>... features) noexcept
    
    This function can be used to create a new :cpp:class:`derivation_clause` for use in the definitions of instances of :cpp:class:`new_type`.
-   See :ref:`sec-standard-derivation-tags` for a list of standard derivation tags.
+
+   .. versionadded:: 1.0.0
+
+   .. seealso:: :ref:`sec-standard-derivation-tags` for a list of standard derivation tags
 
 Header :literal:`<newtype/derivation_clause.hpp>`
 =================================================
@@ -327,6 +363,8 @@ Class template :cpp:class:`derivation_clause`
                derivation_clause
 
    Derivation clauses are used by :cpp:class:`new_type` to allow users to specify a set of automatically derived support functions.
+
+   .. versionadded:: 1.0.0
 
    **Constructors**
 
