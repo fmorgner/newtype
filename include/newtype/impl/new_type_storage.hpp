@@ -14,9 +14,13 @@ namespace nt::impl
     {
     }
 
-    template<typename ArgumentType>
-    constexpr explicit new_type_storage(ArgumentType && value) noexcept(std::is_nothrow_constructible_v<BaseType, ArgumentType>)
-        : m_value{std::forward<ArgumentType>(value)}
+    constexpr new_type_storage(BaseType const & value)
+        : m_value{value}
+    {
+    }
+
+    constexpr new_type_storage(BaseType && value)
+        : m_value{std::move(value)}
     {
     }
 
@@ -26,37 +30,15 @@ namespace nt::impl
   template<typename BaseType, typename TagType, bool = std::is_default_constructible_v<BaseType>>
   struct new_type_constructor : new_type_storage<BaseType, TagType>
   {
-    using super = new_type_storage<BaseType, TagType>;
-    using super::super;
-
-    constexpr new_type_constructor(BaseType const & value)
-        : super{value}
-    {
-    }
-
-    constexpr new_type_constructor(BaseType && value)
-        : super{std::move(value)}
-    {
-    }
+    using new_type_storage<BaseType, TagType>::new_type_storage;
   };
 
   template<typename BaseType, typename TagType>
   struct new_type_constructor<BaseType, TagType, false> : new_type_storage<BaseType, TagType>
   {
-    using super = new_type_storage<BaseType, TagType>;
-    using super::super;
+    using new_type_storage<BaseType, TagType>::new_type_storage;
 
     constexpr new_type_constructor() = delete;
-
-    constexpr new_type_constructor(BaseType const & value)
-        : super{value}
-    {
-    }
-
-    constexpr new_type_constructor(BaseType && value)
-        : super{std::move(value)}
-    {
-    }
   };
 
   template<typename BaseType, typename TagType, bool = std::is_copy_constructible_v<BaseType>>
@@ -77,6 +59,7 @@ namespace nt::impl
 
     constexpr new_type_copy_constructor(new_type_copy_constructor const &) = delete;
     constexpr new_type_copy_constructor(new_type_copy_constructor &&) = default;
+    constexpr new_type_copy_constructor(BaseType const &) = delete;
     auto constexpr operator=(new_type_copy_constructor &) -> new_type_copy_constructor & = default;
     auto constexpr operator=(new_type_copy_constructor &&) -> new_type_copy_constructor & = default;
   };
@@ -99,6 +82,7 @@ namespace nt::impl
 
     constexpr new_type_move_constructor(new_type_move_constructor const &) = default;
     constexpr new_type_move_constructor(new_type_move_constructor &&) = delete;
+    constexpr new_type_move_constructor(BaseType &&) = delete;
     auto constexpr operator=(new_type_move_constructor &) -> new_type_move_constructor & = default;
     auto constexpr operator=(new_type_move_constructor &&) -> new_type_move_constructor & = default;
   };
