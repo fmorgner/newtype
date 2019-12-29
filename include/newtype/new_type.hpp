@@ -205,8 +205,8 @@ namespace nt
   /**
    * @brief Check if one nt::new_type object is less-than an other
    *
-   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational and the base type is
-   * less-than comparable. Otherwise is is defined as deleted.
+   * @note This operator is only available if the the derivation clause of this nt::new_type does contains nt::Relational and the base type is
+   * less-than comparable.
    * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
    * comparison operator is noexcept.
    * @return true iff. the base type comparison operator returns true, false otherwise.
@@ -220,15 +220,11 @@ namespace nt
     return lhs.decay() < rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
-  auto constexpr operator<(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)
-      -> std::enable_if_t<!DerivationClause(nt::Relational) || !impl::is_less_than_comparable_v<BaseType>, bool> = delete;
-
   /**
    * Check if one nt::new_type object is greater-than an other
    *
-   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational and the base type is
-   * greater-than comparable. Otherwise is is defined as deleted.
+   * @note This operator is only available if the the derivation clause of this nt::new_type does contains nt::Relational and the base type is
+   * greater-than comparable.
    * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
    * comparison operator is noexcept.
    * @return true iff. the base type comparison operator returns true, false otherwise.
@@ -242,14 +238,11 @@ namespace nt
     return lhs.decay() > rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
-  auto constexpr operator>(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)
-      -> std::enable_if_t<!DerivationClause(nt::Relational) || !impl::is_greater_than_comparable_v<BaseType>, bool> = delete;
-
   /**
    * Check if one nt::new_type object is less-than or equal-to an other
    *
-   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational
+   * @note This operator is only available if the the derivation clause of this nt::new_type does contains nt::Relational and the base type is
+   * less-than-or-equal-to comparable.
    * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
    * comparison operator is noexcept.
    * @return true iff. the base type comparison operator returns true, false otherwise.
@@ -263,14 +256,11 @@ namespace nt
     return lhs.decay() <= rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
-  auto constexpr operator<=(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)
-      -> std::enable_if_t<!DerivationClause(nt::Relational) || !impl::is_less_than_equal_to_comparable_v<BaseType>, bool> = delete;
-
   /**
    * Check if one nt::new_type object is greater-than or equal-to an other
    *
-   * @note This operator is only avalaible if the the derivation clause of this nt::new_type does contains nt::Relational
+   * @note This operator is only available if the the derivation clause of this nt::new_type does contains nt::Relational and the base type is
+   * greater-than-or-equal comparable
    * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
    * comparison operator is noexcept.
    * @return true iff. the base type comparison operator returns true, false otherwise.
@@ -283,11 +273,6 @@ namespace nt
   {
     return lhs.decay() >= rhs.decay();
   }
-
-  template<typename BaseType, typename TagType, auto DerivationClause>
-  auto constexpr operator>=(new_type<BaseType, TagType, DerivationClause> const & lhs,
-                            new_type<BaseType, TagType, DerivationClause> const & rhs)
-      -> std::enable_if_t<!DerivationClause(nt::Relational) || !impl::is_greater_than_equal_to_comparable_v<BaseType>, bool> = delete;
 
   /**
    * @brief Write the contained base type object to a standard output stream
