@@ -135,35 +135,31 @@ Synopsis
 
      template<typename BaseType,
               typename TagType,
-              auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+              auto DerivationClause>
      auto constexpr operator<(new_type<BaseType, TagType, DerivationClause> const &,
                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                              -> bool;
+                              -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
 
      template<typename BaseType,
               typename TagType,
-              auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+              auto DerivationClause>
      auto constexpr operator>(new_type<BaseType, TagType, DerivationClause> const &,
                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                              -> bool;
+                              -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
 
      template<typename BaseType,
               typename TagType,
-              auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+              auto DerivationClause>
      auto constexpr operator<=(new_type<BaseType, TagType, DerivationClause> const &,
                                new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                               -> bool;
+                               -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
 
      template<typename BaseType,
               typename TagType,
-              auto DerivationClause,
-              typename = std::enable_if_t<DerivationClause(nt::Relational)>>
+              auto DerivationClause>
      auto constexpr operator>=(new_type<BaseType, TagType, DerivationClause> const &,
                                new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                               -> bool;
+                               -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
 
     // Stream input/output operators
 
@@ -171,21 +167,19 @@ Synopsis
               typename TagType,
               auto DerivationClause,
               typename CharType,
-              typename StreamTraits,
-              typename = std::enable_if_t<DerivationClause(nt::Show)>>
+              typename StreamTraits>
      auto operator<<(std::basic_ostream<CharType, StreamTraits> &,
                      new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                     -> std::basic_ostream<CharType, StreamTraits> &;
+                     -> std::enable_if_t<DerivationClause(nt::Show) && /*see below*/, std::basic_ostream<CharType, StreamTraits>> &;
 
      template<typename BaseType,
               typename TagType,
               auto DerivationClause,
               typename CharType,
-              typename StreamTraits,
-              typename = std::enable_if_t<DerivationClause(nt::Read)>>
+              typename StreamTraits>
      auto operator>>(std::basic_istream<CharType, StreamTraits> &,
                      new_type<BaseType, TagType, DerivationClause> &) noexcept(/*see below*/)
-                     -> std::basic_istream<CharType, StreamTraits> &;
+                     -> std::enable_if_t<DerivationClause(nt::Read) && /*see below*/, std::basic_istream<CharType, StreamTraits>> &;
    }
 
 Member Type Aliases
