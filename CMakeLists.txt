@@ -94,6 +94,13 @@ if(BUILD_DOCS)
     message(FATAL_ERROR "Could not find pipenv")
   endif()
 
+  set(DOC_SOURCES
+    "${PROJECT_SOURCE_DIR}/doc/src/index.rst"
+    "${PROJECT_SOURCE_DIR}/doc/src/conf.py"
+    "${PROJECT_SOURCE_DIR}/examples/src/basic_usage.cpp"
+    "${PROJECT_SOURCE_DIR}/examples/src/basic_usage_with_show.cpp"
+  )
+
   add_custom_target("pipenv_install"
     COMMAND "${PIPENV_EXE}" "install" ">/dev/null"
     COMMENT "Installing pipenv dependencies"
@@ -110,14 +117,14 @@ if(BUILD_DOCS)
 
   add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/doc/html/index.html"
     COMMAND "${PIPENV_EXE}" "run" "sphinx-build" "-b" "singlehtml" "${PROJECT_SOURCE_DIR}/doc/src" "${PROJECT_BINARY_DIR}/doc/html" ">/dev/null"
-    DEPENDS "${PROJECT_SOURCE_DIR}/doc/src/index.rst" "${PROJECT_SOURCE_DIR}/doc/src/conf.py"
+    DEPENDS ${DOC_SOURCES}
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
     COMMENT "Compiling HTML documentation"
   )
 
   add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/doc/man/newtype.3"
     COMMAND "${PIPENV_EXE}" "run" "sphinx-build" "-b" "man" "${PROJECT_SOURCE_DIR}/doc/src" "${PROJECT_BINARY_DIR}/doc/man" ">/dev/null"
-    DEPENDS "${PROJECT_SOURCE_DIR}/doc/src/index.rst" "${PROJECT_SOURCE_DIR}/doc/src/conf.py"
+    DEPENDS ${DOC_SOURCES}
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
     COMMENT "Compiling man pages"
   )
@@ -135,7 +142,22 @@ if(BUILD_DOCS)
   install(FILES "${PROJECT_BINARY_DIR}/doc/man/${PROJECT_NAME}.3"
     DESTINATION "share/man/man3"
   )
-  endif()
+endif()
+
+# 'newtype' examples
+
+option(BUILD_EXAMPLES "Build the library examples" OFF)
+
+if(BUILD_EXAMPLES)
+  add_executable("ex_basic_usage" "examples/src/basic_usage.cpp")
+  target_link_libraries("ex_basic_usage" "${PROJECT_NAME}")
+
+  add_executable("ex_basic_usage_with_show" "examples/src/basic_usage_with_show.cpp")
+  target_link_libraries("ex_basic_usage_with_show" "${PROJECT_NAME}")
+
+  add_executable("ex_basic_usage_with_read" "examples/src/basic_usage_with_read.cpp")
+  target_link_libraries("ex_basic_usage_with_read" "${PROJECT_NAME}")
+endif()
 
 # CMake support files
 

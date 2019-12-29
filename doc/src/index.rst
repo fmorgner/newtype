@@ -1,204 +1,223 @@
+.. cpp:namespace-push:: nt
+
 #############
 Documentation
 #############
 
 The ``newtype`` library provides types and functions to facilitate the creation of strong type aliases.
 
-API
-===
+Example Usage
+#############
 
-.. cpp:namespace-push:: nt
+:ref:`new-type-usage-basic` below demonstrates the basic usage of :cpp:class:`new_type`.
+In it, :cpp:class:`new_type` is used to create thre new strong aliases :literal:`Width`, :literal:`Height`, and :literal:`Area` that all alias :literal:`unsigned int`.
+
+.. literalinclude:: ../../examples/src/basic_usage.cpp
+   :language: c++
+   :linenos:
+   :name: new-type-usage-basic 
+   :caption: Basic usage of :cpp:class:`new_type`
+
+However, using :cpp:class:`new_type` in this fashion seem quite cumbersome.
+Starting from the bottom, :literal:`unsigned int` can normally be shifted on to any :cpp:class:`std::basic_ostream`, like :cpp:var:`std::cout` in this example.
+Since printing values, among other things, is a common scenario, ``newtype`` provides facilities to support automatic derivation of supporting functions.
+
+.. literalinclude:: ../../examples/src/basic_usage_with_show.cpp
+   :language: c++
+   :linenos:
+   :name: new-type-usage-basic-show
+   :caption: Improved usability using the :cpp:var:`Show` derivation tag
+
+:ref:`new-type-usage-basic-show` demonstrates how the function template :cpp:func:`deriving` can be used to enable automatic derivation of the stream output operator for :literal:`Area`.
+Similarly, it is possible to derive the stream input operators of :literal:`Width` and :literal:`Height`, as shown in :ref:`new-type-usage-basic-read` below.
+
+.. literalinclude:: ../../examples/src/basic_usage_with_read.cpp
+   :language: c++
+   :linenos:
+   :name: new-type-usage-basic-read
+   :caption: Deriving input operations using the :cpp:var:`Read` derivation tag
+
+API
+###
 
 This section of the documentation describes the public API of the *new_type*.
 It provides detailed descriptions of the types and functions designed to be used by applications.
 Additionally, this section provides usage examples that demonstrate the use and properties of the public API.
 
+Header :literal:`<newtype/new_type.hpp>`
+========================================
+
+This header contains the definitions of the class template :cpp:class:`new_type` as well as a set of associated namespace-level functions.
+
 Class template :cpp:class:`new_type`
 ------------------------------------
+
+The class template :cpp:class:`new_type` is designed to allow the creation of new types based on existing types.
+Similarly to the Haskell newtype, this class template creates a new type that is layout equivalent to the underlying type.
 
 .. cpp:class:: template<typename BaseType, typename TagType, auto DerivationClause = deriving()> \
                new_type
 
-   The class template :cpp:class:`new_type` is designed to allow the creation of new types based on existing types.
-   Similarly to the Haskell :literal:`newtype`, this class template creates a new type that is layout equivalent to the underlying type.
+   **Member Type Aliases**
 
-   :tparam BaseType: The underlying type of the new strong alias
-   :tparam TagType: A type uniquely identifying this string alias
-   :tparam DerivationClause: A :cpp:class:`derivation_clause` listing all features that shall be automatically derived.
+   .. cpp:type:: base_type = BaseType
 
+   .. cpp:type:: tag_type = TagType
 
-Usage
-~~~~~
+   .. cpp:type:: derivation_clause_type = decltype(DerivationClause)
 
-:ref:`new-type-usage-simple` below demonstrate the most basic usage of :cpp:class:`new_type`.
-In it, :cpp:class:`new_type` is used to create a new strong alias :literal:`width` for :literal:`unsigned int`.
+   **Static Data Members**
 
-.. code-block:: c++
-   :linenos:
-   :name: new-type-usage-simple
-   :caption: Creating a new strong alias for :literal:`unsigned int`
+   .. cpp:var:: derivation_clause_type constexpr static derivation_clause = DerivationClause
 
-   #include <newtype/new_type.hpp>
+   **Constructors**
 
-   using width = nt::new_type<unsigned int, struct width_tag>;
+   .. cpp:function:: constexpr new_type()
 
-The class template :cpp:class:`new_type` expects the desired underlying type as its first template argument, :literal:`unsigned int` in the example above.
-As a second template argument, :cpp:class:`new_type` expects a tag- or phantom-type.
-Neither the underlying type, nor the tag-type are is required to be complete.
+      **noexcept specification:** This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow default-construtible.
 
-The class template :cpp:class:`new_type` takes as a third template argument an instance of :cpp:class:`derivation_clause`.
-Derivation clauses make it possible to let the implementation derive certain operations automatically.
-For example, the derivation tag :cpp:var:`Arithmetic` enables automatic derivation of arithmetic operations for a given instance of :cpp:class:`new_type` (see :ref:`new-type-usage-deriving-arithmetic` below).
+      **default definition:** This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is default-construtible.
+      Otherwise, this constructor shall be explicitely deleted.
 
-.. code-block:: c++
-   :linenos:
-   :name: new-type-usage-deriving-arithmetic
-   :caption: Automatically deriving arithmetic operations
+   .. cpp:function:: constexpr new_type(new_type const &)
 
-   #include <newtype/new_type.hpp>
+      **noexcept specification:**: This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-construtible.
 
-   using width = nt::new_type<unsigned int, struct width_tag, deriving(nt::Arithmetic)>;
+      **default definition:** This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is copy-construtible.
+      Otherwise, this constructor shall be explicitely deleted.
 
-Synopsis
-~~~~~~~~
+   .. cpp:function:: constexpr new_type(new_type &&)
 
-.. code-block:: c++
+      **noexcept specification:**: This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow move-construtible.
 
-   namespace nt
-   {
-     template<typename BaseType, typename TagType, auto DerivationClause = deriving()>
-     class new_type
-     {
-     public:
+      **default definition:** This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is move-construtible.
+      Otherwise, this constructor shall be explicitely deleted.
 
-       // Type aliases
+   .. cpp:function:: constexpr new_type(BaseType &)
 
-       using base_type = BaseType;
-       using tag_type = TagType;
-       using derivation_clause_type = decltype(DerivationClause);
+      **noexcept specification:** This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-construtible.
 
-       // Derivation clause access
+      **enablement:** This constructor shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is copy-construtible.
+      Otherwise, this constructor shall be explicitely deleted.
 
-       auto constexpr static derivation_clause = DerivationClause;
+   .. cpp:function:: constexpr new_type(BaseType &&)
 
-       // Constructors
+      **noexcept specification:** This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow move-construtible.
 
-       constexpr          new_type() noexcept(std::is_nothrow_default_constructible_v<BaseType>) = /*see below*/;
+      **enablement:** This constructor shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is move-construtible.
+      Otherwise, this constructor shall be explicitely deleted.
 
-       constexpr          new_type(new_type const &) noexcept(std::is_nothrow_copy_constructible_v<BaseType>) = /*see below*/;
+   **Assignment Operators**
 
-       constexpr          new_type(new_type      &&) noexcept(std::is_nothrow_move_constructible_v<BaseType>) = /*see below*/;
+   .. cpp:function:: constexpr new_type & operator=(new_type const &)
 
-       constexpr explicit new_type(BaseType const &) noexcept(std::is_nothrow_copy_constructible_v<BaseType>);
+      **noexcept specification:** This assignment operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-assignable.
 
-       constexpr explicit new_type(BaseType      &&) noexcept(std::is_nothrow_move_constructible_v<BaseType>);
+      **default definition:** This assignment operator shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is copy-assignable.
+      Otherwise, this assignment operator shall be explicitely deleted.
 
-       // Assignment operators
+   .. cpp:function:: constexpr new_type & operator=(new_type &&)
 
-       auto constexpr operator=(new_type const &) noexcept(std::is_nothrow_copy_assignable_v<BaseType>) -> new_type & = /*see below*/
+      **noexcept specification:** This assignment operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow move-assignable.
 
-       auto constexpr operator=(new_type &&) noexcept(std::is_nothrow_move_assignable_v<BaseType>) -> new_type & = /*see below*/
+      **default definition:** This assignment operator shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is move-assignable.
+      Otherwise, this assignment operator shall be explicitely deleted.
 
-       // Accessors
+   **Accessors**
 
-       auto constexpr decay() const noexcept -> BaseType;
+   .. cpp:function:: constexpr BaseType decay() const
 
-       /* EXPLICIT: see below */ constexpr operator base_type() const noexcept(/*see below*/)
+      **noexcept specification:** This member function shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-assignable.
 
-       // Indirection operators
+   .. cpp:function:: constexpr operator BaseType() const
 
-       auto constexpr operator->()       noexcept -> std::enable_if_t<DerivationClause(nt::Indirection), BaseType       *>;
+      **noexcept specification:** This conversion operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-assignable.
 
-       auto constexpr operator->() const noexcept -> std::enable_if_t<DerivationClause(nt::Indirection), BaseType const *>;
+      **explicit specification:** This conversion operator shall be explicit unless this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`ImplicitConversion`.
 
-     private:
-       BaseType m_value; // exposition only
-     };
+   **Member Access Trough Pointer**
 
-     // Equality comparison operators
+   .. cpp:function:: constexpr BaseType operator->() noexcept
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause>
-     auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const &,
-                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                               -> bool;
+      **enablement:** This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`Indirection`
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause>
-     auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const &,
-                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                               -> bool;
-     
-     // Relational operators
+   .. cpp:function:: constexpr BaseType const * operator->() const noexcept
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause>
-     auto constexpr operator<(new_type<BaseType, TagType, DerivationClause> const &,
-                              new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                              -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
+      **enablement:** This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`Indirection`
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause>
-     auto constexpr operator>(new_type<BaseType, TagType, DerivationClause> const &,
-                              new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                              -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
+Namespace-level functions and function templates
+------------------------------------------------
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause>
-     auto constexpr operator<=(new_type<BaseType, TagType, DerivationClause> const &,
-                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                               -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
+The functions and functions templates described in this section provide additional functionality for the class template :cpp:class:`new_type` that is not part of the class itself.
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause>
-     auto constexpr operator>=(new_type<BaseType, TagType, DerivationClause> const &,
-                               new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                               -> std::enable_if_t<DerivationClause(nt::Relational) && /*see below*/, bool>;
+Equality Comparison Operators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // Stream input/output operators
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator==(new_type<BaseType, TagType, DerivationClause> const &,\
+                                            new_type<BaseType, TagType, DerivationClause> const &)
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause,
-              typename CharType,
-              typename StreamTraits>
-     auto operator<<(std::basic_ostream<CharType, StreamTraits> &,
-                     new_type<BaseType, TagType, DerivationClause> const &) noexcept(/*see below*/)
-                     -> std::enable_if_t<DerivationClause(nt::Show) && /*see below*/, std::basic_ostream<CharType, StreamTraits>> &;
+   **noexcept specification:** This conversion operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow equals-comparable.
 
-     template<typename BaseType,
-              typename TagType,
-              auto DerivationClause,
-              typename CharType,
-              typename StreamTraits>
-     auto operator>>(std::basic_istream<CharType, StreamTraits> &,
-                     new_type<BaseType, TagType, DerivationClause> &) noexcept(/*see below*/)
-                     -> std::enable_if_t<DerivationClause(nt::Read) && /*see below*/, std::basic_istream<CharType, StreamTraits>> &;
-   }
+   **enablement:** This operator shall be available iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`==`
 
-Member Type Aliases
-~~~~~~~~~~~~~~~~~~~
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const &,\
+                                            new_type<BaseType, TagType, DerivationClause> const &)
 
-Static Data Members
-~~~~~~~~~~~~~~~~~~~
+   **noexcept specification:** This conversion operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow not-equals-comparable.
 
-Special Member Functions
-~~~~~~~~~~~~~~~~~~~~~~~~
+   **enablement:** This operator shall be available iff. this :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`!=`
 
-Free Equality Comparison Operators
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Relational Comparison Operators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Free Relational Operators
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator<(new_type<BaseType, TagType, DerivationClause> const &, \
+                                           new_type<BaseType, TagType, DerivationClause> const &)
 
-Free Stream Input/Ouput Operators
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator>(new_type<BaseType, TagType, DerivationClause> const &, \
+                                           new_type<BaseType, TagType, DerivationClause> const &)
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator<=(new_type<BaseType, TagType, DerivationClause> const &, \
+                                            new_type<BaseType, TagType, DerivationClause> const &)
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator>=(new_type<BaseType, TagType, DerivationClause> const &, \
+                                            new_type<BaseType, TagType, DerivationClause> const &)
+
+Stream I/O Operators
+~~~~~~~~~~~~~~~~~~~~
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause, \
+                  typename CharType, \
+                  typename StreamTraits> \
+                  std::basic_ostream<CharType, StreamTraits> & operator<<(std::basic_ostream<CharType, StreamTraits> &, \
+                                                                         new_type<BaseType, TagType, DerivationClause> const &)
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause, \
+                  typename CharType, \
+                  typename StreamTraits> \
+                  std::basic_istream<CharType, StreamTraits> & operator>>(std::basic_istream<CharType, StreamTraits> &, \
+                                                                         new_type<BaseType, TagType, DerivationClause> &)
 
 Class template :cpp:class:`derivation_clause`
 ---------------------------------------------

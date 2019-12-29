@@ -2,6 +2,7 @@
 #define NEWTYPE_IMPL_NEW_TYPE_STORAGE_HPP
 
 #include <type_traits>
+#include <utility>
 
 namespace nt::impl
 {

@@ -39,6 +39,8 @@ namespace nt
     using super = impl::new_type_move_assignment<BaseType, TagType>;
 
   public:
+    /// @section Type aliases
+
     /**
      * @brief The base type of this nt::new_type
      *
@@ -60,12 +62,16 @@ namespace nt
      */
     using derivation_clause_type = decltype(DerivationClause);
 
+    /// @section Derivation clause access
+
     /**
      * @brief The derivation clause fo this nt::new_type
      *
      * This static data-member provides conevient access to the derivation clause of this nt::new_type instance
      */
     auto constexpr static derivation_clause = DerivationClause;
+
+    /// @section Constructors
 
     using super::super;
 
@@ -95,6 +101,8 @@ namespace nt
      */
     constexpr new_type(new_type &&) noexcept(std::is_nothrow_move_constructible_v<BaseType>) = default;
 
+    /// @section Assignment operators
+
     /**
      * @brief Copy-assign the value of an existing instance of this nt::new_type to this instance
      *
@@ -114,6 +122,8 @@ namespace nt
      * @return A reference to this instance
      */
     auto constexpr operator=(new_type &&) noexcept(std::is_nothrow_move_assignable_v<BaseType>) -> new_type & = default;
+
+    /// @section Accessors
 
     /**
      * @brief Obtain a copy of the contained base type object
@@ -147,6 +157,8 @@ namespace nt
       return decay();
     }
 
+    /// @section Indirection operators
+
     /**
      * @brief Perform an access to a member of the base type
      *
@@ -169,6 +181,8 @@ namespace nt
       return std::addressof(this->m_value);
     }
   };
+
+  /// @section Equality comparison operators
 
   /**
    * @brief Compare two objects for equality
@@ -201,6 +215,8 @@ namespace nt
   {
     return lhs.decay() != rhs.decay();
   }
+
+  /// @section Relational operators
 
   /**
    * @brief Check if one nt::new_type object is less-than an other
@@ -273,6 +289,8 @@ namespace nt
   {
     return lhs.decay() >= rhs.decay();
   }
+
+  /// @section Stream input/output operators
 
   /**
    * @brief Write the contained base type object to a standard output stream
