@@ -50,7 +50,7 @@ API
 
 This section of the documentation describes the public API of the *new_type*.
 It provides detailed descriptions of the types and functions designed to be used by applications.
-Additionally, this section provides usage examples that demonstrate the use and properties of the public API.
+All declarations described in this section are found in the namespace :cpp:any:`nt`, unless noted otherwise.
 
 Header :literal:`<newtype/new_type.hpp>`
 ========================================
@@ -249,7 +249,51 @@ Stream I/O Operators
 
    **noexcept specification:** This input operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow input streamable.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being read from a stream using the operator :literal:`>>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Reads`.
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being read from a stream using the operator :literal:`>>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Read`.
+
+Header :literal:`<newtype/derivable.hpp>`
+=========================================
+
+This header defines the alias template :cpp:type:`derivable` as well as the set of standard derivation tags.
+
+Alias template :cpp:type:`derivable`
+------------------------------------
+
+.. cpp:type:: template<typename NameTag> \
+              derivable = type<NameTag>
+
+Standard derivation tags
+------------------------
+
+.. cpp:var:: auto constexpr Arithmetic = derivable<struct arithmetic_tag>{}
+
+   This tag enables the derivation of the arithmetic operators :cpp:func:`operator+`, :cpp:func:`operator-`, :cpp:func:`operator*`, :cpp:func:`operator/`, :cpp:func:`operator+=`, :cpp:func:`operator-=`, :cpp:func:`operator*=`, and :cpp:func:`operator/=`
+
+.. cpp:var:: auto constexpr EqBase = derivable<struct eq_base_tag>{}
+
+   This tag enables the derivation of "Equality comparison with base type" operators :literal:`==` and :literal:`!=`
+   By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
+
+.. cpp:var:: auto constexpr ImplicitConversion = derivable<struct implicit_conversion_tag>{}
+
+   This tag enables the derivation of the implicit "conversion to base type" operator.
+   By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
+
+.. cpp:var:: auto constexpr Indirection = derivable<struct indirection_tag>{}
+
+   This tag enables the derivation of the "member access through pointer" operators :cpp:func:`new_type::operator->`
+
+.. cpp:var:: auto constexpr Read = derivable<struct read_tag>{}
+
+   This tag enables the derivation of the "stream output" operator :cpp:func:`operator<<`
+
+.. cpp:var:: auto constexpr Relational = derivable<struct relational_tag>{}
+
+   This tag enables the derivation of the relational operators :cpp:func:`operator<`, :cpp:func:`operator>`, :cpp:func:`operator<=`, and :cpp:func:`operator>=`
+
+.. cpp:var:: auto constexpr Show = derivable<struct show_tag>{}
+
+   This tag enables the derivation of the "stream input" operator :cpp:func:`operator>>`
 
 Header :literal:`<newtype/derivation_clause.hpp>`
 =================================================

@@ -27,11 +27,12 @@ namespace nt
     auto constexpr Arithmetic = derivable<struct arithmetic_tag>{};
 
     /**
-     * @brief A tag to enable derivation of equality comparison operators
+     * @brief A tag to enable derivation of "equality comparison with base type" operators
      *
+     * @note Deriving this feature seriously weakens the using nt::new_type instance
      * @since 1.0.0
      */
-    auto constexpr EqBase = derivable<struct eq_tag>{};
+    auto constexpr EqBase = derivable<struct eq_base_tag>{};
 
     /**
      * @brief A tag to enable derivation of the implicit "conversion to base type" operator

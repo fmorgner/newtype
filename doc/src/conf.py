@@ -27,6 +27,8 @@ pygments_style = 'tango'
 
 exclude_patterns = []
 
+numfig = True
+
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'haiku'
