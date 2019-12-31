@@ -1,3 +1,4 @@
+#include "arithmetic_suite.hpp"
 #include "conversion_suite.hpp"
 #include "derivation_clause_suite.hpp"
 #include "equality_comparison_suite.hpp"
@@ -57,6 +58,7 @@ int main(int argc, char ** argv)
       equality_comparison_suite(),
       relational_operators_suite(),
       io_operators_suite(),
+      arithmetic_suite(),
   };
 
   auto selectors = get_test_selectors(suites);

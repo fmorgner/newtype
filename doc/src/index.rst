@@ -272,6 +272,18 @@ Stream I/O Operators
 
    .. versionadded:: 1.0.0
 
+Arithmetic Operators
+~~~~~~~~~~~~~~~~~~~~
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause> operator+(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
+
+   **noexcept specification:** This input operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow addable as well as nothrow copy-constructible.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is addable using the operator :literal:`+` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+
 Header :literal:`<newtype/derivable.hpp>`
 =========================================
 

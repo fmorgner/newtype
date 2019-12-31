@@ -325,6 +325,27 @@ namespace nt
   {
     return input >> target.m_value;
   }
+
+  /// @section Arithmetic operators
+
+  /**
+   * @brief Add two instances of the same nt::new_type
+   *
+   * @note This operator is only available if the derivation clause of the passed in nt::new_type objects contains nt::Arithmetic and the base
+   * type is addable.
+   * @param lhs The left-hand side of the addition
+   * @param rhs The right-hand side of the addition
+   * @return a new instance of the same nt::new_type
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr
+  operator+(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
+      impl::is_nothrow_addable_v<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_addable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
+  {
+    return {lhs.decay() + rhs.decay()};
+  }
+
 }  // namespace nt
 
 #endif

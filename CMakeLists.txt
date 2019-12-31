@@ -50,8 +50,9 @@ if(BUILD_TESTING)
   add_executable("${PROJECT_NAME}_tests"
     "${PROJECT_SOURCE_DIR}/test/src/driver.cpp"
 
-    "${PROJECT_SOURCE_DIR}/test/src/derivation_clause_suite.cpp"
+    "${PROJECT_SOURCE_DIR}/test/src/arithmetic_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/conversion_suite.cpp"
+    "${PROJECT_SOURCE_DIR}/test/src/derivation_clause_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/equality_comparison_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/io_operators_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/new_type_constructor_suite.cpp"

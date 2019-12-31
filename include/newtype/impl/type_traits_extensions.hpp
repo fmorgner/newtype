@@ -513,6 +513,72 @@ namespace nt::impl
 
   }  // namespace iostreamable
 
+  inline namespace arithmetic
+  {
+
+    /**
+     * @brief A trait to test if a given type is addable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-addable T
+     */
+    template<typename T, typename = void>
+    struct is_addable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is input streamable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for addable T
+     */
+    template<typename T>
+    struct is_addable<T, std::void_t<decltype(std::declval<T const &>() + std::declval<T const &>())>> : std::true_type
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is addable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_addable_v = is_addable<T>::value;
+
+    /**
+     * @brief A trait to test if a given type is noexcept addable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-noexcept addable or non-addable T
+     */
+    template<typename T, typename = void>
+    struct is_nothrow_addable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is noexcept addable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for addable T detemining if T is noexcept addable
+     */
+    template<typename T>
+    struct is_nothrow_addable<T, std::void_t<decltype(std::declval<T const &>() + std::declval<T const &>())>>
+        : std::bool_constant<noexcept(std::declval<T const &>() + std::declval<T const &>())>
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is noexcept addable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_nothrow_addable_v = is_nothrow_addable<T>::value;
+
+  }  // namespace arithmetic
+
 }  // namespace nt::impl
 
 #endif
