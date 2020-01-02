@@ -1,13 +1,14 @@
 #ifndef NEWTYPE_DERIVABLE_HPP
 #define NEWTYPE_DERIVABLE_HPP
 
-#include "newtype/type.hpp"
-
 namespace nt
 {
 
-  template<typename NameTag>
-  using derivable = type<NameTag>;
+  template<typename DerivableTag>
+  struct derivable final
+  {
+    using tag_type = DerivableTag;
+  };
 
   /**
    * @brief A set of standard derivation tags

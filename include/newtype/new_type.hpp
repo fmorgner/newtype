@@ -5,7 +5,6 @@
 #include "newtype/deriving.hpp"
 #include "newtype/impl/new_type_storage.hpp"
 #include "newtype/impl/type_traits_extensions.hpp"
-#include "newtype/type.hpp"
 
 #include <istream>
 #include <ostream>
