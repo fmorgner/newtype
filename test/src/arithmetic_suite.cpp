@@ -215,10 +215,10 @@ inline namespace compound_addition
       -> void
   {
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Arithmetic)>;
-    auto lhs = type_alias{24};
-    auto rhs = type_alias{18};
     auto elhs = 42;
     auto erhs = 18;
+    auto lhs = type_alias{elhs};
+    auto rhs = type_alias{erhs};
     ASSERT_EQUAL(elhs += erhs, (lhs += rhs).decay());
   }
 
@@ -259,6 +259,11 @@ auto arithmetic_suite() -> std::pair<cute::suite, std::string>
           KAWAII(a_new__type_deriving_arithmetic_is_dividable_with_instances_of_itself_if_the_base_type_is_dividable<dividable_type>),
           KAWAII(division_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
           KAWAII(division_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
+
+          /// Compound Addition Tests
+          KAWAII(addition_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
+          KAWAII(
+              addition_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
       },
       "Arithmetic Operators Tests"};
 }
