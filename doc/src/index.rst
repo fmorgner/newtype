@@ -181,12 +181,60 @@ Equality Comparison Operators
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
+                  constexpr bool operator==(new_type<BaseType, TagType, DerivationClause> const &,\
+                                            BaseType const &)
+
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow equals-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`==` and b) the derivation clause contains :cpp:var:`EqBase`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator==(BaseType const &,\
+                                            new_type<BaseType, TagType, DerivationClause> const &)
+
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow equals-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`==` and b) the derivation clause contains :cpp:var:`EqBase`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
                   constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const &,\
                                             new_type<BaseType, TagType, DerivationClause> const &)
 
    **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow not-equals-comparable.
 
    **enablement:** This operator shall be available iff. this :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`!=`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const &,\
+                                            BaseType const &)
+
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow equals-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`!=` and b) the derivation clause contains :cpp:var:`EqBase`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
+                  constexpr bool operator!=(BaseType const &,\
+                                            new_type<BaseType, TagType, DerivationClause> const &)
+
+   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow equals-comparable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`!=` and b) the derivation clause contains :cpp:var:`EqBase`
 
    .. versionadded:: 1.0.0
 
@@ -355,8 +403,8 @@ This header defines the alias template :cpp:type:`derivable` as well as the set 
 Alias template :cpp:type:`derivable`
 ------------------------------------
 
-.. cpp:type:: template<typename NameTag> \
-              derivable = type<NameTag>
+.. cpp:struct:: template<typename NameTag> \
+                derivable
 
    .. versionadded:: 1.0.0
 
@@ -373,7 +421,7 @@ Standard derivation tags
 
 .. cpp:var:: auto constexpr EqBase = derivable<struct eq_base_tag>{}
 
-   This tag enables the derivation of "Equality comparison with base type" operators :literal:`==` and :literal:`!=`
+   This tag enables the derivation of "Equality comparison with base type" operators :cpp:func:`template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)`, :cpp:func:`template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)` :cpp:func:`template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)`, and :cpp:func:`template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)`
    By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
 
    .. versionadded:: 1.0.0

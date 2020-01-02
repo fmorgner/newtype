@@ -229,6 +229,37 @@ namespace nt
   }
 
   /**
+   * @brief Compare an instance of a given nt::new_type with an object of its base type
+   *
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            BaseType const & rhs) noexcept(impl::is_nothrow_equality_comparable_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_equality_comparable_v<BaseType>, bool>
+  {
+    return lhs.decay() == rhs;
+  }
+
+  /**
+   * @brief Compare an instance of the base type with an instance of a given nt::new_type
+   *
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr
+  operator==(BaseType const & lhs,
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_equality_comparable_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_equality_comparable_v<BaseType>, bool>
+  {
+    return lhs == rhs.decay();
+  }
+
+  /**
    * @brief Compare two objects for non-equality
    *
    * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
@@ -242,6 +273,37 @@ namespace nt
       -> std::enable_if_t<impl::is_inequality_comparable_v<BaseType>, bool>
   {
     return lhs.decay() != rhs.decay();
+  }
+
+  /**
+   * @brief Compare an instance of a given nt::new_type with an object of its base type
+   *
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            BaseType const & rhs) noexcept(impl::is_nothrow_inequality_comparable_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_inequality_comparable_v<BaseType>, bool>
+  {
+    return lhs.decay() != rhs;
+  }
+
+  /**
+   * @brief Compare an instance of the base type with an instance of a given nt::new_type
+   *
+   * @throw This comparison operator throws any exception thrown by the base type comparison operator. It it noexcept iff. the base type
+   * comparison operator is noexcept.
+   * @return true iff. the base type comparison operator returns true, false otherwise.
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr
+  operator!=(BaseType const & lhs,
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_inequality_comparable_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_inequality_comparable_v<BaseType>, bool>
+  {
+    return lhs != rhs.decay();
   }
 
   /// @section Relational operators
