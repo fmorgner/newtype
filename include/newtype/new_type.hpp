@@ -43,6 +43,13 @@ namespace nt
         -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_add_assignable_v<BaseTypeT>,
                             new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
 
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend
+    operator-=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
+               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(impl::is_nothrow_subtract_assignable_v<BaseTypeT>)
+        -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_subtract_assignable_v<BaseTypeT>,
+                            new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
+
     using super = impl::new_type_move_assignment<BaseType, TagType>;
 
   public:
@@ -368,7 +375,7 @@ namespace nt
       -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_add_assignable_v<BaseType>,
                           new_type<BaseType, TagType, DerivationClause> &>
   {
-    lhs.m_value += rhs.decay();
+    lhs.m_value += rhs.m_value;
     return lhs;
   }
 
@@ -388,6 +395,26 @@ namespace nt
       -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_subtractable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
   {
     return {lhs.decay() - rhs.decay()};
+  }
+
+  /**
+   * @brief Subtract two instances of the same nt::new_type, modifying the left-hand side
+   *
+   * @note This operator is only available if the derivation clause of the passed in nt::new_type objects contains nt::Arithmetic and the base
+   * type is subtractable.
+   * @param lhs The left-hand side of the subtractition
+   * @param rhs The right-hand side of the subtractition
+   * @return a reference to the the modified value
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr
+  operator-=(new_type<BaseType, TagType, DerivationClause> & lhs,
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_subtract_assignable_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_subtract_assignable_v<BaseType>,
+                          new_type<BaseType, TagType, DerivationClause> &>
+  {
+    lhs.m_value -= rhs.m_value;
+    return lhs;
   }
 
   /**

@@ -826,188 +826,66 @@ namespace nt::impl
     template<typename T>
     auto constexpr is_nothrow_add_assignable_v = is_nothrow_add_assignable<T>::value;
 
-    // /**
-    //  * @brief A trait to test if a given type is subtractable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the base case for non-subtractable T
-    //  */
-    // template<typename T, typename = void>
-    // struct is_subtract_assignable : std::false_type
-    // {
-    // };
+    /**
+     * @brief A trait to test if a given type is subtract-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-subtract-assignable T
+     */
+    template<typename T, typename = void>
+    struct is_subtract_assignable : std::false_type
+    {
+    };
 
-    // /**
-    //  * @brief A trait to test if a given type is subtractable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the case for subtractable T
-    //  */
-    // template<typename T>
-    // struct is_subtract_assignable<T, std::void_t<decltype(std::declval<T const &>() - std::declval<T const &>())>> : std::true_type
-    // {
-    // };
+    /**
+     * @brief A trait to test if a given type is subtract-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for subtract-assignable T
+     */
+    template<typename T>
+    struct is_subtract_assignable<T, std::void_t<decltype(std::declval<T &>() -= std::declval<T const &>())>> : std::true_type
+    {
+    };
 
-    // /**
-    //  * @brief A variable template to test if a given type is subtractable
-    //  *
-    //  * @tparam T The type to test
-    //  */
-    // template<typename T>
-    // auto constexpr is_subtractable_v = is_subtract_assignable<T>::value;
+    /**
+     * @brief A variable template to test if a given type is subtract-assignable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_subtract_assignable_v = is_subtract_assignable<T>::value;
 
-    // /**
-    //  * @brief A trait to test if a given type is noexcept subtractable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the base case for non-noexcept subtractable or non-subtractable T
-    //  */
-    // template<typename T, typename = void>
-    // struct is_nothrow_subtractable : std::false_type
-    // {
-    // };
+    /**
+     * @brief A trait to test if a given type is noexcept subtract-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-noexcept subtract-assignable or non-subtract-assignable T
+     */
+    template<typename T, typename = void>
+    struct is_nothrow_subtract_assignable : std::false_type
+    {
+    };
 
-    // /**
-    //  * @brief A trait to test if a given type is noexcept subtractable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the case for subtractable T detemining if T is noexcept subtractable
-    //  */
-    // template<typename T>
-    // struct is_nothrow_subtractable<T, std::void_t<decltype(std::declval<T const &>() - std::declval<T const &>())>>
-    //     : std::bool_constant<noexcept(std::declval<T const &>() - std::declval<T const &>())>
-    // {
-    // };
+    /**
+     * @brief A trait to test if a given type is noexcept subtract-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for subtract-assignable T detemining if T is noexcept subtract-assignable
+     */
+    template<typename T>
+    struct is_nothrow_subtract_assignable<T, std::void_t<decltype(std::declval<T &>() -= std::declval<T const &>())>>
+        : std::bool_constant<noexcept(std::declval<T &>() -= std::declval<T const &>())>
+    {
+    };
 
-    // /**
-    //  * @brief A variable template to test if a given type is noexcept subtractable
-    //  *
-    //  * @tparam T The type to test
-    //  */
-    // template<typename T>
-    // auto constexpr is_nothrow_subtractable_v = is_nothrow_subtractable<T>::value;
-
-    // /**
-    //  * @brief A trait to test if a given type is multipliable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the base case for non-multipliable T
-    //  */
-    // template<typename T, typename = void>
-    // struct is_multipliable : std::false_type
-    // {
-    // };
-
-    // /**
-    //  * @brief A trait to test if a given type is multipliable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the case for multipliable T
-    //  */
-    // template<typename T>
-    // struct is_multipliable<T, std::void_t<decltype(std::declval<T const &>() * std::declval<T const &>())>> : std::true_type
-    // {
-    // };
-
-    // /**
-    //  * @brief A variable template to test if a given type is multipliable
-    //  *
-    //  * @tparam T The type to test
-    //  */
-    // template<typename T>
-    // auto constexpr is_multipliable_v = is_multipliable<T>::value;
-
-    // /**
-    //  * @brief A trait to test if a given type is noexcept multipliable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the base case for non-noexcept multipliable or non-multipliable T
-    //  */
-    // template<typename T, typename = void>
-    // struct is_nothrow_multipliable : std::false_type
-    // {
-    // };
-
-    // /**
-    //  * @brief A trait to test if a given type is noexcept multipliable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the case for multipliable T detemining if T is noexcept multipliable
-    //  */
-    // template<typename T>
-    // struct is_nothrow_multipliable<T, std::void_t<decltype(std::declval<T const &>() * std::declval<T const &>())>>
-    //     : std::bool_constant<noexcept(std::declval<T const &>() * std::declval<T const &>())>
-    // {
-    // };
-
-    // /**
-    //  * @brief A variable template to test if a given type is noexcept multipliable
-    //  *
-    //  * @tparam T The type to test
-    //  */
-    // template<typename T>
-    // auto constexpr is_nothrow_multipliable_v = is_nothrow_multipliable<T>::value;
-
-    // /**
-    //  * @brief A trait to test if a given type is dividable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the base case for non-dividable T
-    //  */
-    // template<typename T, typename = void>
-    // struct is_dividable : std::false_type
-    // {
-    // };
-
-    // /**
-    //  * @brief A trait to test if a given type is dividable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the case for dividable T
-    //  */
-    // template<typename T>
-    // struct is_dividable<T, std::void_t<decltype(std::declval<T const &>() / std::declval<T const &>())>> : std::true_type
-    // {
-    // };
-
-    // /**
-    //  * @brief A variable template to test if a given type is dividable
-    //  *
-    //  * @tparam T The type to test
-    //  */
-    // template<typename T>
-    // auto constexpr is_dividable_v = is_dividable<T>::value;
-
-    // /**
-    //  * @brief A trait to test if a given type is noexcept dividable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the base case for non-noexcept dividable or non-dividable T
-    //  */
-    // template<typename T, typename = void>
-    // struct is_nothrow_dividable : std::false_type
-    // {
-    // };
-
-    // /**
-    //  * @brief A trait to test if a given type is noexcept dividable
-    //  *
-    //  * @tparam T The type to test
-    //  * @note This specialization forms the case for dividable T detemining if T is noexcept dividable
-    //  */
-    // template<typename T>
-    // struct is_nothrow_dividable<T, std::void_t<decltype(std::declval<T const &>() / std::declval<T const &>())>>
-    //     : std::bool_constant<noexcept(std::declval<T const &>() / std::declval<T const &>())>
-    // {
-    // };
-
-    // /**
-    //  * @brief A variable template to test if a given type is noexcept dividable
-    //  *
-    //  * @tparam T The type to test
-    //  */
-    // template<typename T>
-    // auto constexpr is_nothrow_dividable_v = is_nothrow_dividable<T>::value;
+    /**
+     * @brief A variable template to test if a given type is noexcept subtract-assignable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_nothrow_subtract_assignable_v = is_nothrow_subtract_assignable<T>::value;
 
   }  // namespace compound_arithmetic
 

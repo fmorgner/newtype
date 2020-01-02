@@ -222,12 +222,31 @@ inline namespace compound_addition
     ASSERT_EQUAL(elhs += erhs, (lhs += rhs).decay());
   }
 
+  auto subtraction_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Arithmetic)>;
+    ASSERT((std::is_same_v<type_alias &, decltype(std::declval<type_alias &>() -= std::declval<type_alias const &>())>));
+  }
+
+  auto subtraction_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type()
+      -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Arithmetic)>;
+    auto elhs = 42;
+    auto erhs = 18;
+    auto lhs = type_alias{elhs};
+    auto rhs = type_alias{erhs};
+    ASSERT_EQUAL(elhs -= erhs, (lhs -= rhs).decay());
+  }
+
 }  // namespace compound_addition
 
 auto arithmetic_suite() -> std::pair<cute::suite, std::string>
 {
   return {
       {
+          // clang-format off
+
           /// Addition Tests
           KAWAII(a_new__type_not_deriving_arithmetic_is_not_addable_with_instances_of_itself),
           KAWAII(a_new__type_deriving_arithmetic_is_addable_with_instances_of_itself),
@@ -262,8 +281,13 @@ auto arithmetic_suite() -> std::pair<cute::suite, std::string>
 
           /// Compound Addition Tests
           KAWAII(addition_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
-          KAWAII(
-              addition_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
+          KAWAII(addition_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
+
+          /// Compound Addition Tests
+          KAWAII(subtraction_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
+          KAWAII(subtraction_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
+
+          // clang-format on
       },
       "Arithmetic Operators Tests"};
 }
