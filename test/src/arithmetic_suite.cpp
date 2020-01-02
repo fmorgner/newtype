@@ -9,6 +9,43 @@
 
 #include <type_traits>
 
+namespace
+{
+
+  struct addable_type
+  {
+    auto constexpr operator+(addable_type const &) const -> addable_type
+    {
+      return {};
+    };
+  };
+
+  struct subtractable_type
+  {
+    auto constexpr operator-(subtractable_type const &) const -> subtractable_type
+    {
+      return {};
+    };
+  };
+
+  struct multipliable_type
+  {
+    auto constexpr operator*(multipliable_type const &)const -> multipliable_type
+    {
+      return {};
+    };
+  };
+
+  struct dividable_type
+  {
+    auto constexpr operator/(dividable_type const &) const -> dividable_type
+    {
+      return {};
+    };
+  };
+
+}  // namespace
+
 inline namespace addition_tests
 {
 
@@ -22,6 +59,14 @@ inline namespace addition_tests
   {
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Arithmetic)>;
     ASSERT(nt::impl::is_addable_v<type_alias>);
+  }
+
+  template<typename T>
+  auto a_new__type_deriving_arithmetic_is_addable_with_instances_of_itself_if_the_base_type_is_addable() -> void
+  {
+    static_assert(nt::impl::is_addable_v<T>, "Sanity Check");
+    using type_alias = nt::new_type<T, struct tag, deriving(nt::Arithmetic)>;
+    ASSERT_EQUAL(nt::impl::is_addable_v<T>, nt::impl::is_addable_v<type_alias>);
   }
 
   auto addition_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type() -> void
@@ -55,6 +100,14 @@ inline namespace subtraction_tests
     ASSERT(nt::impl::is_subtractable_v<type_alias>);
   }
 
+  template<typename T>
+  auto a_new__type_deriving_arithmetic_is_subtractable_with_instances_of_itself_if_the_base_type_is_subtractable() -> void
+  {
+    static_assert(nt::impl::is_subtractable_v<T>, "Sanity Check");
+    using type_alias = nt::new_type<T, struct tag, deriving(nt::Arithmetic)>;
+    ASSERT_EQUAL(nt::impl::is_subtractable_v<T>, nt::impl::is_subtractable_v<type_alias>);
+  }
+
   auto subtraction_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type() -> void
   {
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Arithmetic)>;
@@ -73,18 +126,23 @@ inline namespace subtraction_tests
 
 auto arithmetic_suite() -> std::pair<cute::suite, std::string>
 {
-  return {{
-              /// Addition Tests
-              KAWAII(a_new__type_not_deriving_arithmetic_is_not_addable_with_instances_of_itself),
-              KAWAII(a_new__type_deriving_arithmetic_is_addable_with_instances_of_itself),
-              KAWAII(addition_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
-              KAWAII(addition_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
+  return {
+      {
+          /// Addition Tests
+          KAWAII(a_new__type_not_deriving_arithmetic_is_not_addable_with_instances_of_itself),
+          KAWAII(a_new__type_deriving_arithmetic_is_addable_with_instances_of_itself),
+          KAWAII(a_new__type_deriving_arithmetic_is_addable_with_instances_of_itself_if_the_base_type_is_addable<int>),
+          KAWAII(a_new__type_deriving_arithmetic_is_addable_with_instances_of_itself_if_the_base_type_is_addable<addable_type>),
+          KAWAII(addition_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
+          KAWAII(addition_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
 
-              /// Subtraction Tests
-              KAWAII(a_new__type_not_deriving_arithmetic_is_not_subtractable_with_instances_of_itself),
-              KAWAII(a_new__type_deriving_arithmetic_is_subtractable_with_instances_of_itself),
-              KAWAII(subtraction_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
-              KAWAII(subtraction_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
-          },
-          "Arithmetic Operators Tests"};
+          /// Subtraction Tests
+          KAWAII(a_new__type_not_deriving_arithmetic_is_not_subtractable_with_instances_of_itself),
+          KAWAII(a_new__type_deriving_arithmetic_is_subtractable_with_instances_of_itself),
+          KAWAII(a_new__type_deriving_arithmetic_is_subtractable_with_instances_of_itself_if_the_base_type_is_subtractable<int>),
+          KAWAII(a_new__type_deriving_arithmetic_is_subtractable_with_instances_of_itself_if_the_base_type_is_subtractable<subtractable_type>),
+          KAWAII(subtraction_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type),
+          KAWAII(subtraction_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type),
+      },
+      "Arithmetic Operators Tests"};
 }

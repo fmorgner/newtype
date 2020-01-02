@@ -595,7 +595,7 @@ namespace nt::impl
      * @note This specialization forms the case for subtractable T
      */
     template<typename T>
-    struct is_subtractable<T, std::void_t<decltype(std::declval<T const &>() + std::declval<T const &>())>> : std::true_type
+    struct is_subtractable<T, std::void_t<decltype(std::declval<T const &>() - std::declval<T const &>())>> : std::true_type
     {
     };
 
@@ -625,8 +625,8 @@ namespace nt::impl
      * @note This specialization forms the case for subtractable T detemining if T is noexcept subtractable
      */
     template<typename T>
-    struct is_nothrow_subtractable<T, std::void_t<decltype(std::declval<T const &>() + std::declval<T const &>())>>
-        : std::bool_constant<noexcept(std::declval<T const &>() + std::declval<T const &>())>
+    struct is_nothrow_subtractable<T, std::void_t<decltype(std::declval<T const &>() - std::declval<T const &>())>>
+        : std::bool_constant<noexcept(std::declval<T const &>() - std::declval<T const &>())>
     {
     };
 
