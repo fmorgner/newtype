@@ -638,6 +638,66 @@ namespace nt::impl
     template<typename T>
     auto constexpr is_nothrow_subtractable_v = is_nothrow_subtractable<T>::value;
 
+    /**
+     * @brief A trait to test if a given type is multipliable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-multipliable T
+     */
+    template<typename T, typename = void>
+    struct is_multipliable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is multipliable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for multipliable T
+     */
+    template<typename T>
+    struct is_multipliable<T, std::void_t<decltype(std::declval<T const &>() * std::declval<T const &>())>> : std::true_type
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is multipliable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_multipliable_v = is_multipliable<T>::value;
+
+    /**
+     * @brief A trait to test if a given type is noexcept multipliable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-noexcept multipliable or non-multipliable T
+     */
+    template<typename T, typename = void>
+    struct is_nothrow_multipliable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is noexcept multipliable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for multipliable T detemining if T is noexcept multipliable
+     */
+    template<typename T>
+    struct is_nothrow_multipliable<T, std::void_t<decltype(std::declval<T const &>() * std::declval<T const &>())>>
+        : std::bool_constant<noexcept(std::declval<T const &>() * std::declval<T const &>())>
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is noexcept multipliable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_nothrow_multipliable_v = is_nothrow_multipliable<T>::value;
   }  // namespace arithmetic
 
 }  // namespace nt::impl
