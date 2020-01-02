@@ -382,6 +382,24 @@ namespace nt
     return {lhs.decay() * rhs.decay()};
   }
 
+  /**
+   * @brief Divide two instances of the same nt::new_type
+   *
+   * @note This operator is only available if the derivation clause of the passed in nt::new_type objects contains nt::Arithmetic and the base
+   * type is dividable.
+   * @param lhs The left-hand side of the division
+   * @param rhs The right-hand side of the division
+   * @return a new instance of the same nt::new_type
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr
+  operator/(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
+      impl::is_nothrow_dividable_v<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_dividable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
+  {
+    return {lhs.decay() / rhs.decay()};
+  }
+
 }  // namespace nt
 
 #endif

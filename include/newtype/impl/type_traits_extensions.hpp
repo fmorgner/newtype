@@ -698,6 +698,68 @@ namespace nt::impl
      */
     template<typename T>
     auto constexpr is_nothrow_multipliable_v = is_nothrow_multipliable<T>::value;
+
+    /**
+     * @brief A trait to test if a given type is dividable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-dividable T
+     */
+    template<typename T, typename = void>
+    struct is_dividable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is dividable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for dividable T
+     */
+    template<typename T>
+    struct is_dividable<T, std::void_t<decltype(std::declval<T const &>() / std::declval<T const &>())>> : std::true_type
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is dividable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_dividable_v = is_dividable<T>::value;
+
+    /**
+     * @brief A trait to test if a given type is noexcept dividable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-noexcept dividable or non-dividable T
+     */
+    template<typename T, typename = void>
+    struct is_nothrow_dividable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is noexcept dividable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for dividable T detemining if T is noexcept dividable
+     */
+    template<typename T>
+    struct is_nothrow_dividable<T, std::void_t<decltype(std::declval<T const &>() / std::declval<T const &>())>>
+        : std::bool_constant<noexcept(std::declval<T const &>() / std::declval<T const &>())>
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is noexcept dividable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_nothrow_dividable_v = is_nothrow_dividable<T>::value;
+
   }  // namespace arithmetic
 
 }  // namespace nt::impl
