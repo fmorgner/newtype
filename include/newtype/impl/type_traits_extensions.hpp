@@ -577,6 +577,67 @@ namespace nt::impl
     template<typename T>
     auto constexpr is_nothrow_addable_v = is_nothrow_addable<T>::value;
 
+    /**
+     * @brief A trait to test if a given type is subtractable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-subtractable T
+     */
+    template<typename T, typename = void>
+    struct is_subtractable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is input streamable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for subtractable T
+     */
+    template<typename T>
+    struct is_subtractable<T, std::void_t<decltype(std::declval<T const &>() + std::declval<T const &>())>> : std::true_type
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is subtractable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_subtractable_v = is_subtractable<T>::value;
+
+    /**
+     * @brief A trait to test if a given type is noexcept subtractable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-noexcept subtractable or non-subtractable T
+     */
+    template<typename T, typename = void>
+    struct is_nothrow_subtractable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is noexcept subtractable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for subtractable T detemining if T is noexcept subtractable
+     */
+    template<typename T>
+    struct is_nothrow_subtractable<T, std::void_t<decltype(std::declval<T const &>() + std::declval<T const &>())>>
+        : std::bool_constant<noexcept(std::declval<T const &>() + std::declval<T const &>())>
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is noexcept subtractable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_nothrow_subtractable_v = is_nothrow_subtractable<T>::value;
+
   }  // namespace arithmetic
 
 }  // namespace nt::impl
