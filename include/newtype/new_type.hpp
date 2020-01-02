@@ -57,6 +57,13 @@ namespace nt
         -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_multiply_assignable_v<BaseTypeT>,
                             new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
 
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend
+    operator/=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
+               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(impl::is_nothrow_divide_assignable_v<BaseTypeT>)
+        -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_divide_assignable_v<BaseTypeT>,
+                            new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
+
     using super = impl::new_type_move_assignment<BaseType, TagType>;
 
   public:
@@ -447,8 +454,8 @@ namespace nt
    *
    * @note This operator is only available if the derivation clause of the passed in nt::new_type objects contains nt::Arithmetic and the base
    * type is multiplyable.
-   * @param lhs The left-hand side of the multiplyition
-   * @param rhs The right-hand side of the multiplyition
+   * @param lhs The left-hand side of the multiplication
+   * @param rhs The right-hand side of the multiplication
    * @return a reference to the the modified value
    */
   template<typename BaseType, typename TagType, auto DerivationClause>
@@ -478,6 +485,25 @@ namespace nt
       -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_dividable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
   {
     return {lhs.decay() / rhs.decay()};
+  }
+
+  /**
+   * @brief Divide two instances of the same nt::new_type, modifying the left-hand side
+   *
+   * @note This operator is only available if the derivation clause of the passed in nt::new_type objects contains nt::Arithmetic and the base
+   * type is dividable.
+   * @param lhs The left-hand side of the division
+   * @param rhs The right-hand side of the division
+   * @return a reference to the the modified value
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr operator/=(new_type<BaseType, TagType, DerivationClause> & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_divide_assignable_v<BaseType>)
+      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_divide_assignable_v<BaseType>,
+                          new_type<BaseType, TagType, DerivationClause> &>
+  {
+    lhs.m_value /= rhs.m_value;
+    return lhs;
   }
 
 }  // namespace nt
