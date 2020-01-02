@@ -528,7 +528,7 @@ namespace nt::impl
     };
 
     /**
-     * @brief A trait to test if a given type is input streamable
+     * @brief A trait to test if a given type is addable
      *
      * @tparam T The type to test
      * @note This specialization forms the case for addable T
@@ -589,7 +589,7 @@ namespace nt::impl
     };
 
     /**
-     * @brief A trait to test if a given type is input streamable
+     * @brief A trait to test if a given type is subtractable
      *
      * @tparam T The type to test
      * @note This specialization forms the case for subtractable T
