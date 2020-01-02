@@ -887,6 +887,67 @@ namespace nt::impl
     template<typename T>
     auto constexpr is_nothrow_subtract_assignable_v = is_nothrow_subtract_assignable<T>::value;
 
+    /**
+     * @brief A trait to test if a given type is multiply-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-multiply-assignable T
+     */
+    template<typename T, typename = void>
+    struct is_multiply_assignable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is multiply-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for multiply-assignable T
+     */
+    template<typename T>
+    struct is_multiply_assignable<T, std::void_t<decltype(std::declval<T &>() *= std::declval<T const &>())>> : std::true_type
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is multiply-assignable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_multiply_assignable_v = is_multiply_assignable<T>::value;
+
+    /**
+     * @brief A trait to test if a given type is noexcept multiply-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-noexcept multiply-assignable or non-multiply-assignable T
+     */
+    template<typename T, typename = void>
+    struct is_nothrow_multiply_assignable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is noexcept multiply-assignable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for multiply-assignable T detemining if T is noexcept multiply-assignable
+     */
+    template<typename T>
+    struct is_nothrow_multiply_assignable<T, std::void_t<decltype(std::declval<T &>() *= std::declval<T const &>())>>
+        : std::bool_constant<noexcept(std::declval<T &>() *= std::declval<T const &>())>
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is noexcept multiply-assignable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_nothrow_multiply_assignable_v = is_nothrow_multiply_assignable<T>::value;
+
   }  // namespace compound_arithmetic
 
 }  // namespace nt::impl
