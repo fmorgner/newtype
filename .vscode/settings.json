@@ -62,7 +62,8 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "*.ipp": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "netfwd": "cpp"
     },
     "cmake.configureArguments": "-DCMAKE_EXPORT_COMPILE_COMMANDS=YES",
     "cmake.cpptools.intelliSenseMode": "gcc-x64",

@@ -287,6 +287,15 @@ Arithmetic Operators
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause> & operator+=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
+
+   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow add-assignable.
+
+   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is add-assignable using the operator :literal:`+=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+
+.. cpp:function:: template<typename BaseType, \
+                  typename TagType, \
+                  auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> operator-(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow subtractable as well as nothrow copy-constructible.

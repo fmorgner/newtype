@@ -202,6 +202,28 @@ inline namespace division_tests
 
 }  // namespace division_tests
 
+inline namespace compound_addition
+{
+
+  auto addition_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_an_instance_of_the_same_new__type() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Arithmetic)>;
+    ASSERT((std::is_same_v<type_alias &, decltype(std::declval<type_alias &>() += std::declval<type_alias const &>())>));
+  }
+
+  auto addition_assignment_of_two_instances_of_a_new__type_deriving_arithmetic_produces_the_correct_value_with_respect_to_the_base_type()
+      -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Arithmetic)>;
+    auto lhs = type_alias{24};
+    auto rhs = type_alias{18};
+    auto elhs = 42;
+    auto erhs = 18;
+    ASSERT_EQUAL(elhs += erhs, (lhs += rhs).decay());
+  }
+
+}  // namespace compound_addition
+
 auto arithmetic_suite() -> std::pair<cute::suite, std::string>
 {
   return {
