@@ -393,7 +393,7 @@ Arithmetic Operators
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
-                  constexpr new_type<BaseType, TagType, DerivationClause> & operator+=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
+                  constexpr new_type<BaseType, TagType, DerivationClause> & operator+=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow add-assignable.
 
@@ -411,7 +411,7 @@ Arithmetic Operators
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
-                  constexpr new_type<BaseType, TagType, DerivationClause> & operator-=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
+                  constexpr new_type<BaseType, TagType, DerivationClause> & operator-=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow subtract-assignable.
 
@@ -429,7 +429,7 @@ Arithmetic Operators
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
-                  constexpr new_type<BaseType, TagType, DerivationClause> & operator*=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
+                  constexpr new_type<BaseType, TagType, DerivationClause> & operator*=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow multiply-assignable.
 
@@ -447,7 +447,7 @@ Arithmetic Operators
 .. cpp:function:: template<typename BaseType, \
                   typename TagType, \
                   auto DerivationClause> \
-                  constexpr new_type<BaseType, TagType, DerivationClause> & operator/=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
+                  constexpr new_type<BaseType, TagType, DerivationClause> & operator/=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow divide-assignable.
 
@@ -493,13 +493,28 @@ Standard derivation tags
 
 .. cpp:var:: auto constexpr Arithmetic = derivable<class arithmetic_tag>{}
 
-   This tag enables the derivation of the arithmetic operators :cpp:func:`operator+`, :cpp:func:`operator-`, :cpp:func:`operator*`, :cpp:func:`operator/`, :cpp:func:`operator+=`, :cpp:func:`operator-=`, :cpp:func:`operator*=`, and :cpp:func:`operator/=`
+   This tag enables the derivation of the following arithmetic operators:
+   
+      * :cpp:func:`operator+(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> operator+(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
+      * :cpp:func:`operator-(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> operator-(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
+      * :cpp:func:`operator*(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> operator*(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
+      * :cpp:func:`operator/(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> operator/(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
+      * :cpp:func:`operator+=(new_type &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> & operator+=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
+      * :cpp:func:`operator-=(new_type &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> & operator-=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
+      * :cpp:func:`operator*=(new_type &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> & operator*=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
+      * :cpp:func:`operator/=(new_type &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> & operator/=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
 
    .. versionadded:: 1.0.0
 
 .. cpp:var:: auto constexpr EqBase = derivable<class eq_base_tag>{}
 
-   This tag enables the derivation of "Equality comparison with base type" operators :cpp:func:`operator==(BaseType, new_type) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)>`, :cpp:func:`operator==(new_type, BaseType) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)>` :cpp:func:`operator!=(BaseType, new_type) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)>`, and :cpp:func:`operator!=(new_type, BaseType) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)>`
+   This tag enables the derivation of following "equality comparison with base type" operators:
+
+      * :cpp:func:`operator==(BaseType const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)>`
+      * :cpp:func:`operator==(new_type const &, BaseType const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)>`
+      * :cpp:func:`operator!=(BaseType const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)>`
+      * :cpp:func:`operator!=(new_type const &, BaseType const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)>`
+
    By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
 
    .. versionadded:: 1.0.0
@@ -519,25 +534,36 @@ Standard derivation tags
 
 .. cpp:var:: auto constexpr Indirection = derivable<class indirection_tag>{}
 
-   This tag enables the derivation of the "member access through pointer" operators :cpp:func:`new_type::operator->`
+   .. .. cpp:function:: constexpr BaseType operator->() noexcept
+
+   ..    **enablement:** This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`Indirection`
+
+   .. .. cpp:function:: constexpr BaseType const * operator->() const noexcept
+
+   This tag enables the derivation of the "member access through pointer" operator :cpp:func:`operator->() <constexpr BaseType new_type::operator->()()>` (both in :literal:`const` and non-:literal:`const` variants).
 
    .. versionadded:: 1.0.0
 
 .. cpp:var:: auto constexpr Read = derivable<class read_tag>{}
 
-   This tag enables the derivation of the "stream output" operator :cpp:func:`operator<<`
+   This tag enables the derivation of the "stream output" :cpp:func:`operator\<\<(std::basic_ostream &, new_type const &) <operator<<>`
 
    .. versionadded:: 1.0.0
 
 .. cpp:var:: auto constexpr Relational = derivable<class relational_tag>{}
 
-   This tag enables the derivation of the relational operators :cpp:func:`operator<`, :cpp:func:`operator>`, :cpp:func:`operator<=`, and :cpp:func:`operator>=`
+   This tag enables the derivation of the following relational operators:
+   
+      * :cpp:func:`operator\<(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool operator<(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)>`
+      * :cpp:func:`operator>(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool operator>(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)>`
+      * :cpp:func:`operator\<=(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool operator<=(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)>`
+      * :cpp:func:`operator>=(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool operator>=(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)>`
 
    .. versionadded:: 1.0.0
 
 .. cpp:var:: auto constexpr Show = derivable<class show_tag>{}
 
-   This tag enables the derivation of the "stream input" operator :cpp:func:`operator>>`
+   This tag enables the derivation of the "stream input" :cpp:func:`operator>>(std::basic_istream &, new_type &) <operator>>>`
 
    .. versionadded:: 1.0.0
 
