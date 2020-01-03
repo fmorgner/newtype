@@ -36,6 +36,13 @@ namespace nt
     auto constexpr EqBase = derivable<struct eq_base_tag>{};
 
     /**
+     * @brief A tag to enable derivation of a specialization of std::hash
+     *
+     * @since 1.0.0
+     */
+    auto constexpr Hash = derivable<struct hash_tag>{};
+
+    /**
      * @brief A tag to enable derivation of the implicit "conversion to base type" operator
      *
      * @note If this tag is not present in the derivation clause of any given nt::new_type, the type instance only supports explicit

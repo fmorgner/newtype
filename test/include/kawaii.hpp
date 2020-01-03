@@ -18,7 +18,7 @@ namespace nt::test
   {
     auto constexpr prepositions = std::array{"a", "an", "and", "as", "at", "by", "for", "in", "of", "on", "or", "the", "to"};
     auto constexpr keywords = std::array{"noexcept"};
-    auto constexpr type_names = std::array{"new_type", "derivation_clause"};
+    auto constexpr type_names = std::array{"new_type", "derivation_clause", "unordered_map"};
 
     auto inline replace_template_argument_syntax(std::string const & name) -> std::string
     {

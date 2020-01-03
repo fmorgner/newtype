@@ -6,6 +6,7 @@
 #include "newtype/impl/new_type_storage.hpp"
 #include "newtype/impl/type_traits_extensions.hpp"
 
+#include <functional>
 #include <istream>
 #include <ostream>
 #include <type_traits>
@@ -568,5 +569,20 @@ namespace nt
   }
 
 }  // namespace nt
+
+namespace std
+{
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  struct hash<nt::new_type<BaseType, TagType, DerivationClause>>
+  {
+    template<typename BaseTypeT = BaseType, auto DerivationClauseV = DerivationClause>
+    auto constexpr operator()(nt::new_type<BaseType, TagType, DerivationClause> const & object,
+                              std::enable_if_t<DerivationClauseV(nt::Hash) && nt::impl::is_hashable_v<BaseTypeT>> * = nullptr) const
+        -> std::size_t
+    {
+      return std::hash<BaseType>{}(object.decay());
+    }
+  };
+}  // namespace std
 
 #endif

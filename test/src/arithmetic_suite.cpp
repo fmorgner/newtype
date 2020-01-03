@@ -1,4 +1,5 @@
-#include "conversion_suite.hpp"
+#include "arithmetic_suite.hpp"
+
 #include "kawaii.hpp"
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"

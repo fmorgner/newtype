@@ -1,6 +1,8 @@
 #ifndef NEWTYPE_IMPL_TYPE_TRAITS_EXTENSIONS_HPP
 #define NEWTYPE_IMPL_TYPE_TRAITS_EXTENSIONS_HPP
 
+#include <cstddef>
+#include <functional>
 #include <iosfwd>
 #include <type_traits>
 
@@ -1010,6 +1012,42 @@ namespace nt::impl
     auto constexpr is_nothrow_divide_assignable_v = is_nothrow_divide_assignable<T>::value;
 
   }  // namespace compound_arithmetic
+
+  inline namespace std_support
+  {
+
+    /**
+     * @brief A trait to test if a given type is hashable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the base case for non-hashable T
+     */
+    template<typename T, typename = void>
+    struct is_hashable : std::false_type
+    {
+    };
+
+    /**
+     * @brief A trait to test if a given type is hashable
+     *
+     * @tparam T The type to test
+     * @note This specialization forms the case for hashable T
+     */
+    template<typename T>
+    struct is_hashable<T, std::void_t<decltype(std::declval<std::hash<T> const &>()(std::declval<T const &>()))>>
+        : std::is_same<std::size_t, decltype(std::declval<std::hash<T> const &>()(std::declval<T const &>()))>
+    {
+    };
+
+    /**
+     * @brief A variable template to test if a given type is hashable
+     *
+     * @tparam T The type to test
+     */
+    template<typename T>
+    auto constexpr is_hashable_v = is_hashable<T>::value;
+
+  }  // namespace std_support
 
 }  // namespace nt::impl
 
