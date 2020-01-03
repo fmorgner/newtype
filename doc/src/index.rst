@@ -453,13 +453,13 @@ Arithmetic Operators
 
    **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is divide-assignable using the operator :literal:`/=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
 
-:cpp:struct:`std::hash` Support
+:cpp:class:`std::hash` Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. cpp:namespace-pop::
 
-.. cpp:struct:: template<typename BaseType, typename TagType, auto DerivationClause> \
-                std::hash<nt::new_type<BaseType, TagType, DerivationClause>>
+.. cpp:class:: template<typename BaseType, typename TagType, auto DerivationClause> \
+               std::hash<nt::new_type<BaseType, TagType, DerivationClause>>
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
@@ -478,11 +478,11 @@ Header :literal:`<newtype/derivable.hpp>`
 
 This header defines the alias template :cpp:type:`derivable` as well as the set of standard derivation tags.
 
-Alias template :cpp:type:`derivable`
+Class template :cpp:type:`derivable`
 ------------------------------------
 
-.. cpp:struct:: template<typename NameTag> \
-                derivable
+.. cpp:class:: template<typename NameTag> \
+               derivable
 
    .. versionadded:: 1.0.0
 
@@ -491,51 +491,51 @@ Alias template :cpp:type:`derivable`
 Standard derivation tags
 ------------------------
 
-.. cpp:var:: auto constexpr Arithmetic = derivable<struct arithmetic_tag>{}
+.. cpp:var:: auto constexpr Arithmetic = derivable<class arithmetic_tag>{}
 
    This tag enables the derivation of the arithmetic operators :cpp:func:`operator+`, :cpp:func:`operator-`, :cpp:func:`operator*`, :cpp:func:`operator/`, :cpp:func:`operator+=`, :cpp:func:`operator-=`, :cpp:func:`operator*=`, and :cpp:func:`operator/=`
 
    .. versionadded:: 1.0.0
 
-.. cpp:var:: auto constexpr EqBase = derivable<struct eq_base_tag>{}
+.. cpp:var:: auto constexpr EqBase = derivable<class eq_base_tag>{}
 
    This tag enables the derivation of "Equality comparison with base type" operators :cpp:func:`operator==(BaseType, new_type) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)>`, :cpp:func:`operator==(new_type, BaseType) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator==(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)>` :cpp:func:`operator!=(BaseType, new_type) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(BaseType const &, new_type<BaseType, TagType, DerivationClause> const &)>`, and :cpp:func:`operator!=(new_type, BaseType) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool nt::operator!=(new_type<BaseType, TagType, DerivationClause> const &, BaseType const &)>`
    By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
 
    .. versionadded:: 1.0.0
 
-.. cpp:var:: auto constexpr ImplicitConversion = derivable<struct implicit_conversion_tag>{}
+.. cpp:var:: auto constexpr ImplicitConversion = derivable<class implicit_conversion_tag>{}
 
    This tag enables the derivation of the implicit "conversion to base type" operator.
    By virtue of its nature, deriving this feature compromises the strength of the given :cpp:class:`new_type`.
 
    .. versionadded:: 1.0.0
 
-.. cpp:var:: auto constexpr Hash = derivable<struct hash_tag>{}
+.. cpp:var:: auto constexpr Hash = derivable<class hash_tag>{}
 
-   This tag enables the derivation of a specialization of :cpp:struct:`std::hash`
+   This tag enables the derivation of a specialization of :cpp:class:`std::hash`
 
    .. versionadded:: 1.0.0
 
-.. cpp:var:: auto constexpr Indirection = derivable<struct indirection_tag>{}
+.. cpp:var:: auto constexpr Indirection = derivable<class indirection_tag>{}
 
    This tag enables the derivation of the "member access through pointer" operators :cpp:func:`new_type::operator->`
 
    .. versionadded:: 1.0.0
 
-.. cpp:var:: auto constexpr Read = derivable<struct read_tag>{}
+.. cpp:var:: auto constexpr Read = derivable<class read_tag>{}
 
    This tag enables the derivation of the "stream output" operator :cpp:func:`operator<<`
 
    .. versionadded:: 1.0.0
 
-.. cpp:var:: auto constexpr Relational = derivable<struct relational_tag>{}
+.. cpp:var:: auto constexpr Relational = derivable<class relational_tag>{}
 
    This tag enables the derivation of the relational operators :cpp:func:`operator<`, :cpp:func:`operator>`, :cpp:func:`operator<=`, and :cpp:func:`operator>=`
 
    .. versionadded:: 1.0.0
 
-.. cpp:var:: auto constexpr Show = derivable<struct show_tag>{}
+.. cpp:var:: auto constexpr Show = derivable<class show_tag>{}
 
    This tag enables the derivation of the "stream input" operator :cpp:func:`operator>>`
 
