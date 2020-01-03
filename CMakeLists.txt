@@ -97,17 +97,17 @@ if(BUILD_DOCS)
     message(FATAL_ERROR "Could not find pipenv")
   endif()
 
+  execute_process(COMMAND "${PIPENV_EXE}" "install"
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
+    OUTPUT_QUIET
+  )
+
   set(DOC_SOURCES
     "${PROJECT_SOURCE_DIR}/doc/src/index.rst"
     "${PROJECT_SOURCE_DIR}/doc/src/conf.py"
     "${PROJECT_SOURCE_DIR}/examples/src/basic_usage.cpp"
     "${PROJECT_SOURCE_DIR}/examples/src/basic_usage_with_show.cpp"
-  )
-
-  add_custom_target("pipenv_install"
-    COMMAND "${PIPENV_EXE}" "install" ">/dev/null"
-    COMMENT "Installing pipenv dependencies"
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
+    "${PROJECT_SOURCE_DIR}/examples/src/basic_usage_with_read.cpp"
   )
 
   add_custom_target("docs"
@@ -115,8 +115,6 @@ if(BUILD_DOCS)
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
     COMMENT "Building documentation"
   )
-
-  add_dependencies("docs" "pipenv_install")
 
   add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/doc/html/index.html"
     COMMAND "${PIPENV_EXE}" "run" "sphinx-build" "-b" "singlehtml" "${PROJECT_SOURCE_DIR}/doc/src" "${PROJECT_BINARY_DIR}/doc/html" ">/dev/null"
