@@ -175,15 +175,10 @@ The functions and functions templates described in this section provide addition
 Equality Comparison Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,\
-                                            new_type<BaseType, TagType, DerivationClause> const & rhs)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator==(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    Check two instances of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` for equality.
-
-   **enablement:** This operator shall be available iff. :cpp:type:`new_type::base_type` supports comparison using the operator :literal:`==`
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
@@ -193,18 +188,14 @@ Equality Comparison Operators
    :returns: The value returned by the comparison of the contained objects.
    :throws: Any exception thrown by the comparison operator of objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow equals-comparable*.
+   :enablement: This operator shall be available iff. :cpp:type:`new_type::base_type` supports comparison using :literal:`==`
 
    .. versionadded:: 1.0.0
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,\
-                                            BaseType const & rhs)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator==(new_type<BaseType, TagType, DerivationClause> const & lhs, BaseType const & rhs)
 
    Check an instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` for equality with an instance of :cpp:type:`BaseType`.
-
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type::base_type` supports comparison using the operator :literal:`==` and b) the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
@@ -213,7 +204,10 @@ Equality Comparison Operators
    :param rhs: The right-hand side of the comparison
    :returns: The value returned by the comparison of object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`.
    :throws: Any exception thrown by the comparison of object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`. This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow equals-comparable*.
-
+   :enablement: This operator shall be available iff.
+   
+      a. :cpp:type:`new_type::base_type` supports comparison using :literal:`==` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
    .. versionadded:: 1.0.0
 
@@ -222,8 +216,6 @@ Equality Comparison Operators
 
    Check an instance of :cpp:type:`BaseType` for equality with an instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>`.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type::base_type` supports comparison using the operator :literal:`==` and b) the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
-
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
    :tparam DerivationClause: |DerivationClauseDoc|
@@ -231,19 +223,17 @@ Equality Comparison Operators
    :param rhs: The right-hand side of the comparison
    :returns: The value returned by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`.
    :throws: Any exception thrown by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`. This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow equals-comparable*.
-
+   :enablement: This operator shall be available iff.
+   
+      a. :cpp:type:`new_type::base_type` supports comparison using :literal:`==` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
    .. versionadded:: 1.0.0
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const &,\
-                                            new_type<BaseType, TagType, DerivationClause> const &)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    Check two instances of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` for in-equality.
-
-   **enablement:** This operator shall be available iff. :cpp:type:`new_type::base_type` supports comparison using the operator :literal:`!=`
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
@@ -251,40 +241,36 @@ Equality Comparison Operators
    :param lhs: The left-hand side of the comparison
    :param rhs: The right-hand side of the comparison
    :returns: The value returned by the comparison of the contained objects.
-   :throws: Any exception thrown by the comparison operator of objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the comparison operator of theobjects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow not-equals-comparable*.
+   :enablement: This operator shall be available iff. :cpp:type:`new_type::base_type` supports comparison using :literal:`!=`
 
    .. versionadded:: 1.0.0
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const &,\
-                                            BaseType const &)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs, BaseType const & rhs)
 
    Check an instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` for in-equality with an instance of :cpp:type:`BaseType`.
-
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type::base_type` supports comparison using the operator :literal:`!=` and b) the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
    :tparam DerivationClause: |DerivationClauseDoc|
    :param lhs: The left-hand side of the comparison
    :param rhs: The right-hand side of the comparison
-   :returns: The value returned by the comparison of object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`.
-   :throws: Any exception thrown by the comparison of object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`. This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow not-equals-comparable*.
+   :returns: The value returned by the comparison of the object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`.
+   :throws: Any exception thrown by the comparison of the object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`.
+            This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow not-equals-comparable*.
+   :enablement: This operator shall be available iff.
+
+      a) :cpp:type:`new_type::base_type` supports comparison using :literal:`!=` and
+      b) the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
    .. versionadded:: 1.0.0
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator!=(BaseType const &,\
-                                            new_type<BaseType, TagType, DerivationClause> const &)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator!=(BaseType const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
    Check an instance of :cpp:type:`BaseType` for in-equality with an instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>`.
-
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type::base_type` supports comparison using the operator :literal:`!=` and b) the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
@@ -293,57 +279,93 @@ Equality Comparison Operators
    :param rhs: The right-hand side of the comparison
    :returns: The value returned by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`.
    :throws: Any exception thrown by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`. This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow not-equals-comparable*.
+   :enablement: This operator shall be available iff.
+   
+      a. :cpp:type:`new_type::base_type` supports comparison using :literal:`!=` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
    .. versionadded:: 1.0.0
 
 Relational Comparison Operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator<(new_type<BaseType, TagType, DerivationClause> const &, \
-                                           new_type<BaseType, TagType, DerivationClause> const &)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator<(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow less-than-comparable.
+   Compare two instances of the same :cpp:class:`new_type` using :literal:`<` (*less-than*).
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`<` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the comparison
+   :param rhs: The right-hand side of the comparison
+   :returns: The value returned by the comparison of the contained objects.
+   :throws: Any exception thrown by the comparison operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow less-than-comparable*.
+   :enablement: This operator shall be available iff.
 
-   .. versionadded:: 1.0.0
-
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator>(new_type<BaseType, TagType, DerivationClause> const &, \
-                                           new_type<BaseType, TagType, DerivationClause> const &)
-
-   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow greater-than-comparable.
-
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+      a. :cpp:type:`new_type::base_type` supports comparison using :literal:`<` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Relational`
 
    .. versionadded:: 1.0.0
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator<=(new_type<BaseType, TagType, DerivationClause> const &, \
-                                            new_type<BaseType, TagType, DerivationClause> const &)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator>(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow less-than-or-equal-comparable.
+   Compare two instances of the same :cpp:class:`new_type` using :literal:`>` (*greater-than*).
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`<=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the comparison
+   :param rhs: The right-hand side of the comparison
+   :returns: The value returned by the comparison of the contained objects.
+   :throws: Any exception thrown by the comparison operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow greater-than-comparable*.
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports comparison using :literal:`>` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Relational`
 
    .. versionadded:: 1.0.0
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
-                  constexpr bool operator>=(new_type<BaseType, TagType, DerivationClause> const &, \
-                                            new_type<BaseType, TagType, DerivationClause> const &)
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator<=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This comparison operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow greater-than-or-equal-comparable.
+   Compare two instances of the same :cpp:class:`new_type` using :literal:`<=` (*less-than-equal*).
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports comparison using the operator :literal:`>=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Relational`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the comparison
+   :param rhs: The right-hand side of the comparison
+   :returns: The value returned by the comparison of the contained objects.
+   :throws: Any exception thrown by the comparison operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow less-than-equal-comparable*.
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports comparison using :literal:`<=` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Relational`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr bool operator>=(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
+
+   Compare two instances of the same :cpp:class:`new_type` using :literal:`>=` (*greater-than-equal*).
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the comparison
+   :param rhs: The right-hand side of the comparison
+   :returns: The value returned by the comparison of the contained objects.
+   :throws: Any exception thrown by the comparison operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow greater-than-equal-comparable*.
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports comparison using :literal:`>=` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Relational`
 
    .. versionadded:: 1.0.0
 
@@ -355,12 +377,22 @@ Stream I/O Operators
                   auto DerivationClause, \
                   typename CharType, \
                   typename StreamTraits> \
-                  std::basic_ostream<CharType, StreamTraits> & operator<<(std::basic_ostream<CharType, StreamTraits> &, \
-                                                                          new_type<BaseType, TagType, DerivationClause> const &)
+                  std::basic_ostream<CharType, StreamTraits> & operator<<(std::basic_ostream<CharType, StreamTraits> & out, new_type<BaseType, TagType, DerivationClause> const & value)
 
-   **noexcept specification:** This output operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow output streamable.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :tparam CharType: The stream character type
+   :tparam StreamTraits: The traits of the output stream
+   :param out: The output stream
+   :param value: A :cpp:class:`new_type` value to write to the output stream
+   :returns: A reference to the output stream
+   :throws: Any exception thrown by the stream-output operator of the object contained by :literal:`value`.
+            This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow output-streamable*.
+   :enablement: This operator shall be available iff.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being output to a stream using the operator :literal:`<<` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Show`.
+      a. :cpp:type:`new_type::base_type` supports being written to an output stream using :literal:`<<` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Show`
 
    .. versionadded:: 1.0.0
 
@@ -369,89 +401,218 @@ Stream I/O Operators
                   auto DerivationClause, \
                   typename CharType, \
                   typename StreamTraits> \
-                  std::basic_istream<CharType, StreamTraits> & operator>>(std::basic_istream<CharType, StreamTraits> &, \
-                                                                          new_type<BaseType, TagType, DerivationClause> &)
+                  std::basic_istream<CharType, StreamTraits> & operator>>(std::basic_istream<CharType, StreamTraits> & in, new_type<BaseType, TagType, DerivationClause> & value)
 
-   **noexcept specification:** This input operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow input streamable.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :tparam CharType: The stream character type
+   :tparam StreamTraits: The traits of the input stream
+   :param in: The input stream
+   :param value: A :cpp:class:`new_type` value to be read from the output stream
+   :returns: A reference to the input stream
+   :throws: Any exception thrown by the stream-input operator of the object contained by :literal:`value`.
+            This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow input-streamable*.
+   :enablement: This operator shall be available iff.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` supports being read from a stream using the operator :literal:`>>` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Read`.
+      a. :cpp:type:`new_type::base_type` supports being read from an input stream using :literal:`>>` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Read`
 
    .. versionadded:: 1.0.0
 
 Arithmetic Operators
 ~~~~~~~~~~~~~~~~~~~~
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> operator+(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow addable as well as nothrow copy-constructible.
+   Add two instances of the same :cpp:class:`new_type`.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is addable using the operator :literal:`+` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the addition
+   :param rhs: The right-hand side of the addition
+   :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`+` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the addition operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow addable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports addition using :literal:`+` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> & operator+=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow add-assignable.
+   Add two instances of the same :cpp:class:`new_type` by overwriting the first one.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is add-assignable using the operator :literal:`+=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the addition
+   :param rhs: The right-hand side of the addition
+   :returns: A reference to the first argument containing the value modified by applying :literal:`+=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the addition-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow add-assignable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports addition using :literal:`+=` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> operator-(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow subtractable as well as nothrow copy-constructible.
+   Subtract two instances of the same :cpp:class:`new_type`.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is subtractable using the operator :literal:`-` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the subtraction
+   :param rhs: The right-hand side of the subtraction
+   :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`-` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the subtraction operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow subtractable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports subtraction using :literal:`-` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> & operator-=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow subtract-assignable.
+   Subtract two instances of the same :cpp:class:`new_type` by overwriting the first one.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is subtract-assignable using the operator :literal:`-=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the subtraction
+   :param rhs: The right-hand side of the subtraction
+   :returns: A reference to the first argument containing the value modified by applying :literal:`-=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the subtraction-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow subtract-assignable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports subtraction using :literal:`-=` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> operator*(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow multipliable as well as nothrow copy-constructible.
+   Multiply two instances of the same :cpp:class:`new_type`.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is multipliable using the operator :literal:`*` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the multiplication
+   :param rhs: The right-hand side of the multiplication
+   :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`*` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the multiplication operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow multipliable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports multiplication using :literal:`*` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> & operator*=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow multiply-assignable.
+   Multiply two instances of the same :cpp:class:`new_type` by overwriting the first one.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is multiply-assignable using the operator :literal:`*=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the multiplication
+   :param rhs: The right-hand side of the multiplication
+   :returns: A reference to the first argument containing the value modified by applying :literal:`*=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the multiplication-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow multiply-assignable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports multiplication using :literal:`*=` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> operator/(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow dividable as well as nothrow copy-constructible.
+   Divide two instances of the same :cpp:class:`new_type`.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is dividable using the operator :literal:`/` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the division
+   :param rhs: The right-hand side of the division
+   :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`/` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the division operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow dividable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
-.. cpp:function:: template<typename BaseType, \
-                  typename TagType, \
-                  auto DerivationClause> \
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports division using :literal:`/` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
                   constexpr new_type<BaseType, TagType, DerivationClause> & operator/=(new_type<BaseType, TagType, DerivationClause> & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)
 
-   **noexcept specification:** This operator shall be noexcept iff. :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is nothrow divide-assignable.
+   Divide two instances of the same :cpp:class:`new_type` by overwriting the first one.
 
-   **enablement:** This operator shall be available iff. a) :cpp:type:`new_type<BaseType, TagType, DerivationClause>::base_type` is divide-assignable using the operator :literal:`/=` and b) :cpp:type:`DerivationClause` includes :cpp:var:`Arithmetic`.
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param lhs: The left-hand side of the division
+   :param rhs: The right-hand side of the division
+   :returns: A reference to the first argument containing the value modified by applying :literal:`/=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
+   :throws: Any exception thrown by the division-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
+            This operator shall be noexcept iff.
+            
+            a. :cpp:type:`new_type::base_type` is *nothrow divide-assignable* and
+            b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
+
+   :enablement: This operator shall be available iff.
+
+      a. :cpp:type:`new_type::base_type` supports division using :literal:`/=` and
+      b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
+
+   .. versionadded:: 1.0.0
 
 :cpp:class:`std::hash` Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -465,9 +626,15 @@ Arithmetic Operators
    :tparam TagType: |TagTypeDoc|
    :tparam DerivationClause: |DerivationClauseDoc|
 
-   .. cpp:function:: constexpr std::size operator()(nt::new_type<BaseType, TagType, DerivationClause> const &) const
+   .. cpp:function:: constexpr std::size operator()(nt::new_type<BaseType, TagType, DerivationClause> const & value) const
 
-      **enablement:** This operator shall be available iff. a) :cpp:type:`nt::new_type::base_type` is hashable and b) :cpp:var:`DerivationClause` contains :cpp:var:`nt::Hash`.
+      :param value: A :cpp:class:`nt::new_type` value to be hashed
+      :returns: The result of applying :cpp:class:`std::hash` to the object contained by :literal:`value`
+      :throws: Any exception thrown by the call operator of the specialization of :cpp:class`std::hash` for the type of the object contained by :literal:`value`.
+      :enablement: This operator shall be available iff.
+      
+         a. :cpp:type:`nt::new_type::base_type` is hashable and
+         b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Hash <nt::Hash>`.
 
    .. versionadded:: 1.0.0
 
@@ -483,6 +650,8 @@ Class template :cpp:type:`derivable`
 
 .. cpp:class:: template<typename NameTag> \
                derivable
+
+   :tparam NameTag: A tag uniquely identifing a specific derivation tag
 
    .. versionadded:: 1.0.0
 
