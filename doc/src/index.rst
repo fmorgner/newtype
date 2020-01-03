@@ -87,44 +87,58 @@ Class template :cpp:class:`new_type`
 
    **Static Data Members**
 
-   .. cpp:var:: derivation_clause_type constexpr static derivation_clause = DerivationClause
+   .. cpp:var:: static derivation_clause_type constexpr derivation_clause = DerivationClause
 
    **Constructors**
 
    .. cpp:function:: constexpr new_type()
 
-      **noexcept specification:** This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow default-construtible.
+      Construct a new instance of this :cpp:class:`new_type` by default constructing the contained object.
 
-      **default definition:** This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is default-construtible.
-      Otherwise, this constructor shall be explicitely deleted.
+      :throws: Any exception thrown by the default constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow default-construtible*.
+      :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *default-construtible*.
+                   Otherwise, this constructor shall be explicitely deleted.
 
-   .. cpp:function:: constexpr new_type(new_type const &)
+   .. cpp:function:: constexpr new_type(new_type const & other)
 
-      **noexcept specification:**: This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-construtible.
+      Construct a new instance of this :cpp:class:`new_type` by copy-constructing the contained object using the value contained by :literal:`other`.
 
-      **default definition:** This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is copy-construtible.
-      Otherwise, this constructor shall be explicitely deleted.
+      :param other: An existing instance of this :cpp:class:`new_type`
+      :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-construtible*.
+      :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *copy-construtible*.
+                   Otherwise, this constructor shall be explicitely deleted.
 
-   .. cpp:function:: constexpr new_type(new_type &&)
+   .. cpp:function:: constexpr new_type(new_type && other)
 
-      **noexcept specification:**: This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow move-construtible.
+      Construct a new instance of this :cpp:class:`new_type` by move-constructing the contained object using the value contained by :literal:`other`.
 
-      **default definition:** This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is move-construtible.
-      Otherwise, this constructor shall be explicitely deleted.
+      :param other: An existing instance of this :cpp:class:`new_type`
+      :throws: Any exception thrown by the move-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow move-construtible*.
+      :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *move-construtible*.
+                   Otherwise, this constructor shall be explicitely deleted.
 
-   .. cpp:function:: constexpr new_type(BaseType &)
+   .. cpp:function:: constexpr new_type(BaseType const & value)
 
-      **noexcept specification:** This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-construtible.
+      Construct a new instance of this :cpp:class:`new_type` by copy-constructing the contained object using :literal:`value`.
 
-      **enablement:** This constructor shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is copy-construtible.
-      Otherwise, this constructor shall be explicitely deleted.
+      :param other: An existing instance of this :cpp:class:`new_type`
+      :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-construtible*.
+      :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *copy-construtible*.
+                   Otherwise, this constructor shall be explicitely deleted.
 
-   .. cpp:function:: constexpr new_type(BaseType &&)
+   .. cpp:function:: constexpr new_type(BaseType && value)
 
-      **noexcept specification:** This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow move-construtible.
+      Construct a new instance of this :cpp:class:`new_type` by move-constructing the contained object using :literal:`value`.
 
-      **enablement:** This constructor shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is move-construtible.
-      Otherwise, this constructor shall be explicitely deleted.
+      :param other: An existing instance of this :cpp:class:`new_type`
+      :throws: Any exception thrown by the move-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow move-construtible*.
+      :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *move-construtible*.
+                   Otherwise, this constructor shall be explicitely deleted.
 
    **Assignment Operators**
 
