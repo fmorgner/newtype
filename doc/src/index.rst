@@ -76,6 +76,8 @@ Class template :cpp:class:`new_type`
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
    :tparam DerivationClause: |DerivationClauseDoc|
+   
+   .. versionadded:: 1.0.0
 
    **Member Type Aliases**
 
@@ -124,7 +126,7 @@ Class template :cpp:class:`new_type`
 
       Construct a new instance of this :cpp:class:`new_type` by copy-constructing the contained object using :literal:`value`.
 
-      :param other: An existing instance of this :cpp:class:`new_type`
+      :param value: An existing instance of this :cpp:class:`new_type`
       :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
                This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-construtible*.
       :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *copy-construtible*.
@@ -134,7 +136,7 @@ Class template :cpp:class:`new_type`
 
       Construct a new instance of this :cpp:class:`new_type` by move-constructing the contained object using :literal:`value`.
 
-      :param other: An existing instance of this :cpp:class:`new_type`
+      :param value: An existing instance of this :cpp:class:`new_type`
       :throws: Any exception thrown by the move-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
                This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow move-construtible*.
       :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *move-construtible*.
@@ -142,44 +144,56 @@ Class template :cpp:class:`new_type`
 
    **Assignment Operators**
 
-   .. cpp:function:: constexpr new_type & operator=(new_type const &)
+   .. cpp:function:: constexpr new_type & operator=(new_type const & other)
 
-      **noexcept specification:** This assignment operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-assignable.
+      Copy the value of an existing instance of this :cpp:class:`new_type` and replace this instance's value
 
-      **default definition:** This assignment operator shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is copy-assignable.
-      Otherwise, this assignment operator shall be explicitely deleted.
+      :param other: An existing instance of this :cpp:class:`new_type`
+      :throws: Any exception thrown by the copy-assignment operator of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-assignable*.
+      :enablement: This operator shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *copy-assignable*.
+                   Otherwise, this operator shall be explicitely deleted.
 
-   .. cpp:function:: constexpr new_type & operator=(new_type &&)
+   .. cpp:function:: constexpr new_type & operator=(new_type && other)
 
-      **noexcept specification:** This assignment operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow move-assignable.
+      Move the value of an existing instance of this :cpp:class:`new_type` and replace this instance's value
 
-      **default definition:** This assignment operator shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is move-assignable.
-      Otherwise, this assignment operator shall be explicitely deleted.
+      :param other: An existing instance of this :cpp:class:`new_type`
+      :throws: Any exception thrown by the move-assignment operator of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow move-assignable*.
+      :enablement: This operator shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *move-assignable*.
+                   Otherwise, this operator shall be explicitely deleted.
 
    **Accessors**
 
    .. cpp:function:: constexpr BaseType decay() const
 
-      **noexcept specification:** This member function shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-assignable.
+      Retrieve the object contained by this :cpp:class:`new_type` object
+
+      :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-constructible*.
 
    .. cpp:function:: constexpr operator BaseType() const
 
-      **noexcept specification:** This conversion operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is nothrow copy-assignable.
+      Retrieve the object contained by this :cpp:class:`new_type` object
 
-      **explicit specification:** This conversion operator shall be explicit unless this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`ImplicitConversion`.
+      :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
+               This operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-constructible*.
+      :explicit: This conversion operator shall be explicit unless this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`ImplicitConversion`.
 
-   **Member Access Trough Pointer**
+   **Member Access Through Pointer**
 
    .. cpp:function:: constexpr BaseType operator->() noexcept
 
-      **enablement:** This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`Indirection`
+      Perform "member access through pointer" via a pointer to object contained by this :cpp:class:`new_type`
+
+      :enablement: This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Indirection`
 
    .. cpp:function:: constexpr BaseType const * operator->() const noexcept
 
-      **enablement:** This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`Indirection`
-   
-   .. versionadded:: 1.0.0
+      Perform "member access through pointer" via a pointer to object contained by this :cpp:class:`new_type`
 
+      :enablement: This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Indirection`
 
 :literal:`namespace`-level functions and function templates
 -----------------------------------------------------------
