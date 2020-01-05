@@ -3,6 +3,7 @@
 
 #include "newtype/derivable.hpp"
 #include "newtype/derivation_clause.hpp"
+#include "newtype/version.hpp"
 
 #include <type_traits>
 

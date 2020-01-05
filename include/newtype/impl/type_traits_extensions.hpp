@@ -1,6 +1,8 @@
 #ifndef NEWTYPE_IMPL_TYPE_TRAITS_EXTENSIONS_HPP
 #define NEWTYPE_IMPL_TYPE_TRAITS_EXTENSIONS_HPP
 
+#include "newtype/version.hpp"
+
 #include <cstddef>
 #include <functional>
 #include <iosfwd>

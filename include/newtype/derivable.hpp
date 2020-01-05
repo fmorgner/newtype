@@ -1,6 +1,8 @@
 #ifndef NEWTYPE_DERIVABLE_HPP
 #define NEWTYPE_DERIVABLE_HPP
 
+#include "newtype/version.hpp"
+
 namespace nt
 {
 

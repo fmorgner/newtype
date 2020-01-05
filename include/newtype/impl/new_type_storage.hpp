@@ -1,6 +1,8 @@
 #ifndef NEWTYPE_IMPL_NEW_TYPE_STORAGE_HPP
 #define NEWTYPE_IMPL_NEW_TYPE_STORAGE_HPP
 
+#include "newtype/version.hpp"
+
 #include <type_traits>
 #include <utility>
 
