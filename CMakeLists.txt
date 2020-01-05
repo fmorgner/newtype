@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION "3.9.0")
 project("newtype"
   VERSION "0.0.1"
   LANGUAGES CXX
-  DESCRIPTION "A library to create new types based on existing ones."
+  DESCRIPTION "A library of types and functions to create strong type aliases"
 )
 
 set(CMAKE_CXX_STANDARD "20")
