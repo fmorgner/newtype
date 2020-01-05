@@ -47,5 +47,5 @@ class NewtypeConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        if self.settings.compiler in ["gcc", "clang"]:
-            self.cpp_info.cxxflags = "-std=c++20"
+        if self.settings.compiler in ["gcc"]:
+            self.cpp_info.cxxflags.append("-std=c++2a")
