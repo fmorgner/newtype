@@ -80,4 +80,8 @@ A `Pipfile` is provided in the directory `docs` within the source root.
    :target: bitcoin:14NhzUxmcXaXwLQQcj5UhDvSuxA6hmGkkg?label=Donation%20to%20%27fmorgner%2Fnew_type%27&message=Thanks%20for%20your%20work%20on%20%27fmorgner%2Fnewtype%27
 
 .. |travis| image:: https://travis-ci.org/fmorgner/newtype.svg?branch=master
-    :target: https://travis-ci.org/fmorgner/newtype
+   :target: https://travis-ci.org/fmorgner/newtype
+
+.. |conan| image:: https://api.bintray.com/packages/fmorgner/conan-public/newtype/images/download.svg
+   :alt: Download on conan
+   :target: https://bintray.com/fmorgner/conan-public/newtype/_latestVersion
