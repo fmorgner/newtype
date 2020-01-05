@@ -794,38 +794,89 @@ Class template :cpp:class:`derivation_clause`
 
    Derivation clauses are used by :cpp:class:`new_type` to allow users to specify a set of automatically derived support functions.
 
+   :tparam DerivableTags: A (potentially empty) list of tag types identifying the contained derivations
+
    .. versionadded:: 1.0.0
 
    **Constructors**
 
    .. cpp:function:: constexpr derivation_clause(derivable<DerivableTags>...) noexcept
 
+      Construct a new derivations clause containing the given derivations
+
    **Evaluation Functions**
 
    .. cpp:function:: template<typename DerivableTag> \
                      constexpr bool operator()(derivable<DerivableTag>) const noexcept
+
+      Check if this :cpp:class:`derivation clause <derivation_clause>` contains the given derivation
+
+      :tparam DerivableTag: A tag uniquely identifying a derivation   
    
    .. cpp:function:: template<typename DerivableTag, typename... RemainingDerivableTags> \
                      constexpr bool operator()(derivable<DerivableTag>, derivable<RemainingDerivableTags>...) const noexcept
+
+      Check if this :cpp:class:`derivation clause <derivation_clause>` contains **all** of the given derivations
+
+      :tparam DerivableTag: A tag uniquely identifying a derivation
+      :tparam RemainingDerivableTags: A list of tags uniquely identifying a list of derivations
 
    **Equality Comparison Operators**
 
    .. cpp:function:: template<typename... OtherDerivableTags> \
        constexpr bool operator==(derivation_clause<OtherDerivableTags...> other) const noexcept
 
+      Check if this :cpp:class:`derivation clause <derivation_clause>` is identical to the one represented by :cpp:any:`other`.
+      Two derivation clauses are considered equal iff. both contain the same derivations irrespective of their order.
+
+      :tparam OtherDerivableTags: A (potentialy empty) list of tags uniquely identifying a list of derivations
+      :param other: An existing :cpp:class:`derivation clause <derivation_clause>`
+
    .. cpp:function:: template<typename... OtherDerivableTags> \
        constexpr bool operator!=(derivation_clause<OtherDerivableTags...> other) const noexcept
+
+      Check if this :cpp:class:`derivation clause <derivation_clause>` is different from the one represented by :cpp:any:`other`.
+      Two derivation clauses are considered different iff. one contains at least one derivation not contained by the other.
+
+      :tparam OtherDerivableTags: A (potentialy empty) list of tags uniquely identifying a list of derivations
+      :param other: An existing :cpp:class:`derivation clause <derivation_clause>`
 
    **Relational Comparison Operators**
 
    .. cpp:function:: template<typename... OtherDerivableTags> \
        constexpr bool operator<(derivation_clause<OtherDerivableTags...> other) const noexcept
    
+      Check if this :cpp:class:`derivation clause <derivation_clause>` is a subset of the one represented by :cpp:any:`other`.
+      One :cpp:class:`derivation clause <derivation_clause>` is considered to be a subset of another iff. the list of derivations of this instance forms a proper subset of the list of derivations of the other.
+
+      :tparam OtherDerivableTags: A (potentialy empty) list of tags uniquely identifying a list of derivations
+      :param other: An existing :cpp:class:`derivation clause <derivation_clause>`
+
    .. cpp:function:: template<typename... OtherDerivableTags> \
        constexpr bool operator>(derivation_clause<OtherDerivableTags...> other) const noexcept
-   
+
+      Check if this :cpp:class:`derivation clause <derivation_clause>` is a superset of the one represented by :cpp:any:`other`.
+      One :cpp:class:`derivation clause <derivation_clause>` is considered to be a superset of another iff. the list of derivations of this instance forms a proper superset of the list of derivations of the other.
+
+      :tparam OtherDerivableTags: A (potentialy empty) list of tags uniquely identifying a list of derivations
+      :param other: An existing :cpp:class:`derivation clause <derivation_clause>`
+
    .. cpp:function:: template<typename... OtherDerivableTags> \
        constexpr bool operator<=(derivation_clause<OtherDerivableTags...> other) const noexcept
 
+      Check if this :cpp:class:`derivation clause <derivation_clause>` is either identical to or a subset of the one represented by :cpp:any:`other`.
+      One :cpp:class:`derivation clause <derivation_clause>` is considered to be identical to another iff. the list of derivations of this instance is identical to the list of derivations of the other.
+      One :cpp:class:`derivation clause <derivation_clause>` is considered to be a subset of another iff. the list of derivations of this instance forms a proper subset of the list of derivations of the other.
+
+      :tparam OtherDerivableTags: A (potentialy empty) list of tags uniquely identifying a list of derivations
+      :param other: An existing :cpp:class:`derivation clause <derivation_clause>`
+
    .. cpp:function:: template<typename... OtherDerivableTags> \
        constexpr bool operator>=(derivation_clause<OtherDerivableTags...> other) const noexcept
+
+      Check if this :cpp:class:`derivation clause <derivation_clause>` is either identical to or a superset of the one represented by :cpp:any:`other`.
+      One :cpp:class:`derivation clause <derivation_clause>` is considered to be identical to another iff. the list of derivations of this instance is identical to the list of derivations of the other.
+      One :cpp:class:`derivation clause <derivation_clause>` is considered to be a superset of another iff. the list of derivations of this instance forms a proper superset of the list of derivations of the other.
+
+      :tparam OtherDerivableTags: A (potentialy empty) list of tags uniquely identifying a list of derivations
+      :param other: An existing :cpp:class:`derivation clause <derivation_clause>`
