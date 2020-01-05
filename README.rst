@@ -4,7 +4,7 @@ newtype
 
 The `newtype` library provides types and functions to facilitate the creation of strong type aliases.
 
-|c++20| |license| |docs| |travis| |btc|
+|c++20| |license| |docs| |travis| |conan| |btc|
 
 Usage
 =====
