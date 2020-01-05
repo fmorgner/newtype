@@ -25,7 +25,7 @@ class NewtypeConan(ConanFile):
     url = "https://github.com/fmorgner/newtype"
     description = "A library of types and functions to create strong type aliases"
     generators = "cmake"
-    requires = (
+    build_requires = (
         "CUTE/2.2.6@fmorgner/stable",
         "lyra/1.2.0"
     )
