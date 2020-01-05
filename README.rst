@@ -82,6 +82,6 @@ A `Pipfile` is provided in the directory `docs` within the source root.
 .. |travis| image:: https://travis-ci.org/fmorgner/newtype.svg?branch=master
    :target: https://travis-ci.org/fmorgner/newtype
 
-.. |conan| image:: https://api.bintray.com/packages/fmorgner/conan-public/newtype/images/download.svg
-   :alt: Download on conan
-   :target: https://bintray.com/fmorgner/conan-public/newtype/_latestVersion
+.. |conan| image:: https://api.bintray.com/packages/fmorgner/conan-public/newtype%3A_/images/download.svg
+   :alt: Download the latest version on conan
+   :target: https://bintray.com/fmorgner/conan-public/newtype%3A_/_latestVersion
