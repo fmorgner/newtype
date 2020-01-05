@@ -20,12 +20,13 @@ class NewtypeConan(ConanFile):
         "url": "https://github.com/fmorgner/newtype.git",
         "revision": "auto",
     }
+    settings = ("compiler",)
     version = get_version()
     license = "BSD-3-Clause"
     url = "https://github.com/fmorgner/newtype"
     description = "A library of types and functions to create strong type aliases"
     generators = "cmake"
-    requires = (
+    build_requires = (
         "CUTE/2.2.6@fmorgner/stable",
         "lyra/1.2.0"
     )
@@ -44,3 +45,7 @@ class NewtypeConan(ConanFile):
     def package(self):
         cmake = self._configure_cmake()
         cmake.install()
+
+    def package_info(self):
+        if self.settings.compiler in ["gcc", "clang"]:
+            self.cpp_info.cxxflags = "-std=c++20"
