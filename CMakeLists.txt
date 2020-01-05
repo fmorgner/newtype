@@ -181,6 +181,10 @@ install(FILES
   DESTINATION "lib/cmake/${PROJECT_NAME}"
 )
 
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/doc/src/"
+  DESTINATION "share/doc/newtype"
+)
+
 install(EXPORT "${PROJECT_NAME}Targets"
   DESTINATION "lib/cmake/${PROJECT_NAME}"
 )
