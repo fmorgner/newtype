@@ -1,4 +1,17 @@
+import re
+
 from conans import ConanFile, CMake
+from conans.tools import load
+
+
+def get_version():
+    try:
+        content = load("CMakeLists.txt")
+        version = re.search("project\(\"newtype\"\s*VERSION \"(.*)\"", content).group(1)
+        return version.strip()
+    except:
+        return None
+
 
 class NewtypeConan(ConanFile):
     name = "newtype"
@@ -7,7 +20,7 @@ class NewtypeConan(ConanFile):
         "url": "https://github.com/fmorgner/newtype.git",
         "revision": "auto",
     }
-    version = "0.0.1"
+    version = get_version()
     license = "BSD-3-Clause"
     url = "https://github.com/fmorgner/newtype"
     description = "A library of types and functions to create strong type aliases"
