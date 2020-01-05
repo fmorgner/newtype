@@ -150,14 +150,16 @@ endif()
 option(BUILD_EXAMPLES "Build the library examples" OFF)
 
 if(BUILD_EXAMPLES)
-  add_executable("ex_basic_usage" "examples/src/basic_usage.cpp")
-  target_link_libraries("ex_basic_usage" "${PROJECT_NAME}")
+  function(add_example NAME)
+    add_executable("ex_${NAME}"
+      "examples/src/${NAME}.cpp"
+    )
+    target_link_libraries("ex_${NAME}" "${PROJECT_NAME}")
+  endfunction()
 
-  add_executable("ex_basic_usage_with_show" "examples/src/basic_usage_with_show.cpp")
-  target_link_libraries("ex_basic_usage_with_show" "${PROJECT_NAME}")
-
-  add_executable("ex_basic_usage_with_read" "examples/src/basic_usage_with_read.cpp")
-  target_link_libraries("ex_basic_usage_with_read" "${PROJECT_NAME}")
+  add_example("basic_usage")
+  add_example("basic_usage_with_show")
+  add_example("basic_usage_with_read")
 endif()
 
 # CMake support files
