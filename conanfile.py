@@ -20,7 +20,7 @@ class NewtypeConan(ConanFile):
         "url": "https://github.com/fmorgner/newtype.git",
         "revision": "auto",
     }
-    settings = ("compiler",)
+    settings = None
     version = read_project_property("VERSION")
     license = "BSD-3-Clause"
     url = "https://github.com/fmorgner/newtype"
@@ -38,18 +38,13 @@ class NewtypeConan(ConanFile):
         cmake.configure()
         return cmake
 
-    def configure(self):
-        del self.settings.compiler.libcxx
-
     def build(self):
         cmake = self._configure_cmake()
         cmake.build()
-        cmake.test()
 
     def package(self):
         cmake = self._configure_cmake()
         cmake.install()
 
-    def package_info(self):
-        if self.settings.compiler in ["gcc"]:
-            self.cpp_info.cxxflags.append("-std=c++2a")
+    def package_id(self):
+        self.info.header_only()
