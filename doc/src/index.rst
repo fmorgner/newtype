@@ -28,7 +28,7 @@ In it, :cpp:class:`new_type` is used to create thre new strong aliases :literal:
 .. literalinclude:: ../../examples/src/basic_usage.cpp
    :language: c++
    :linenos:
-   :name: new-type-usage-basic 
+   :name: new-type-usage-basic
    :caption: Basic usage of :cpp:class:`new_type`
 
 However, using :cpp:class:`new_type` in this fashion seem quite cumbersome.
@@ -76,7 +76,7 @@ Class template :cpp:class:`new_type`
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
    :tparam DerivationClause: |DerivationClauseDoc|
-   
+
    .. versionadded:: 1.0.0
 
    **Member Type Aliases**
@@ -86,6 +86,18 @@ Class template :cpp:class:`new_type`
    .. cpp:type:: tag_type = TagType
 
    .. cpp:type:: derivation_clause_type = decltype(DerivationClause)
+
+   .. cpp:type:: iterator = typename BaseType::iterator
+
+      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`iterator <new_type::base_type::iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:type:: const_iterator = typename BaseType::const_iterator
+
+      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`const_iterator <new_type::base_type::const_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+
+      .. versionadded:: 1.1.0
 
    **Static Data Members**
 
@@ -195,6 +207,30 @@ Class template :cpp:class:`new_type`
 
       :enablement: This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Indirection`
 
+   **Iterators**
+
+   .. cpp:function:: constexpr iterator begin()
+
+      Get an iterator to the beginning of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`begin() <new_type::base_type::begin()>` that returns an instance of type :cpp:type:`iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator begin() const
+
+      Get a constant iterator to the beginning of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`begin() const <new_type::base_type::begin()>` that returns an instance of type :cpp:type:`const_iterator`
+
+      .. versionadded:: 1.1.0
+
 :literal:`namespace`-level functions and function templates
 -----------------------------------------------------------
 
@@ -233,7 +269,7 @@ Equality Comparison Operators
    :returns: The value returned by the comparison of object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`.
    :throws: Any exception thrown by the comparison of object contained by :literal:`lhs` with an object of the :cpp:type:`base type <new_type::base_type>`. This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow equals-comparable*.
    :enablement: This operator shall be available iff.
-   
+
       a. :cpp:type:`new_type::base_type` supports comparison using :literal:`==` and
       b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
@@ -252,7 +288,7 @@ Equality Comparison Operators
    :returns: The value returned by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`.
    :throws: Any exception thrown by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`. This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow equals-comparable*.
    :enablement: This operator shall be available iff.
-   
+
       a. :cpp:type:`new_type::base_type` supports comparison using :literal:`==` and
       b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
@@ -308,7 +344,7 @@ Equality Comparison Operators
    :returns: The value returned by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`.
    :throws: Any exception thrown by the comparison of an object of :cpp:type:`base type <new_type::base_type>` with the object contained by :literal:`rhs`. This operator shall be noexcept iff. :cpp:type:`new_type::base_type` is *nothrow not-equals-comparable*.
    :enablement: This operator shall be available iff.
-   
+
       a. :cpp:type:`new_type::base_type` supports comparison using :literal:`!=` and
       b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`EqBase`
 
@@ -464,7 +500,7 @@ Arithmetic Operators
    :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`+` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the addition operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow addable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -488,7 +524,7 @@ Arithmetic Operators
    :returns: A reference to the first argument containing the value modified by applying :literal:`+=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the addition-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow add-assignable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -512,7 +548,7 @@ Arithmetic Operators
    :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`-` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the subtraction operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow subtractable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -536,7 +572,7 @@ Arithmetic Operators
    :returns: A reference to the first argument containing the value modified by applying :literal:`-=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the subtraction-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow subtract-assignable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -560,7 +596,7 @@ Arithmetic Operators
    :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`*` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the multiplication operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow multipliable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -584,7 +620,7 @@ Arithmetic Operators
    :returns: A reference to the first argument containing the value modified by applying :literal:`*=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the multiplication-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow multiply-assignable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -608,7 +644,7 @@ Arithmetic Operators
    :returns: A new instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` containing the result of applying :literal:`/` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the division operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow dividable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -631,7 +667,7 @@ Arithmetic Operators
    :returns: A reference to the first argument containing the value modified by applying :literal:`/=` to the objects contained by :literal:`lhs` and :literal:`rhs`.
    :throws: Any exception thrown by the division-assignment operator of the objects contained by :literal:`lhs` and :literal:`rhs`.
             This operator shall be noexcept iff.
-            
+
             a. :cpp:type:`new_type::base_type` is *nothrow divide-assignable* and
             b. :cpp:type:`new_type::base_type` is *nothrow copy-constructible*
 
@@ -641,6 +677,45 @@ Arithmetic Operators
       b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Arithmetic`
 
    .. versionadded:: 1.0.0
+
+Iterators
+~~~~~~~~~
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::iterator begin(new_type<BaseType, TagType, DerivationClause> & obj)
+
+   Get an iterator to the beginning of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator to the begining of the object of contained by :literal:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`begin(BaseType &)` that returns an instance of type :cpp:type:`new_type::iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_iterator begin(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant iterator to the beginning of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator to the begining of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`begin(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_iterator`
+
+   .. versionadded:: 1.1.0
 
 :cpp:class:`std::hash` Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -660,7 +735,7 @@ Arithmetic Operators
       :returns: The result of applying :cpp:class:`std::hash` to the object contained by :literal:`value`
       :throws: Any exception thrown by the call operator of the specialization of :cpp:class`std::hash` for the type of the object contained by :literal:`value`.
       :enablement: This operator shall be available iff.
-      
+
          a. :cpp:type:`nt::new_type::base_type` is hashable and
          b. the :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Hash <nt::Hash>`.
 
@@ -731,15 +806,18 @@ Standard derivation tags
 
 .. cpp:var:: auto constexpr Indirection = derivable<class indirection_tag>{}
 
-   .. .. cpp:function:: constexpr BaseType operator->() noexcept
-
-   ..    **enablement:** This operator shall be available iff. this :cpp:class:`new_type`'s :cpp:var:`derivation_clause` contains :cpp:var:`Indirection`
-
-   .. .. cpp:function:: constexpr BaseType const * operator->() const noexcept
-
    This tag enables the derivation of the "member access through pointer" operator :cpp:func:`operator->() <constexpr BaseType new_type::operator->()()>` (both in :literal:`const` and non-:literal:`const` variants).
 
    .. versionadded:: 1.0.0
+
+.. cpp:var:: auto constexpr Iterable = derivable<class iterable_tag>{}
+
+   This tag enables the derivation of the following "standard iterator functions":
+
+      * :cpp:func:`begin() <constexpr typename BaseType::iterator new_type::begin()>`
+      * :cpp:func:`begin() const <constexpr typename BaseType::iterator new_type::begin() const>`
+
+   .. versionadded:: 1.1.0
 
 .. cpp:var:: auto constexpr Read = derivable<class read_tag>{}
 
@@ -750,7 +828,7 @@ Standard derivation tags
 .. cpp:var:: auto constexpr Relational = derivable<class relational_tag>{}
 
    This tag enables the derivation of the following relational operators:
-   
+
       * :cpp:func:`operator\<(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool operator<(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)>`
       * :cpp:func:`operator>(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool operator>(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)>`
       * :cpp:func:`operator\<=(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr bool operator<=(new_type<BaseType, TagType, DerivationClause> const &, new_type<BaseType, TagType, DerivationClause> const &)>`
@@ -774,7 +852,7 @@ Function template :cpp:func:`deriving`
 
 .. cpp:function:: template<typename... DerivableTags> \
                   constexpr derivation_clause<DerivableTags...> deriving(derivable<DerivableTags>... features) noexcept
-   
+
    This function can be used to create a new :cpp:class:`derivation_clause` for use in the definitions of instances of :cpp:class:`new_type`.
 
    .. versionadded:: 1.0.0
@@ -811,8 +889,8 @@ Class template :cpp:class:`derivation_clause`
 
       Check if this :cpp:class:`derivation clause <derivation_clause>` contains the given derivation
 
-      :tparam DerivableTag: A tag uniquely identifying a derivation   
-   
+      :tparam DerivableTag: A tag uniquely identifying a derivation
+
    .. cpp:function:: template<typename DerivableTag, typename... RemainingDerivableTags> \
                      constexpr bool operator()(derivable<DerivableTag>, derivable<RemainingDerivableTags>...) const noexcept
 
@@ -845,7 +923,7 @@ Class template :cpp:class:`derivation_clause`
 
    .. cpp:function:: template<typename... OtherDerivableTags> \
        constexpr bool operator<(derivation_clause<OtherDerivableTags...> other) const noexcept
-   
+
       Check if this :cpp:class:`derivation clause <derivation_clause>` is a subset of the one represented by :cpp:any:`other`.
       One :cpp:class:`derivation clause <derivation_clause>` is considered to be a subset of another iff. the list of derivations of this instance forms a proper subset of the list of derivations of the other.
 

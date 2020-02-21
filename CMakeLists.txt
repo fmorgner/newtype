@@ -59,6 +59,7 @@ if(BUILD_TESTING)
     "${PROJECT_SOURCE_DIR}/test/src/equality_comparison_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/hash_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/io_operators_suite.cpp"
+    "${PROJECT_SOURCE_DIR}/test/src/iterable_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/new_type_constructor_suite.cpp"
     "${PROJECT_SOURCE_DIR}/test/src/relational_operators_suite.cpp"
     )

@@ -3,12 +3,14 @@
 
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
+#include "newtype/impl/new_type_iterator_types.hpp"
 #include "newtype/impl/new_type_storage.hpp"
 #include "newtype/impl/type_traits_extensions.hpp"
 #include "newtype/version.hpp"
 
 #include <functional>
 #include <istream>
+#include <iterator>
 #include <ostream>
 #include <type_traits>
 
@@ -26,7 +28,9 @@ namespace nt
    * @tparam DervivationClause An nt::derivation_clause describing which features shall be automatically derived for the new type alias
    */
   template<typename BaseType, typename TagType, auto DerivationClause = deriving()>
-  class new_type : impl::new_type_move_assignment<BaseType, TagType>
+  class new_type
+      : impl::new_type_move_assignment<BaseType, TagType>
+      , public impl::new_type_iterator_types<BaseType, DerivationClause(nt::Iterable)>
   {
     static_assert(!std::is_reference_v<BaseType>, "The base type must not be a reference type");
     static_assert(!std::is_void_v<std::remove_cv_t<BaseType>>, "The base type must not be possibly cv-qualified void");
@@ -208,6 +212,51 @@ namespace nt
     auto constexpr operator-> () const noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType const *>
     {
       return std::addressof(this->m_value);
+    }
+
+    /// @section Iterators
+
+    /**
+     * @brief Get the begin iterator of the base type
+     *
+     * @return An iterator to the beginning of the base type sequence
+     * @throw Any exception thrown by the overload of 'begin' selected
+     */
+    template<typename NewType = new_type, std::enable_if_t<NewType::derivation_clause(nt::Iterable)> * = nullptr>
+    auto constexpr begin()
+        -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_begin_v<BaseType>, typename NewType::iterator>
+    {
+      if constexpr (impl::has_member_begin_v<BaseType>)
+      {
+        return this->m_value.begin();
+      }
+      else
+      {
+        using std::begin;
+        return begin(this->m_value);
+      }
+    }
+
+    /**
+     * @brief Get the begin iterator of the base type
+     *
+     * @note Overload for constant instances
+     * @return An iterator to the beginning of the base type sequence
+     * @throw Any exception thrown by the overload of 'begin' selected
+     */
+    template<typename NewType = new_type>
+    auto constexpr begin() const
+        -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_begin_v<BaseType const>, typename NewType::const_iterator>
+    {
+      if constexpr (impl::has_member_begin_v<BaseType>)
+      {
+        return this->m_value.begin();
+      }
+      else
+      {
+        using std::begin;
+        return begin(this->m_value);
+      }
     }
   };
 
@@ -567,6 +616,35 @@ namespace nt
   {
     lhs.m_value /= rhs.m_value;
     return lhs;
+  }
+
+  /// @section Free Iterator Accessors
+
+  /**
+   * @brief Get the begin iterator of the base type
+   *
+   * @return An iterator to the beginning of the base type sequence
+   * @throw Any exception thrown by the overload of 'begin' selected
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename NewType = new_type<BaseType, TagType, DerivationClause>>
+  auto constexpr begin(new_type<BaseType, TagType, DerivationClause> & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_begin_v<BaseType>, typename NewType::iterator>
+  {
+    return begin(obj);
+  }
+
+  /**
+   * @brief Get the begin iterator of the base type
+   *
+   * @note Overload for constant instances
+   * @return An iterator to the beginning of the base type sequence
+   * @throw Any exception thrown by the overload of 'begin' selected
+   */
+  template<typename BaseType, typename TagType, auto DerivationClause, typename NewType = new_type<BaseType, TagType, DerivationClause>>
+  auto constexpr begin(new_type<BaseType, TagType, DerivationClause> const & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_begin_v<BaseType const>, typename NewType::const_iterator>
+  {
+    return begin(obj);
   }
 
 }  // namespace nt

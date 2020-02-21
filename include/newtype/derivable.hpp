@@ -61,6 +61,13 @@ namespace nt
     auto constexpr Indirection = derivable<struct indirection_tag>{};
 
     /**
+     * @brief A tag to enable derivation of the iterator accessors
+     *
+     * @since 1.0.0
+     */
+    auto constexpr Iterable = derivable<struct iterable_tag>{};
+
+    /**
      * @brief A tag to enable derivation of the stream input operator
      *
      * @since 1.0.0

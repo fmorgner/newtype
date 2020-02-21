@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <functional>
 #include <iosfwd>
+#include <iterator>
 #include <type_traits>
 
 namespace nt::impl
@@ -1050,6 +1051,77 @@ namespace nt::impl
     auto constexpr is_hashable_v = is_hashable<T>::value;
 
   }  // namespace std_support
+
+  inline namespace iterable
+  {
+    template<typename T, typename = void>
+    struct has_std_begin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_std_begin<T, std::void_t<decltype(std::begin(std::declval<T &>()))>>
+        : std::is_same<typename T::iterator, std::remove_cvref_t<decltype(std::begin(std::declval<T &>()))>>
+    {
+    };
+
+    template<typename T>
+    struct has_std_begin<T const, std::void_t<decltype(std::begin(std::declval<T const &>()))>>
+        : std::is_same<typename T::const_iterator, std::remove_cvref_t<decltype(std::begin(std::declval<T const &>()))>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_std_begin_v = has_std_begin<T>::value;
+
+    template<typename T, typename = void>
+    struct has_free_begin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_free_begin<T, std::void_t<decltype(begin(std::declval<T &>()))>>
+        : std::is_same<typename T::iterator, std::remove_cvref_t<decltype(begin(std::declval<T &>()))>>
+    {
+    };
+
+    template<typename T>
+    struct has_free_begin<T const, std::void_t<decltype(begin(std::declval<T const &>()))>>
+        : std::is_same<typename T::const_iterator, std::remove_cvref_t<decltype(begin(std::declval<T const &>()))>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_free_begin_v = has_free_begin<T>::value;
+
+    template<typename T, typename = void>
+    struct has_member_begin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_member_begin<T, std::void_t<decltype(std::declval<T &>().begin())>>
+        : std::is_same<typename T::iterator, std::remove_cvref_t<decltype(std::declval<T &>().begin())>>
+    {
+    };
+
+    template<typename T>
+    struct has_member_begin<T const, std::void_t<decltype(std::declval<T const &>().begin())>>
+        : std::is_same<typename T::const_iterator, std::remove_cvref_t<decltype(std::declval<T const &>().begin())>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_member_begin_v = has_member_begin<T>::value;
+
+    template<typename T>
+    struct has_begin : std::disjunction<has_std_begin<T>, has_free_begin<T>, has_member_begin<T>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_begin_v = has_begin<T>::value;
+  }  // namespace iterable
 
 }  // namespace nt::impl
 
