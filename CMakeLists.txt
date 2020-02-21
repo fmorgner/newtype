@@ -6,11 +6,6 @@ project("newtype"
   DESCRIPTION "A library of types and functions to create strong type aliases"
 )
 
-set(CMAKE_CXX_STANDARD "20")
-set(CMAKE_CXX_STANDARD_REQUIRED YES)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-
 include("CTest")
 include("CMakePackageConfigHelpers")
 
@@ -21,6 +16,10 @@ add_library("${PROJECT_NAME}" INTERFACE)
 target_include_directories("${PROJECT_NAME}" INTERFACE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+)
+
+target_compile_features("${PROJECT_NAME}" INTERFACE
+  "cxx_std_20"
 )
 
 install(TARGETS "${PROJECT_NAME}"
