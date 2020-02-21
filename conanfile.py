@@ -4,11 +4,11 @@ from conans import ConanFile, CMake
 from conans.tools import load
 
 
-def get_version():
+def read_project_property(property):
     try:
-        content = load("CMakeLists.txt")
-        version = re.search("project\(\"newtype\"\s*VERSION \"(.*)\"", content).group(1)
-        return version.strip()
+        cmake_lists = load("CMakeLists.txt")
+        value = re.search(r"project\(.*{} \"(.*?)\"".format(property), cmake_lists, re.S).group(1)
+        return value.strip()
     except:
         return None
 
@@ -21,10 +21,10 @@ class NewtypeConan(ConanFile):
         "revision": "auto",
     }
     settings = ("compiler",)
-    version = get_version()
+    version = read_project_property("VERSION")
     license = "BSD-3-Clause"
     url = "https://github.com/fmorgner/newtype"
-    description = "A library of types and functions to create strong type aliases"
+    description = read_project_property("DESCRIPTION")
     generators = "cmake"
     build_requires = (
         "CUTE/2.2.6@fmorgner/stable",
@@ -34,8 +34,12 @@ class NewtypeConan(ConanFile):
     def _configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions["BUILD_TESTING"] = True
+        cmake.definitions["RUN_TESTS_AFTER_BUILD"] = True
         cmake.configure()
         return cmake
+
+    def configure(self):
+        del self.settings.compiler.libcxx
 
     def build(self):
         cmake = self._configure_cmake()
