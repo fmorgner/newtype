@@ -9,7 +9,8 @@ formats:
 python:
   version: 3.7
   install:
-    - pipfile: doc
+    - method: pipfile
+      path: doc
 
 sphinx:
   builder: singlehtml
