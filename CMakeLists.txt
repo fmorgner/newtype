@@ -9,6 +9,10 @@ project("newtype"
 include("CTest")
 include("CMakePackageConfigHelpers")
 
+# Project Options
+
+option(RUN_TESTS_AFTER_BUILD "Automatically run the unit tests after building" ON)
+
 # 'newtype' library
 
 add_library("${PROJECT_NAME}" INTERFACE)
@@ -78,12 +82,14 @@ if(BUILD_TESTING)
 
   discover_tests(TARGET "${PROJECT_NAME}_tests")
 
-  add_custom_target("run_all_tests"
-    COMMAND ${CMAKE_CTEST_COMMAND} "--output-on-failure"
-    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-    DEPENDS "newtype_tests"
-    COMMENT "Running unit tests"
+  if(RUN_TESTS_AFTER_BUILD)
+    add_custom_command(TARGET "${PROJECT_NAME}_tests"
+      POST_BUILD
+      COMMAND "${CMAKE_CTEST_COMMAND}" "--output-on-failure"
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+      COMMENT "Running unit tests"
   )
+  endif()
 endif()
 
 # 'newtype' docs
