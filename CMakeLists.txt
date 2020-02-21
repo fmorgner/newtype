@@ -103,7 +103,7 @@ if(BUILD_DOCS)
     message(FATAL_ERROR "Could not find pipenv")
   endif()
 
-  execute_process(COMMAND "${PIPENV_EXE}" "install"
+  execute_process(COMMAND "${PIPENV_EXE}" "install" "-r" "requirements.txt"
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
     OUTPUT_QUIET
   )
