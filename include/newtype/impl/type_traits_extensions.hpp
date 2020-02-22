@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <functional>
 #include <iosfwd>
-#include <iterator>
 #include <type_traits>
 
 namespace nt::impl
@@ -1055,26 +1054,6 @@ namespace nt::impl
   inline namespace iterable
   {
     template<typename T, typename = void>
-    struct has_std_begin : std::false_type
-    {
-    };
-
-    template<typename T>
-    struct has_std_begin<T, std::void_t<decltype(std::begin(std::declval<T &>()))>>
-        : std::is_same<typename T::iterator, std::remove_cvref_t<decltype(std::begin(std::declval<T &>()))>>
-    {
-    };
-
-    template<typename T>
-    struct has_std_begin<T const, std::void_t<decltype(std::begin(std::declval<T const &>()))>>
-        : std::is_same<typename T::const_iterator, std::remove_cvref_t<decltype(std::begin(std::declval<T const &>()))>>
-    {
-    };
-
-    template<typename T>
-    auto constexpr has_std_begin_v = has_std_begin<T>::value;
-
-    template<typename T, typename = void>
     struct has_free_begin : std::false_type
     {
     };
@@ -1115,7 +1094,7 @@ namespace nt::impl
     auto constexpr has_member_begin_v = has_member_begin<T>::value;
 
     template<typename T>
-    struct has_begin : std::disjunction<has_std_begin<T>, has_free_begin<T>, has_member_begin<T>>
+    struct has_begin : std::disjunction<has_free_begin<T>, has_member_begin<T>>
     {
     };
 

@@ -10,7 +10,6 @@
 
 #include <functional>
 #include <istream>
-#include <iterator>
 #include <ostream>
 #include <type_traits>
 
@@ -61,6 +60,16 @@ namespace nt
                new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(impl::is_nothrow_divide_assignable_v<BaseTypeT>)
         -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_divide_assignable_v<BaseTypeT>,
                             new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
+
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend begin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_begin_v<BaseTypeT>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::iterator>;
+
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend begin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_begin_v<BaseTypeT>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator>;
 
     using super = impl::new_type_move_assignment<BaseType, TagType>;
 
@@ -448,21 +457,23 @@ namespace nt
   /**
    * Get an iterator to the beginning of the object contained by an instance of new_type
    */
-  template<typename BaseType, typename TagType, auto DerivationClause, typename NewType = new_type<BaseType, TagType, DerivationClause>>
+  template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr begin(new_type<BaseType, TagType, DerivationClause> & obj)
-      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_begin_v<BaseType>, typename NewType::iterator>
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_begin_v<BaseType>,
+                          typename new_type<BaseType, TagType, DerivationClause>::iterator>
   {
-    return begin(obj);
+    return begin(obj.m_value);
   }
 
   /**
    * Get a constant iterator to the beginning of the object contained by an instance of new_type
    */
-  template<typename BaseType, typename TagType, auto DerivationClause, typename NewType = new_type<BaseType, TagType, DerivationClause>>
+  template<typename BaseType, typename TagType, auto DerivationClause>
   auto constexpr begin(new_type<BaseType, TagType, DerivationClause> const & obj)
-      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_begin_v<BaseType const>, typename NewType::const_iterator>
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_begin_v<BaseType const>,
+                          typename new_type<BaseType, TagType, DerivationClause>::const_iterator>
   {
-    return begin(obj);
+    return begin(obj.m_value);
   }
 
 }  // namespace nt
