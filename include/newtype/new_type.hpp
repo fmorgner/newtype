@@ -224,17 +224,9 @@ namespace nt
      */
     template<typename NewType = new_type, std::enable_if_t<NewType::derivation_clause(nt::Iterable)> * = nullptr>
     auto constexpr begin()
-        -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_begin_v<BaseType>, typename NewType::iterator>
+        -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_begin_v<BaseType>, typename NewType::iterator>
     {
-      if constexpr (impl::has_member_begin_v<BaseType>)
-      {
-        return this->m_value.begin();
-      }
-      else
-      {
-        using std::begin;
-        return begin(this->m_value);
-      }
+      return this->m_value.begin();
     }
 
     /**
@@ -245,18 +237,10 @@ namespace nt
      * @throw Any exception thrown by the overload of 'begin' selected
      */
     template<typename NewType = new_type>
-    auto constexpr begin() const
-        -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_begin_v<BaseType const>, typename NewType::const_iterator>
+    auto constexpr begin() const -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_begin_v<BaseType const>,
+                                                     typename NewType::const_iterator>
     {
-      if constexpr (impl::has_member_begin_v<BaseType>)
-      {
-        return this->m_value.begin();
-      }
-      else
-      {
-        using std::begin;
-        return begin(this->m_value);
-      }
+      return this->m_value.begin();
     }
   };
 
