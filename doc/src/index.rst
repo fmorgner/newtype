@@ -772,7 +772,7 @@ Standard derivation tags
 .. cpp:var:: auto constexpr Arithmetic = derivable<class arithmetic_tag>{}
 
    This tag enables the derivation of the following arithmetic operators:
-   
+
       * :cpp:func:`operator+(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> operator+(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
       * :cpp:func:`operator-(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> operator-(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
       * :cpp:func:`operator*(new_type const &, new_type const &) <template\<typename BaseType, typename TagType, auto DerivationClause> constexpr new_type<BaseType, TagType, DerivationClause> operator*(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs)>`
