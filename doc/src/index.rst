@@ -180,14 +180,14 @@ Class template :cpp:class:`new_type`
 
    .. cpp:function:: constexpr BaseType decay() const
 
-      Retrieve the object contained by this :cpp:class:`new_type` object
+      Retrieve a copy of the object contained by this :cpp:class:`new_type` object
 
       :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
                This operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-constructible*.
 
    .. cpp:function:: constexpr operator BaseType() const
 
-      Retrieve the object contained by this :cpp:class:`new_type` object
+      Retrieve a copy of the object contained by this :cpp:class:`new_type` object
 
       :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
                This operator shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow copy-constructible*.
@@ -443,6 +443,8 @@ Stream I/O Operators
                   typename StreamTraits> \
                   std::basic_ostream<CharType, StreamTraits> & operator<<(std::basic_ostream<CharType, StreamTraits> & out, new_type<BaseType, TagType, DerivationClause> const & value)
 
+   Write an instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` to a standard :cpp:type:`ostream <std::ostream>`.
+
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
    :tparam DerivationClause: |DerivationClauseDoc|
@@ -466,6 +468,8 @@ Stream I/O Operators
                   typename CharType, \
                   typename StreamTraits> \
                   std::basic_istream<CharType, StreamTraits> & operator>>(std::basic_istream<CharType, StreamTraits> & in, new_type<BaseType, TagType, DerivationClause> & value)
+
+   Read an instance of :cpp:class:`new_type\<BaseType, TagType, DerivationClause>` from a standard :cpp:type:`istream <std::istream>`.
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
@@ -728,6 +732,8 @@ Iterators
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
    :tparam DerivationClause: |DerivationClauseDoc|
+
+   Hash an instance of :cpp:class:`new_type` using the hash implementation of the :cpp:type:`base type <BaseType>`.
 
    .. cpp:function:: constexpr std::size operator()(nt::new_type<BaseType, TagType, DerivationClause> const & value) const
 
