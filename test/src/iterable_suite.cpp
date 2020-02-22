@@ -69,6 +69,21 @@ inline namespace begin_tests
     ASSERT(!nt::impl::has_free_begin_v<type_alias const>);
   }
 
+  auto accessing_the_first_element_of_an_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type() -> void
+  {
+    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
+    auto weak = std::array{42, 21, 10};
+    auto strong = type_alias{{42, 21, 10}};
+    ASSERT_EQUAL(*weak.begin(), *strong.begin());
+  }
+
+  auto an_iterator_obtained_via_member_begin_compares_equal_to_an_iterator_obtained_via_free_begin() -> void
+  {
+    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
+    auto instance = type_alias{{42, 21, 10}};
+    ASSERT_EQUAL(begin(instance), instance.begin());
+  }
+
 }  // namespace begin_tests
 
 auto iterable_suite() -> std::pair<cute::suite, std::string>
@@ -81,6 +96,8 @@ auto iterable_suite() -> std::pair<cute::suite, std::string>
               KAWAII(a_new__type_based_on_an_iterable_type_with_constant_member_begin_deriving_iterable_has_constant_member_begin),
               KAWAII(a_new__type_based_on_an_iterable_type_without_free_begin_deriving_iterable_has_no_free_begin),
               KAWAII(a_new__type_based_on_an_iterable_type_without_constant_free_begin_deriving_iterable_has_no_constant_free_begin),
+              KAWAII(accessing_the_first_element_of_an_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
+              KAWAII(an_iterator_obtained_via_member_begin_compares_equal_to_an_iterator_obtained_via_free_begin),
           },
           "Iterable Tests"};
 }
