@@ -1051,7 +1051,7 @@ namespace nt::impl
 
   }  // namespace std_support
 
-  inline namespace iterable
+  inline namespace iterable_begin
   {
     template<typename T, typename = void>
     struct has_free_begin : std::false_type
@@ -1100,7 +1100,46 @@ namespace nt::impl
 
     template<typename T>
     auto constexpr has_begin_v = has_begin<T>::value;
-  }  // namespace iterable
+  }  // namespace iterable_begin
+
+  inline namespace iterable_cbegin
+  {
+    template<typename T, typename = void>
+    struct has_free_cbegin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_free_cbegin<T, std::void_t<decltype(cbegin(std::declval<T const &>()))>>
+        : std::is_same<typename T::const_iterator, std::remove_cvref_t<decltype(cbegin(std::declval<T const &>()))>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_free_cbegin_v = has_free_cbegin<T>::value;
+
+    template<typename T, typename = void>
+    struct has_member_cbegin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_member_cbegin<T, std::void_t<decltype(std::declval<T const &>().cbegin())>>
+        : std::is_same<typename T::const_iterator, decltype(std::declval<T const &>().cbegin())>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_member_cbegin_v = has_member_cbegin<T>::value;
+
+    template<typename T>
+    struct has_cbegin : std::disjunction<has_free_cbegin<T>, has_member_cbegin<T>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_cbegin_v = has_cbegin<T>::value;
+  }  // namespace iterable_cbegin
 
 }  // namespace nt::impl
 

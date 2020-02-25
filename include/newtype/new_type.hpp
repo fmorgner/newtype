@@ -71,6 +71,11 @@ namespace nt
         -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_begin_v<BaseTypeT>,
                             typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator>;
 
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend cbegin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_cbegin_v<BaseTypeT const>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator>;
+
     using super = impl::new_type_move_assignment<BaseType, TagType>;
 
   public:
@@ -197,6 +202,13 @@ namespace nt
                                                      typename NewType::const_iterator>
     {
       return this->m_value.begin();
+    }
+
+    template<typename NewType = new_type>
+    auto constexpr cbegin() const -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_cbegin_v<BaseType const>,
+                                                      typename NewType::const_iterator>
+    {
+      return this->m_value.cbegin();
     }
   };
 
@@ -474,6 +486,14 @@ namespace nt
                           typename new_type<BaseType, TagType, DerivationClause>::const_iterator>
   {
     return begin(obj.m_value);
+  }
+
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr cbegin(new_type<BaseType, TagType, DerivationClause> const & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_cbegin_v<BaseType const>,
+                          typename new_type<BaseType, TagType, DerivationClause>::const_iterator>
+  {
+    return cbegin(obj.m_value);
   }
 
 }  // namespace nt

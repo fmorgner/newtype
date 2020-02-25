@@ -231,6 +231,17 @@ Class template :cpp:class:`new_type`
 
       .. versionadded:: 1.1.0
 
+   .. cpp:function:: constexpr iterator cbegin() const
+
+      Get a constant iterator to the beginning of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`cbegin() const <new_type::base_type::cbegin()>` that returns an instance of type :cpp:type:`const_iterator`
+
+      .. versionadded:: 1.1.0
+
 :literal:`namespace`-level functions and function templates
 -----------------------------------------------------------
 
@@ -718,6 +729,24 @@ Iterators
 
       a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
       b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`begin(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_iterator cbegin(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant iterator to the beginning of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator to the begining of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`cbegin(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_iterator`
 
    .. versionadded:: 1.1.0
 
