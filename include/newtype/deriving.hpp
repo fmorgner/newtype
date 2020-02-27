@@ -10,9 +10,6 @@
 namespace nt
 {
 
-  /**
-   * Create a new derivation clause with the given derivables
-   */
   template<typename... DerivableTags>
   auto constexpr deriving(derivable<DerivableTags>... features) noexcept -> derivation_clause<DerivableTags...>
   {
