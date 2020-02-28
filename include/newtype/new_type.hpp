@@ -88,6 +88,36 @@ namespace nt
         -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_crbegin_v<BaseTypeT const>,
                             typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_reverse_iterator>;
 
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend end(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_end_v<BaseTypeT>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::iterator>;
+
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend end(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_end_v<BaseTypeT const>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator>;
+
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend cend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_cend_v<BaseTypeT const>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator>;
+
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend rend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_rend_v<BaseTypeT>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::reverse_iterator>;
+
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend rend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_rend_v<BaseTypeT const>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_reverse_iterator>;
+
+    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    auto constexpr friend crend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj)
+        -> std::enable_if_t<DerivationClauseV(nt::Iterable) && impl::has_free_crend_v<BaseTypeT const>,
+                            typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_reverse_iterator>;
+
     using super = impl::new_type_move_assignment<BaseType, TagType>;
 
   public:
@@ -175,6 +205,48 @@ namespace nt
                                                        typename NewType::const_reverse_iterator>
     {
       return this->m_value.crbegin();
+    }
+
+    template<typename NewType = new_type, std::enable_if_t<NewType::derivation_clause(nt::Iterable)> * = nullptr>
+    auto constexpr end()
+        -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_end_v<BaseType>, typename NewType::iterator>
+    {
+      return this->m_value.end();
+    }
+
+    template<typename NewType = new_type>
+    auto constexpr end() const -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_end_v<BaseType const>,
+                                                   typename NewType::const_iterator>
+    {
+      return this->m_value.end();
+    }
+
+    template<typename NewType = new_type>
+    auto constexpr cend() const -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_cend_v<BaseType const>,
+                                                    typename NewType::const_iterator>
+    {
+      return this->m_value.cend();
+    }
+
+    template<typename NewType = new_type, std::enable_if_t<NewType::derivation_clause(nt::Iterable)> * = nullptr>
+    auto constexpr rend()
+        -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_rend_v<BaseType>, typename NewType::reverse_iterator>
+    {
+      return this->m_value.rend();
+    }
+
+    template<typename NewType = new_type>
+    auto constexpr rend() const -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_rend_v<BaseType const>,
+                                                    typename NewType::const_reverse_iterator>
+    {
+      return this->m_value.rend();
+    }
+
+    template<typename NewType = new_type>
+    auto constexpr crend() const -> std::enable_if_t<NewType::derivation_clause(nt::Iterable) && impl::has_member_crend_v<BaseType const>,
+                                                     typename NewType::const_reverse_iterator>
+    {
+      return this->m_value.crend();
     }
   };
 
@@ -408,6 +480,54 @@ namespace nt
                           typename new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator>
   {
     return crbegin(obj.m_value);
+  }
+
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr end(new_type<BaseType, TagType, DerivationClause> & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_end_v<BaseType>,
+                          typename new_type<BaseType, TagType, DerivationClause>::iterator>
+  {
+    return end(obj.m_value);
+  }
+
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr end(new_type<BaseType, TagType, DerivationClause> const & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_end_v<BaseType const>,
+                          typename new_type<BaseType, TagType, DerivationClause>::const_iterator>
+  {
+    return end(obj.m_value);
+  }
+
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr cend(new_type<BaseType, TagType, DerivationClause> const & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_cend_v<BaseType const>,
+                          typename new_type<BaseType, TagType, DerivationClause>::const_iterator>
+  {
+    return cend(obj.m_value);
+  }
+
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr rend(new_type<BaseType, TagType, DerivationClause> & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_rend_v<BaseType>,
+                          typename new_type<BaseType, TagType, DerivationClause>::reverse_iterator>
+  {
+    return rend(obj.m_value);
+  }
+
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr rend(new_type<BaseType, TagType, DerivationClause> const & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_rend_v<BaseType const>,
+                          typename new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator>
+  {
+    return rend(obj.m_value);
+  }
+
+  template<typename BaseType, typename TagType, auto DerivationClause>
+  auto constexpr crend(new_type<BaseType, TagType, DerivationClause> const & obj)
+      -> std::enable_if_t<DerivationClause(nt::Iterable) && impl::has_free_crend_v<BaseType const>,
+                          typename new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator>
+  {
+    return crend(obj.m_value);
   }
 
 }  // namespace nt

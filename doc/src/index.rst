@@ -287,6 +287,72 @@ Class template :cpp:class:`new_type`
 
       .. versionadded:: 1.1.0
 
+   .. cpp:function:: constexpr iterator end()
+
+      Get an iterator beyond the end of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`end() <new_type::base_type::end()>` that returns an instance of type :cpp:type:`iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator end() const
+
+      Get a constant iterator beyond the end of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`end() const <new_type::base_type::end()>` that returns an instance of type :cpp:type:`const_iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator cend() const
+
+      Get a constant iterator beyond the end of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`cend() const <new_type::base_type::cend()>` that returns an instance of type :cpp:type:`const_iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator rend()
+
+      Get a reverse iterator beyond the end of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`rend() <new_type::base_type::rend()>` that returns an instance of type :cpp:type:`reverse_iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator rend() const
+
+      Get a constant reverse iterator beyond the end of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`rend() const <new_type::base_type::rend()>` that returns an instance of type :cpp:type:`const_reverse_iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator crend() const
+
+      Get a constant reverse iterator beyond the end of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`crend() const <new_type::base_type::crend()>` that returns an instance of type :cpp:type:`const_reverse_iterator`
+
+      .. versionadded:: 1.1.0
+
 :literal:`namespace`-level functions and function templates
 -----------------------------------------------------------
 
@@ -846,6 +912,114 @@ Iterators
 
       a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
       b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`crbegin(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_reverse_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::iterator end(new_type<BaseType, TagType, DerivationClause> & obj)
+
+   Get an iterator beyond the end of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator beyond the end of the object of contained by :literal:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`end(BaseType &)` that returns an instance of type :cpp:type:`new_type::iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_iterator end(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant iterator beyond the end of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator beyond the end of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`end(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_iterator cend(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant iterator beyond the end of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator beyond the end of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`cend(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::reverse_iterator rend(new_type<BaseType, TagType, DerivationClause> & obj)
+
+   Get a reverse iterator beyond the end of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator beyond the end of the object of contained by :literal:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`rend(BaseType &)` that returns an instance of type :cpp:type:`new_type::reverse_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator rend(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant reverse iterator beyond the end of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator beyond the end of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`rend(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_reverse_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator crend(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant reverse iterator beyond the end of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator beyond the end of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`crend(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_reverse_iterator`
 
    .. versionadded:: 1.1.0
 
