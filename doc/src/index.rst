@@ -99,6 +99,18 @@ Class template :cpp:class:`new_type`
 
       .. versionadded:: 1.1.0
 
+   .. cpp:type:: reverse_iterator = typename BaseType::reverse_iterator
+
+      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`reverse_iterator <new_type::base_type::reverse_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:type:: const_reverse_iterator = typename BaseType::const_reverse_iterator
+
+      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`const_reverse_iterator <new_type::base_type::const_reverse_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+
+      .. versionadded:: 1.1.0
+
    **Static Data Members**
 
    .. cpp:var:: static derivation_clause_type constexpr derivation_clause = DerivationClause
@@ -239,6 +251,39 @@ Class template :cpp:class:`new_type`
 
          a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
          b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`cbegin() const <new_type::base_type::cbegin()>` that returns an instance of type :cpp:type:`const_iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator rbegin()
+
+      Get a reverse iterator to the beginning of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`rbegin() <new_type::base_type::rbegin()>` that returns an instance of type :cpp:type:`reverse_iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator rbegin() const
+
+      Get a constant reverse iterator to the beginning of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`rbegin() const <new_type::base_type::rbegin()>` that returns an instance of type :cpp:type:`const_reverse_iterator`
+
+      .. versionadded:: 1.1.0
+
+   .. cpp:function:: constexpr iterator crbegin() const
+
+      Get a constant reverse iterator to the beginning of the object contained by this :cpp:class:`new_type`
+
+      :enablement: This function shall be available iff.
+
+         a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable` and
+         b) this :cpp:class:`new_type`'s :cpp:type:`base type <base_type>` has a non-static member function :cpp:func:`crbegin() const <new_type::base_type::crbegin()>` that returns an instance of type :cpp:type:`const_reverse_iterator`
 
       .. versionadded:: 1.1.0
 
@@ -747,6 +792,60 @@ Iterators
 
       a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
       b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`cbegin(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::reverse_iterator rbegin(new_type<BaseType, TagType, DerivationClause> & obj)
+
+   Get a reverse iterator to the beginning of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator to the begining of the object of contained by :literal:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`rbegin(BaseType &)` that returns an instance of type :cpp:type:`new_type::reverse_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator rbegin(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant reverse iterator to the beginning of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator to the begining of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`rbegin(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_reverse_iterator`
+
+   .. versionadded:: 1.1.0
+
+.. cpp:function:: template<typename BaseType, typename TagType, auto DerivationClause> \
+                  constexpr new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator crbegin(new_type<BaseType, TagType, DerivationClause> const & obj)
+
+   Get a constant reverse iterator to the beginning of the object contained by an instance of :cpp:class:`new_type`
+
+   :tparam BaseType: |BaseTypeDoc|
+   :tparam TagType: |TagTypeDoc|
+   :tparam DerivationClause: |DerivationClauseDoc|
+   :param obj: The object to retrieve the iterator from
+   :returns: An iterator to the begining of the object of contained by :cpp:var:`obj`.
+   :throws: Any exception
+   :enablement: This function shall be available iff.
+
+      a) this :cpp:class:`new_type`'s :cpp:var:`derivation clause <DerivationClause>` contains :cpp:var:`Iterable` and
+      b) for the :cpp:class:`new_type`'s :cpp:type:`base type <BaseType>` exists a namespace-level function :literal:`crbegin(BaseType const &)` that returns an instance of type :cpp:type:`new_type::const_reverse_iterator`
 
    .. versionadded:: 1.1.0
 

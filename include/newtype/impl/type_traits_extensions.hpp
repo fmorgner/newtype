@@ -578,6 +578,96 @@ namespace nt::impl
     auto constexpr has_cbegin_v = has_cbegin<T>::value;
   }  // namespace iterable_cbegin
 
+  inline namespace iterable_rbegin
+  {
+    template<typename T, typename = void>
+    struct has_free_rbegin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_free_rbegin<T, std::void_t<decltype(rbegin(std::declval<T &>()))>>
+        : std::is_same<typename T::reverse_iterator, std::remove_cvref_t<decltype(begin(std::declval<T &>()))>>
+    {
+    };
+
+    template<typename T>
+    struct has_free_rbegin<T const, std::void_t<decltype(rbegin(std::declval<T const &>()))>>
+        : std::is_same<typename T::const_reverse_iterator, std::remove_cvref_t<decltype(rbegin(std::declval<T const &>()))>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_free_rbegin_v = has_free_rbegin<T>::value;
+
+    template<typename T, typename = void>
+    struct has_member_rbegin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_member_rbegin<T, std::void_t<decltype(std::declval<T &>().rbegin())>>
+        : std::is_same<typename T::reverse_iterator, std::remove_cvref_t<decltype(std::declval<T &>().rbegin())>>
+    {
+    };
+
+    template<typename T>
+    struct has_member_rbegin<T const, std::void_t<decltype(std::declval<T const &>().rbegin())>>
+        : std::is_same<typename T::const_reverse_iterator, std::remove_cvref_t<decltype(std::declval<T const &>().rbegin())>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_member_rbegin_v = has_member_rbegin<T>::value;
+
+    template<typename T>
+    struct has_rbegin : std::disjunction<has_free_rbegin<T>, has_member_rbegin<T>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_rbegin_v = has_rbegin<T>::value;
+  }  // namespace iterable_rbegin
+
+  inline namespace iterable_rbegin
+  {
+    template<typename T, typename = void>
+    struct has_free_crbegin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_free_crbegin<T, std::void_t<decltype(crbegin(std::declval<T const &>()))>>
+        : std::is_same<typename T::const_reverse_iterator, std::remove_cvref_t<decltype(crbegin(std::declval<T const &>()))>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_free_crbegin_v = has_free_crbegin<T>::value;
+
+    template<typename T, typename = void>
+    struct has_member_crbegin : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct has_member_crbegin<T, std::void_t<decltype(std::declval<T const &>().crbegin())>>
+        : std::is_same<typename T::const_reverse_iterator, std::remove_cvref_t<decltype(std::declval<T const &>().crbegin())>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_member_crbegin_v = has_member_crbegin<T>::value;
+
+    template<typename T>
+    struct has_crbegin : std::disjunction<has_free_crbegin<T>, has_member_crbegin<T>>
+    {
+    };
+
+    template<typename T>
+    auto constexpr has_crbegin_v = has_crbegin<T>::value;
+  }  // namespace iterable_rbegin
+
 }  // namespace nt::impl
 
 #endif
