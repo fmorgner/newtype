@@ -138,6 +138,7 @@ if(BUILD_TESTING)
       "--output-file" "${PROJECT_NAME}.coverage.info"
       "--no-external"
       "--exclude" "${PROJECT_SOURCE_DIR}/test/\\*"
+      ">/dev/null"
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
       COMMENT "Capturing code coverage data"
     )
@@ -166,6 +167,7 @@ if(BUILD_TESTING)
         "--show-details"
         "--output" "coverage-report"
         "${PROJECT_NAME}.coverage.info"
+        ">/dev/null"
         WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
         COMMENT "Generating code coverage report"
       )
@@ -184,9 +186,11 @@ if(BUILD_DOCS)
     message(FATAL_ERROR "Could not find pipenv")
   endif()
 
+  message(STATUS "Installing documentation dependencies via pipenv")
   execute_process(COMMAND "${PIPENV_EXE}" "install" "-r" "requirements.txt"
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
     OUTPUT_QUIET
+    ERROR_QUIET
   )
 
   set(DOC_SOURCES
