@@ -6,12 +6,15 @@ project("newtype"
   DESCRIPTION "A library of types and functions to create strong type aliases"
 )
 
-include("CTest")
 include("CMakePackageConfigHelpers")
 
 # Project Options
 
 option(RUN_TESTS_AFTER_BUILD "Automatically run the unit tests after building" ON)
+option(BUILD_TESTING "Build the unit tests" ON)
+option(ENABLE_CODE_COVERAGE "Enable building support for code coverage report generation" ON)
+option(PRINT_COVERAGE_REPORT "Print a coverage report after running the unit tests" ON)
+option(GENERATE_COVERAGE_REPORT "Generate an HTML coverage report after running the unit tests" OFF)
 
 # 'newtype' library
 
@@ -38,6 +41,24 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
 # 'newtype' tests
 
 if(BUILD_TESTING)
+  enable_testing()
+
+  if(PRINT_COVERAGE_REPORT)
+    find_program(LCOV_EXE NAMES "lcov")
+    mark_as_advanced(LCOV_EXE)
+    if(NOT LCOV_EXE)
+      message(FATAL_ERROR "lcov is required to generate code coverage reports")
+    endif()
+  endif()
+
+  if(GENERATE_COVERAGE_REPORT)
+    find_program(GENHTML_EXE NAMES "genhtml")
+    mark_as_advanced(GENHTML_EXE)
+    if(NOT GENHTML_EXE)
+      message(FATAL_ERROR "genhtml is required to generate code coverage reports")
+    endif()
+  endif()
+
   include("${PROJECT_SOURCE_DIR}/cmake/Modules/DiscoverTests.cmake")
   include("${PROJECT_SOURCE_DIR}/cmake/Modules/Conan.cmake")
 
@@ -79,6 +100,15 @@ if(BUILD_TESTING)
     "-Wextra"
     "-Werror"
     "-pedantic-errors"
+    $<$<BOOL:${ENABLE_CODE_COVERAGE}>:--coverage>
+  )
+
+  target_link_options("${PROJECT_NAME}_tests" PRIVATE
+    $<$<BOOL:${ENABLE_CODE_COVERAGE}>:--coverage>
+  )
+
+  set_target_properties("${PROJECT_NAME}_tests" PROPERTIES
+    CXX_EXTENSIONS OFF
   )
 
   discover_tests(TARGET "${PROJECT_NAME}_tests")
@@ -86,11 +116,56 @@ if(BUILD_TESTING)
   if(RUN_TESTS_AFTER_BUILD)
     add_custom_command(TARGET "${PROJECT_NAME}_tests"
       POST_BUILD
-      COMMAND "${CMAKE_CTEST_COMMAND}" "--output-on-failure"
+      DEPENDS "${PROJECT_NAME}_tests"
+      COMMAND "${CMAKE_CTEST_COMMAND}"
+      ARGS
+      "--output-on-failure"
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
       COMMENT "Running unit tests"
-  )
+    )
   endif()
+
+  if(GENERATE_COVERAGE_REPORT AND RUN_TESTS_AFTER_BUILD)
+    add_custom_command(TARGET "${PROJECT_NAME}_tests"
+      POST_BUILD
+      BYPRODUCTS "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coverage.info"
+      COMMAND "${LCOV_EXE}"
+      ARGS
+      "--capture"
+      "--base-directory" "${PROJECT_SOURCE_DIR}"
+      "--directory" "${PROJECT_BINARY_DIR}"
+      "--output-file" "${PROJECT_NAME}.coverage.info"
+      "--no-external"
+      "--exclude" "${PROJECT_SOURCE_DIR}/test/\\*"
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+      COMMENT "Capturing code coverage data"
+    )
+    add_custom_command(TARGET "${PROJECT_NAME}_tests"
+      POST_BUILD
+      COMMAND "${LCOV_EXE}"
+      ARGS
+      "--list"
+      "${PROJECT_NAME}.coverage.info"
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+      COMMENT "Printing code coverage report"
+    )
+    if(PRINT_COVERAGE_REPORT)
+      add_custom_command(TARGET "${PROJECT_NAME}_tests"
+        POST_BUILD
+        BYPRODUCTS "${PROJECT_BINARY_DIR}/coverage-report/index.html"
+        COMMAND "${GENHTML_EXE}"
+        ARGS
+        "--demangle-cpp"
+        "--highlight"
+        "--missed"
+        "--show-details"
+        "--output" "coverage-report"
+        "${PROJECT_NAME}.coverage.info"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+        COMMENT "Generating code coverage report"
+      )
+    endif()
+    endif()
 endif()
 
 # 'newtype' docs
@@ -99,6 +174,7 @@ option(BUILD_DOCS "Build the library documentation" OFF)
 
 if(BUILD_DOCS)
   find_program(PIPENV_EXE NAMES "pipenv3" "pipenv")
+  mark_as_advanced(PIPENV_EXE)
   if(NOT PIPENV_EXE)
     message(FATAL_ERROR "Could not find pipenv")
   endif()
