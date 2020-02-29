@@ -65,6 +65,7 @@ if(BUILD_TESTING)
   conan_check(REQUIRED)
   conan_add_remote(NAME "fmorgner-public" URL "https://api.bintray.com/conan/fmorgner/conan-public")
   conan_cmake_run(CONANFILE "conanfile.py"
+    OUTPUT_QUIET
     BASIC_SETUP
     CMAKE_TARGETS
     BUILD "missing"
