@@ -30,5 +30,5 @@ install:
   - sudo apt-get install cmake
 
 script:
-  - /usr/bin/cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=YES -DRUN_TESTS_AFTER_BUILD=YES -DENABLE_CODE_COVERAGE=YES -DPRINT_COVERAGE_REPORT=YES .. 
+  - /usr/bin/cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=YES -DRUN_TESTS_AFTER_BUILD=YES -DENABLE_CODE_COVERAGE=YES -DPRINT_COVERAGE_REPORT=YES
   - /usr/bin/cmake --build build --target all --parallel $(nproc)

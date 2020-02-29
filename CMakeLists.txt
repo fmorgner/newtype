@@ -125,7 +125,7 @@ if(BUILD_TESTING)
     )
   endif()
 
-  if(GENERATE_COVERAGE_REPORT AND RUN_TESTS_AFTER_BUILD)
+  if(ENABLE_CODE_COVERAGE AND RUN_TESTS_AFTER_BUILD)
     add_custom_command(TARGET "${PROJECT_NAME}_tests"
       POST_BUILD
       BYPRODUCTS "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.coverage.info"
@@ -140,16 +140,20 @@ if(BUILD_TESTING)
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
       COMMENT "Capturing code coverage data"
     )
-    add_custom_command(TARGET "${PROJECT_NAME}_tests"
-      POST_BUILD
-      COMMAND "${LCOV_EXE}"
-      ARGS
-      "--list"
-      "${PROJECT_NAME}.coverage.info"
-      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-      COMMENT "Printing code coverage report"
-    )
+
     if(PRINT_COVERAGE_REPORT)
+      add_custom_command(TARGET "${PROJECT_NAME}_tests"
+        POST_BUILD
+        COMMAND "${LCOV_EXE}"
+        ARGS
+        "--list"
+        "${PROJECT_NAME}.coverage.info"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+        COMMENT "Printing code coverage report"
+      )
+    endif()
+
+    if(GENERATE_COVERAGE_REPORT)
       add_custom_command(TARGET "${PROJECT_NAME}_tests"
         POST_BUILD
         BYPRODUCTS "${PROJECT_BINARY_DIR}/coverage-report/index.html"
