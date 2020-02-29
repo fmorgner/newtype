@@ -12,6 +12,8 @@ addons:
     packages:
       - g++-9
       - cmake
+      - libperlio-gzip-perl
+      - libjson-perl
 
 compiler:
   - gcc
