@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION "3.9.0")
 
 project("newtype"
-  VERSION "1.0.2"
+  VERSION "1.1.0"
   LANGUAGES CXX
   DESCRIPTION "A library of types and functions to create strong type aliases"
 )
