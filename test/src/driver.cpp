@@ -4,6 +4,7 @@
 #include "equality_comparison_suite.hpp"
 #include "hash_suite.hpp"
 #include "io_operators_suite.hpp"
+#include "iterable_suite.hpp"
 #include "new_type_constructor_suite.hpp"
 #include "relational_operators_suite.hpp"
 
@@ -61,6 +62,7 @@ int main(int argc, char ** argv)
       io_operators_suite(),
       arithmetic_suite(),
       hash_suite(),
+      iterable_suite(),
   };
 
   auto selectors = get_test_selectors(suites);

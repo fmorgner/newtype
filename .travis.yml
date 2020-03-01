@@ -6,26 +6,37 @@ dist: bionic
 addons:
   apt:
     sources:
-      - sourceline: "ppa:ubuntu-toolchain-r/test"
-    packages: ['g++-9']
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+      - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
+        key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
+    packages:
+      - g++-9
+      - cmake
+      - libperlio-gzip-perl
+      - libjson-perl
 
 compiler:
   - gcc
-
-env:
-  - CXX=g++-9
 
 cache:
   directories:
     - $HOME/.conan/data
 
+before_install:
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 20
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 20
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-9 20  
+  - sudo update-alternatives --config gcc
+  - sudo update-alternatives --config g++
+  - sudo update-alternatives --config gcov
+
 install:
   - pip install conan
   - conan user
+  - git clone git://github.com/linux-test-project/lcov.git
+  - cd lcov && sudo make install
+  - cd ..
 
 script:
-  - mkdir -p build
-  - cd build
-  - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=ON .. 
-  - cmake --build . --target all
-  - ctest
+  - /usr/bin/cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=YES -DRUN_TESTS_AFTER_BUILD=YES -DENABLE_CODE_COVERAGE=YES -DPRINT_COVERAGE_REPORT=YES
+  - /usr/bin/cmake --build build --target all --parallel $(nproc)
