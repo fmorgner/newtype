@@ -6,7 +6,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'newtype'
-copyright = '2019, Felix Morgner'
+copyright = '2020, Felix Morgner'
 author = 'Felix Morgner'
 version = '1.0'
 release = '1.1.0'
