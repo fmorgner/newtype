@@ -8,7 +8,7 @@ import os
 project = 'newtype'
 copyright = '2020, Felix Morgner'
 author = 'Felix Morgner'
-version = '1.0'
+version = '1.1'
 release = '1.1.0'
 
 
