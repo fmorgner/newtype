@@ -9,7 +9,7 @@ project = 'newtype'
 copyright = '2019, Felix Morgner'
 author = 'Felix Morgner'
 version = '1.0'
-release = '1.0.0'
+release = '1.1.0'
 
 
 # -- General configuration ---------------------------------------------------

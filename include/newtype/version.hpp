@@ -13,8 +13,8 @@ namespace nt
     char const * const name;
   } version{
       .major = 1,
-      .minor = 0,
-      .patch = 2,
+      .minor = 1,
+      .patch = 0,
       .name = "Francesca",
   };
 
