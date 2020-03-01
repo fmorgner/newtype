@@ -8,18 +8,20 @@
 
 #include <cute/cute.h>
 
+#include <algorithm>
 #include <array>
 #include <iterator>
+#include <numeric>
 
 namespace
 {
 
   struct with_member
   {
-    using iterator = void *;
-    using const_iterator = void const *;
-    using reverse_iterator = void *;
-    using const_reverse_iterator = void const *;
+    using iterator = char *;
+    using const_iterator = char const *;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     auto begin() -> iterator;
     auto begin() const -> const_iterator;
@@ -36,9 +38,77 @@ namespace
     auto crend() const -> const_reverse_iterator;
   };
 
+  struct with_free
+  {
+    using iterator = char *;
+    using const_iterator = char const *;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  };
+
+  auto begin(with_free &) -> with_free::iterator
+  {
+    return {};
+  }
+
+  auto begin(with_free const &) -> with_free::const_iterator
+  {
+    return {};
+  }
+
+  auto cbegin(with_free const &) -> with_free::const_iterator
+  {
+    return {};
+  }
+
+  auto rbegin(with_free &) -> with_free::reverse_iterator
+  {
+    return {};
+  }
+
+  auto rbegin(with_free const &) -> with_free::const_reverse_iterator
+  {
+    return {};
+  }
+
+  auto crbegin(with_free const &) -> with_free::const_reverse_iterator
+  {
+    return {};
+  }
+
+  auto end(with_free &) -> with_free::iterator
+  {
+    return {};
+  }
+
+  auto end(with_free const &) -> with_free::const_iterator
+  {
+    return {};
+  }
+
+  auto cend(with_free const &) -> with_free::const_iterator
+  {
+    return {};
+  }
+
+  auto rend(with_free &) -> with_free::reverse_iterator
+  {
+    return {};
+  }
+
+  auto rend(with_free const &) -> with_free::const_reverse_iterator
+  {
+    return {};
+  }
+
+  auto crend(with_free const &) -> with_free::const_reverse_iterator
+  {
+    return {};
+  }
+
 }  // namespace
 
-inline namespace begin_tests
+inline namespace combined_enablement_tests
 {
 
   auto a_new__type_not_deriving_iterable_has_no_begin() -> void
@@ -47,60 +117,11 @@ inline namespace begin_tests
     ASSERT(!(nt::impl::has_begin_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_begin() -> void
+  auto a_new__type_not_deriving_iterable_has_no_constant_begin() -> void
   {
-    static_assert(!nt::impl::has_begin_v<int>);
-    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!(nt::impl::has_begin_v<type_alias>));
+    using type_alias = nt::new_type<int, struct tag>;
+    ASSERT(!(nt::impl::has_begin_v<type_alias const>));
   }
-
-  auto a_new__type_based_on_an_iterable_type_with_member_begin_deriving_iterable_has_member_begin() -> void
-  {
-    static_assert(nt::impl::has_member_begin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_begin_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_with_constant_member_begin_deriving_iterable_has_constant_member_begin() -> void
-  {
-    static_assert(nt::impl::has_member_begin_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_begin_v<type_alias const>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_free_begin_deriving_iterable_has_no_free_begin() -> void
-  {
-    static_assert(!nt::impl::has_free_begin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_begin_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_constant_free_begin_deriving_iterable_has_no_constant_free_begin() -> void
-  {
-    static_assert(!nt::impl::has_free_begin_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_begin_v<type_alias const>);
-  }
-
-  auto accessing_the_first_element_of_an_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*weak.begin(), *strong.begin());
-  }
-
-  auto an_iterator_obtained_via_member_begin_compares_equal_to_an_iterator_obtained_via_free_begin() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(begin(instance), instance.begin());
-  }
-
-}  // namespace begin_tests
-
-inline namespace cbegin_tests
-{
 
   auto a_new__type_not_deriving_iterable_has_no_cbegin() -> void
   {
@@ -108,109 +129,17 @@ inline namespace cbegin_tests
     ASSERT(!(nt::impl::has_cbegin_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_cbegin() -> void
-  {
-    static_assert(!nt::impl::has_cbegin_v<int>);
-    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!(nt::impl::has_cbegin_v<type_alias>));
-  }
-
-  auto a_new__type_based_on_an_iterable_type_with_member_cbegin_deriving_iterable_has_member_cbegin() -> void
-  {
-    static_assert(nt::impl::has_member_cbegin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_cbegin_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_free_cbegin_deriving_iterable_has_no_free_cbegin() -> void
-  {
-    static_assert(!nt::impl::has_free_cbegin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_cbegin_v<type_alias>);
-  }
-
-  auto accessing_the_first_element_of_a_constant_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type()
-      -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*weak.cbegin(), *strong.cbegin());
-  }
-
-  auto an_iterator_obtained_via_member_cbegin_compares_equal_to_an_iterator_obtained_via_free_cbegin() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(cbegin(instance), instance.cbegin());
-  }
-
-}  // namespace cbegin_tests
-
-inline namespace rbegin_tests
-{
-
   auto a_new__type_not_deriving_iterable_has_no_rbegin() -> void
   {
     using type_alias = nt::new_type<int, struct tag>;
     ASSERT(!(nt::impl::has_rbegin_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_rbegin() -> void
+  auto a_new__type_not_deriving_iterable_has_no_constant_rbegin() -> void
   {
-    static_assert(!nt::impl::has_rbegin_v<int>);
-    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!(nt::impl::has_rbegin_v<type_alias>));
+    using type_alias = nt::new_type<int, struct tag>;
+    ASSERT(!(nt::impl::has_rbegin_v<type_alias const>));
   }
-
-  auto a_new__type_based_on_an_iterable_type_with_member_rbegin_deriving_iterable_has_member_rbegin() -> void
-  {
-    static_assert(nt::impl::has_member_rbegin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_rbegin_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_with_constant_member_rbegin_deriving_iterable_has_constant_member_rbegin() -> void
-  {
-    static_assert(nt::impl::has_member_rbegin_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_rbegin_v<type_alias const>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_free_rbegin_deriving_iterable_has_no_free_rbegin() -> void
-  {
-    static_assert(!nt::impl::has_free_rbegin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_rbegin_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_constant_free_rbegin_deriving_iterable_has_no_constant_free_rbegin() -> void
-  {
-    static_assert(!nt::impl::has_free_rbegin_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_rbegin_v<type_alias const>);
-  }
-
-  auto accessing_the_first_element_of_a_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type()
-      -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*weak.rbegin(), *strong.rbegin());
-  }
-
-  auto an_iterator_obtained_via_member_rbegin_compares_equal_to_an_iterator_obtained_via_free_rbegin() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(rbegin(instance), instance.rbegin());
-  }
-
-}  // namespace rbegin_tests
-
-inline namespace crbegin_tests
-{
 
   auto a_new__type_not_deriving_iterable_has_no_crbegin() -> void
   {
@@ -218,109 +147,17 @@ inline namespace crbegin_tests
     ASSERT(!(nt::impl::has_crbegin_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_crbegin() -> void
-  {
-    static_assert(!nt::impl::has_crbegin_v<int>);
-    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!(nt::impl::has_crbegin_v<type_alias>));
-  }
-
-  auto a_new__type_based_on_an_iterable_type_with_member_crbegin_deriving_iterable_has_member_crbegin() -> void
-  {
-    static_assert(nt::impl::has_member_crbegin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_crbegin_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_free_crbegin_deriving_iterable_has_no_free_crbegin() -> void
-  {
-    static_assert(!nt::impl::has_free_crbegin_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_crbegin_v<type_alias>);
-  }
-
-  auto
-  accessing_the_first_element_of_a_constant_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type()
-      -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*weak.crbegin(), *strong.crbegin());
-  }
-
-  auto an_iterator_obtained_via_member_crbegin_compares_equal_to_an_iterator_obtained_via_free_crbegin() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(crbegin(instance), instance.crbegin());
-  }
-
-}  // namespace crbegin_tests
-
-inline namespace end_tests
-{
-
   auto a_new__type_not_deriving_iterable_has_no_end() -> void
   {
     using type_alias = nt::new_type<int, struct tag>;
     ASSERT(!(nt::impl::has_end_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_end() -> void
+  auto a_new__type_not_deriving_iterable_has_no_constant_end() -> void
   {
-    static_assert(!nt::impl::has_end_v<int>);
-    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!(nt::impl::has_end_v<type_alias>));
+    using type_alias = nt::new_type<int, struct tag>;
+    ASSERT(!(nt::impl::has_end_v<type_alias const>));
   }
-
-  auto a_new__type_based_on_an_iterable_type_with_member_end_deriving_iterable_has_member_end() -> void
-  {
-    static_assert(nt::impl::has_member_end_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_end_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_with_constant_member_end_deriving_iterable_has_constant_member_end() -> void
-  {
-    static_assert(nt::impl::has_member_end_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_end_v<type_alias const>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_free_end_deriving_iterable_has_no_free_end() -> void
-  {
-    static_assert(!nt::impl::has_free_end_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_end_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_constant_free_end_deriving_iterable_has_no_constant_free_end() -> void
-  {
-    static_assert(!nt::impl::has_free_end_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_end_v<type_alias const>);
-  }
-
-  auto accessing_the_last_element_of_an_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*(weak.end() - 1), *(strong.end() - 1));
-  }
-
-  auto an_iterator_obtained_via_member_end_compares_equal_to_an_iterator_obtained_via_free_end() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(end(instance), instance.end());
-  }
-
-}  // namespace end_tests
-
-inline namespace cend_tests
-{
 
   auto a_new__type_not_deriving_iterable_has_no_cend() -> void
   {
@@ -328,108 +165,17 @@ inline namespace cend_tests
     ASSERT(!(nt::impl::has_cend_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_cend() -> void
-  {
-    static_assert(!nt::impl::has_cend_v<int>);
-    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!(nt::impl::has_cend_v<type_alias>));
-  }
-
-  auto a_new__type_based_on_an_iterable_type_with_member_cend_deriving_iterable_has_member_cend() -> void
-  {
-    static_assert(nt::impl::has_member_cend_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_cend_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_free_cend_deriving_iterable_has_no_free_cend() -> void
-  {
-    static_assert(!nt::impl::has_free_cend_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_cend_v<type_alias>);
-  }
-
-  auto accessing_the_last_element_of_a_constant_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type()
-      -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*(weak.cend() - 1), *(strong.cend() - 1));
-  }
-
-  auto an_iterator_obtained_via_member_cend_compares_equal_to_an_iterator_obtained_via_free_cend() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(cend(instance), instance.cend());
-  }
-
-}  // namespace cend_tests
-
-inline namespace rend_tests
-{
-
   auto a_new__type_not_deriving_iterable_has_no_rend() -> void
   {
     using type_alias = nt::new_type<int, struct tag>;
     ASSERT(!(nt::impl::has_rend_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_rend() -> void
+  auto a_new__type_not_deriving_iterable_has_no_constant_rend() -> void
   {
-    static_assert(!nt::impl::has_rend_v<int>);
-    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!(nt::impl::has_rend_v<type_alias>));
+    using type_alias = nt::new_type<int, struct tag>;
+    ASSERT(!(nt::impl::has_rend_v<type_alias const>));
   }
-
-  auto a_new__type_based_on_an_iterable_type_with_member_rend_deriving_iterable_has_member_rend() -> void
-  {
-    static_assert(nt::impl::has_member_rend_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_rend_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_with_constant_member_rend_deriving_iterable_has_constant_member_rend() -> void
-  {
-    static_assert(nt::impl::has_member_rend_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(nt::impl::has_member_rend_v<type_alias const>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_free_rend_deriving_iterable_has_no_free_rend() -> void
-  {
-    static_assert(!nt::impl::has_free_rend_v<with_member>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_rend_v<type_alias>);
-  }
-
-  auto a_new__type_based_on_an_iterable_type_without_constant_free_rend_deriving_iterable_has_no_constant_free_rend() -> void
-  {
-    static_assert(!nt::impl::has_free_rend_v<with_member const>);
-    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_rend_v<type_alias const>);
-  }
-
-  auto accessing_the_last_element_of_a_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*(weak.rend() - 1), *(strong.rend() - 1));
-  }
-
-  auto an_iterator_obtained_via_member_rend_compares_equal_to_an_iterator_obtained_via_free_rend() -> void
-  {
-    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(rend(instance), instance.rend());
-  }
-
-}  // namespace rend_tests
-
-inline namespace crend_tests
-{
 
   auto a_new__type_not_deriving_iterable_has_no_crend() -> void
   {
@@ -437,123 +183,537 @@ inline namespace crend_tests
     ASSERT(!(nt::impl::has_crend_v<type_alias>));
   }
 
-  auto a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_crend() -> void
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_begin() -> void
   {
-    static_assert(!nt::impl::has_crend_v<int>);
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_begin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_begin() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_begin_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_cbegin() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_cbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_rbegin() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_rbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_rbegin() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_rbegin_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_crbegin() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_crbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_end() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_end_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_end() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_end_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_cend() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_cend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_rend() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_rend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_rend() -> void
+  {
+    using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_rend_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_crend() -> void
+  {
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
     ASSERT(!(nt::impl::has_crend_v<type_alias>));
   }
 
-  auto a_new__type_based_on_an_iterable_type_with_member_crend_deriving_iterable_has_member_crend() -> void
+}  // namespace combined_enablement_tests
+
+inline namespace member_enablement_tests
+{
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_begin() -> void
   {
-    static_assert(nt::impl::has_member_crend_v<with_member>);
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_begin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_begin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_begin_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_cbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_cbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_rbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_rbegin_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_crbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_crbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_end() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_end_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_end() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_end_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_cend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_cend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_rend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_rend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_rend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_rend_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_crend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_member_crend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_begin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_begin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_begin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_begin_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_cbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_cbegin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_rbegin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_rbegin_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_crbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_crbegin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_end() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_end_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_end() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_end_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_cend() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_cend_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_rend() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_rend_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_rend() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_member_rend_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_crend() -> void
+  {
     using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
     ASSERT(nt::impl::has_member_crend_v<type_alias>);
   }
 
-  auto a_new__type_based_on_an_iterable_type_without_free_crend_deriving_iterable_has_no_free_crend() -> void
+}  // namespace member_enablement_tests
+
+inline namespace free_enablement_tests
+{
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_begin() -> void
   {
-    static_assert(!nt::impl::has_free_crend_v<with_member>);
     using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
-    ASSERT(!nt::impl::has_free_crend_v<type_alias>);
+    ASSERT(!(nt::impl::has_free_begin_v<type_alias>));
   }
 
-  auto
-  accessing_the_last_element_of_a_constant_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type()
-      -> void
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_begin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_begin_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_cbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_cbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_rbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_rbegin_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_crbegin() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_crbegin_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_end() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_end_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_end() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_end_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_cend() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_cend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_rend() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_rend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_rend() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_rend_v<type_alias const>));
+  }
+
+  auto a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_crend() -> void
+  {
+    using type_alias = nt::new_type<with_member, struct tag, deriving(nt::Iterable)>;
+    ASSERT(!(nt::impl::has_free_crend_v<type_alias>));
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_begin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_begin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_begin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_begin_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_cbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_cbegin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_rbegin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_rbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_rbegin_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_crbegin() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_crbegin_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_end() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_end_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_end() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_end_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_cend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_cend_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_rend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_rend_v<type_alias>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_rend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_rend_v<type_alias const>);
+  }
+
+  auto a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_crend() -> void
+  {
+    using type_alias = nt::new_type<with_free, struct tag, deriving(nt::Iterable)>;
+    ASSERT(nt::impl::has_free_crend_v<type_alias>);
+  }
+
+}  // namespace free_enablement_tests
+
+inline namespace semantic_tests
+{
+
+  auto a_non_const_object_of_iterable_new__type_can_be_used_in_value_range_for() -> void
   {
     using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto weak = std::array{42, 21, 10};
-    auto strong = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(*(weak.crend() - 1), *(strong.crend() - 1));
+    auto object = type_alias{{1, 2, 3}};
+    for (auto e : object)
+    {
+      (void)e;
+    }
+    ASSERT(true);
   }
 
-  auto an_iterator_obtained_via_member_crend_compares_equal_to_an_iterator_obtained_via_free_crend() -> void
+  auto a_const_object_of_iterable_new__type_can_be_used_in_value_range_for() -> void
   {
     using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
-    auto instance = type_alias{{42, 21, 10}};
-    ASSERT_EQUAL(crend(instance), instance.crend());
+    auto const object = type_alias{{1, 2, 3}};
+    for (auto e : object)
+    {
+      (void)e;
+    }
+    ASSERT(true);
   }
 
-}  // namespace crend_tests
+  auto a_non_const_object_of_iterable_new__type_can_be_used_in_reference_range_for() -> void
+  {
+    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
+    auto object = type_alias{{1, 2, 3}};
+    for (auto & e : object)
+    {
+      (void)e;
+    }
+    ASSERT(true);
+  }
+
+  auto a_const_object_of_iterable_new__type_can_be_used_in_const_reference_range_for() -> void
+  {
+    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
+    auto const object = type_alias{{1, 2, 3}};
+    for (auto const & e : object)
+    {
+      (void)e;
+    }
+    ASSERT(true);
+  }
+
+  auto applying_accumulate_to_an_interable_new__type_yields_the_same_result_as_when_applied_to_the_base_type() -> void
+  {
+    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
+    auto const nt_object = type_alias{{1, 2, 3}};
+    auto const bt_object = type_alias::base_type{1, 2, 3};
+
+    auto nt_result = std::accumulate(std::cbegin(nt_object), std::cend(nt_object), 0);
+    auto bt_result = std::accumulate(std::cbegin(bt_object), std::cend(bt_object), 0);
+
+    ASSERT_EQUAL(bt_result, nt_result);
+  }
+
+  auto iterating_over_an_iterable_new__type_yields_the_elements_in_the_same_order_as_when_iterating_the_base_type() -> void
+  {
+    using std::cbegin, std::cend, std::equal;
+    using type_alias = nt::new_type<std::array<int, 3>, struct tag, deriving(nt::Iterable)>;
+    auto const nt_object = type_alias{{1, 2, 3}};
+    auto const bt_object = type_alias::base_type{1, 2, 3};
+
+    ASSERT(equal(cbegin(nt_object), cend(nt_object), cbegin(bt_object), cend(bt_object)));
+  }
+
+}  // namespace semantic_tests
 
 auto iterable_suite() -> std::pair<cute::suite, std::string>
 {
-  return {
-      {
-          // clang-format off
-          /// 'begin' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_begin),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_begin),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_begin_deriving_iterable_has_member_begin),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_constant_member_begin_deriving_iterable_has_constant_member_begin),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_begin_deriving_iterable_has_no_free_begin),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_constant_free_begin_deriving_iterable_has_no_constant_free_begin),
-          KAWAII(accessing_the_first_element_of_an_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_begin_compares_equal_to_an_iterator_obtained_via_free_begin),
+  return {{
+              /// Combined Enablement Tests
+              KAWAII(a_new__type_not_deriving_iterable_has_no_begin),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_constant_begin),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_cbegin),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_rbegin),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_constant_rbegin),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_crbegin),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_end),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_constant_end),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_cend),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_rend),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_constant_rend),
+              KAWAII(a_new__type_not_deriving_iterable_has_no_crend),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_begin),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_begin),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_cbegin),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_rbegin),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_rbegin),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_crbegin),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_end),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_end),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_cend),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_rend),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_constant_rend),
+              KAWAII(a_new__type_on_a_non_iterable_type_deriving_iterable_has_no_crend),
 
-          /// 'cbegin' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_cbegin),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_cbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_cbegin_deriving_iterable_has_member_cbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_cbegin_deriving_iterable_has_no_free_cbegin),
-          KAWAII(accessing_the_first_element_of_a_constant_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_cbegin_compares_equal_to_an_iterator_obtained_via_free_cbegin),
+              /// Member Enablement Tests
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_begin),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_begin),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_cbegin),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_rbegin),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_rbegin),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_crbegin),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_end),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_end),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_cend),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_rend),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_constant_rend),
+              KAWAII(a_new__type_on_a_non_member_iterable_type_deriving_iterable_has_no_member_crend),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_begin),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_begin),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_cbegin),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_rbegin),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_rbegin),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_crbegin),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_end),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_end),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_cend),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_rend),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_constant_rend),
+              KAWAII(a_new__type_on_a_member_iterable_type_deriving_iterable_has_member_crend),
 
-          /// 'rbegin' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_rbegin),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_rbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_rbegin_deriving_iterable_has_member_rbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_constant_member_rbegin_deriving_iterable_has_constant_member_rbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_rbegin_deriving_iterable_has_no_free_rbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_constant_free_rbegin_deriving_iterable_has_no_constant_free_rbegin),
-          KAWAII(accessing_the_first_element_of_a_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_rbegin_compares_equal_to_an_iterator_obtained_via_free_rbegin),
+              /// Free Enablement Tests
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_begin),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_begin),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_cbegin),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_rbegin),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_rbegin),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_crbegin),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_end),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_end),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_cend),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_rend),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_constant_rend),
+              KAWAII(a_new__type_on_a_non_free_iterable_type_deriving_iterable_has_no_free_crend),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_begin),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_begin),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_cbegin),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_rbegin),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_rbegin),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_crbegin),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_end),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_end),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_cend),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_rend),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_constant_rend),
+              KAWAII(a_new__type_on_a_free_iterable_type_deriving_iterable_has_free_crend),
 
-          /// 'crbegin' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_crbegin),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_crbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_crbegin_deriving_iterable_has_member_crbegin),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_crbegin_deriving_iterable_has_no_free_crbegin),
-          KAWAII(accessing_the_first_element_of_a_constant_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_crbegin_compares_equal_to_an_iterator_obtained_via_free_crbegin),
+              /// Semantic Tests
+              KAWAII(a_non_const_object_of_iterable_new__type_can_be_used_in_value_range_for),
+              KAWAII(a_const_object_of_iterable_new__type_can_be_used_in_value_range_for),
+              KAWAII(a_non_const_object_of_iterable_new__type_can_be_used_in_reference_range_for),
+              KAWAII(a_const_object_of_iterable_new__type_can_be_used_in_const_reference_range_for),
+              KAWAII(applying_accumulate_to_an_interable_new__type_yields_the_same_result_as_when_applied_to_the_base_type),
+              KAWAII(iterating_over_an_iterable_new__type_yields_the_elements_in_the_same_order_as_when_iterating_the_base_type),
+          },
 
-          /// 'end' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_end),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_end),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_end_deriving_iterable_has_member_end),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_constant_member_end_deriving_iterable_has_constant_member_end),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_end_deriving_iterable_has_no_free_end),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_constant_free_end_deriving_iterable_has_no_constant_free_end),
-          KAWAII(accessing_the_last_element_of_an_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_end_compares_equal_to_an_iterator_obtained_via_free_end),
-
-          /// 'cend' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_cend),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_cend),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_cend_deriving_iterable_has_member_cend),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_cend_deriving_iterable_has_no_free_cend),
-          KAWAII(accessing_the_last_element_of_a_constant_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_cend_compares_equal_to_an_iterator_obtained_via_free_cend),
-
-          /// 'rend' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_rend),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_rend),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_rend_deriving_iterable_has_member_rend),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_constant_member_rend_deriving_iterable_has_constant_member_rend),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_rend_deriving_iterable_has_no_free_rend),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_constant_free_rend_deriving_iterable_has_no_constant_free_rend),
-          KAWAII(accessing_the_last_element_of_a_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_rend_compares_equal_to_an_iterator_obtained_via_free_rend),
-
-          /// 'crend' Tests
-          KAWAII(a_new__type_not_deriving_iterable_has_no_crend),
-          KAWAII(a_new__type_based_on_a_non_iterable_type_deriving_iterable_has_no_crend),
-          KAWAII(a_new__type_based_on_an_iterable_type_with_member_crend_deriving_iterable_has_member_crend),
-          KAWAII(a_new__type_based_on_an_iterable_type_without_free_crend_deriving_iterable_has_no_free_crend),
-          KAWAII(accessing_the_last_element_of_a_constant_reverse_iterator_on_a_new__type_yields_the_same_value_as_accessing_it_through_an_unwrapped_type),
-          KAWAII(an_iterator_obtained_via_member_crend_compares_equal_to_an_iterator_obtained_via_free_crend),
-          // clang-format on
-      },
-      "Iterable Tests"};
+          "Iterable Tests"};
 }

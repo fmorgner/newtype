@@ -587,7 +587,7 @@ namespace nt::impl
 
     template<typename T>
     struct has_free_rbegin<T, std::void_t<decltype(rbegin(std::declval<T &>()))>>
-        : std::is_same<typename T::reverse_iterator, std::remove_cvref_t<decltype(begin(std::declval<T &>()))>>
+        : std::is_same<typename T::reverse_iterator, std::remove_cvref_t<decltype(rbegin(std::declval<T &>()))>>
     {
     };
 
@@ -767,7 +767,7 @@ namespace nt::impl
 
     template<typename T>
     struct has_free_rend<T, std::void_t<decltype(rend(std::declval<T &>()))>>
-        : std::is_same<typename T::reverse_iterator, std::remove_cvref_t<decltype(end(std::declval<T &>()))>>
+        : std::is_same<typename T::reverse_iterator, std::remove_cvref_t<decltype(rend(std::declval<T &>()))>>
     {
     };
 
