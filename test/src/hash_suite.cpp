@@ -4,7 +4,7 @@
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
 #include "newtype/impl/type_traits_extensions.hpp"
-#include "newtype/new_type.hpp"
+#include "newtype/newtype.hpp"
 
 #include <cute/cute.h>
 

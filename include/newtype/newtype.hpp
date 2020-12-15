@@ -1,5 +1,5 @@
-#ifndef NEWTYPE_NEW_TYPE_HPP
-#define NEWTYPE_NEW_TYPE_HPP
+#ifndef NEWTYPE_NEWTYPE_HPP
+#define NEWTYPE_NEWTYPE_HPP
 
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
@@ -154,13 +154,13 @@ namespace nt
     }
 
     template<typename NewType = new_type>
-    auto constexpr operator-> () noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType *>
+    auto constexpr operator->() noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType *>
     {
       return std::addressof(this->m_value);
     }
 
     template<typename NewType = new_type>
-    auto constexpr operator-> () const noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType const *>
+    auto constexpr operator->() const noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType const *>
     {
       return std::addressof(this->m_value);
     }

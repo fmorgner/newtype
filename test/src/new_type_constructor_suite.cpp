@@ -2,7 +2,7 @@
 
 #include "kawaii.hpp"
 #include "newtype/derivable.hpp"
-#include "newtype/new_type.hpp"
+#include "newtype/newtype.hpp"
 
 #include <cute/cute.h>
 
