@@ -1,14 +1,18 @@
 {
     // CMake Configuration
-    "cmake.configureArguments": "-DCMAKE_EXPORT_COMPILE_COMMANDS=YES",
-    "cmake.cpptools.intelliSenseMode": "gcc-x64",
-    "cmake.cpptools.guessSourceFileConfigurations": true,
+    "cmake.configureOnOpen": false,
+    "cmake.useCMakePresets": "always",
+    "cmake.sourceDirectory": "${workspaceFolder}/source",
+    "cmake.skipConfigureIfCachePresent": true,
 
     // C++ Configuration
     "[cpp]": {
         "editor.formatOnSave": true
     },
     "C_Cpp.autoAddFileAssociations": false,
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.errorSquiggles": "enabledIfIncludesResolve",
+    "C_Cpp.autocomplete": "default",
 
     // RST Configuration
     "restructuredtext.confPath": "${workspaceFolder}/doc/src",

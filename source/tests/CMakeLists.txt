@@ -8,7 +8,7 @@ include("Catch")
 
 add_executable("${PROJECT_NAME}_tests"
   "src/arithmetic.cpp"
-  # "src/conversion_suite.cpp"
+  "src/conversion.cpp"
   # "src/derivation_clause_suite.cpp"
   # "src/equality_comparison_suite.cpp"
   # "src/hash_suite.cpp"
