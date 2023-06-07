@@ -1,50 +1,72 @@
-import re
-
-from conans import ConanFile, CMake
-from conans.tools import load
-
-
-def read_project_property(property):
-    try:
-        cmake_lists = load("CMakeLists.txt")
-        value = re.search(r"project\(.*{} \"(.*?)\"".format(property), cmake_lists, re.S).group(1)
-        return value.strip()
-    except:
-        return None
+from conan import ConanFile
+from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout
+from conan.tools.build import check_min_cppstd
 
 
 class NewtypeConan(ConanFile):
     name = "newtype"
+    version = "2.0.0"
+    license = "BSD-3-Clause"
+    description = "A library of types and functions to create strong type aliases"
+    url = "https://github.com/fmorgner/newtype"
+
+    settings = ("os", "arch", "compiler", "build_type")
+
     scm = {
         "type": "git",
-        "url": "https://github.com/fmorgner/newtype.git",
-        "revision": "auto",
+        "url": "auto",
+        "revision": "auto"
     }
-    settings = None
-    version = read_project_property("VERSION")
-    license = "BSD-3-Clause"
-    url = "https://github.com/fmorgner/newtype"
-    description = read_project_property("DESCRIPTION")
-    generators = "cmake"
-    build_requires = (
-        "CUTE/2.2.6@fmorgner/stable",
-        "lyra/1.2.0"
-    )
-    
-    def _configure_cmake(self):
-        cmake = CMake(self)
-        cmake.definitions["BUILD_TESTING"] = True
-        cmake.definitions["RUN_TESTS_AFTER_BUILD"] = True
-        cmake.configure()
-        return cmake
+
+    options = {
+        "enable_docs": [False, True],
+    }
+
+    default_options = {
+        "enable_docs": False,
+    }
+
+    generators = [
+        "CMakeDeps"
+    ]
+
+    exports_sources = [
+        "source/*",
+        "test_package/*",
+        "LICENSE",
+    ]
 
     def build(self):
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
+        cmake.configure()
         cmake.build()
+        cmake.test()
+
+    def build_requirements(self):
+        self.tool_requires("cmake/[~3.25]")
+        self.tool_requires("ninja/[~1.11]")
+        self.test_requires("catch2/[~3.3]")
+
+    def generate(self):
+        toolchain = CMakeToolchain(self)
+        toolchain.variables["CMAKE_EXPORT_COMPILE_COMMANDS"] = True
+        toolchain.variables["PROJECT_VERSION"] = self.version
+        toolchain.variables["PROJECT_DESCRIPTION"] = self.description
+        toolchain.generate()
+
+    def layout(self):
+        cmake_layout(self, generator="Ninja Multi-Config", src_folder="source")
 
     def package(self):
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
         cmake.install()
 
     def package_id(self):
-        self.info.header_only()
+        self.info.clear()
+
+    def package_info(self):
+        self.cpp_info.bindirs = []
+        self.cpp_info.libdirs = []
+
+    def validate(self):
+        check_min_cppstd(self, 20)

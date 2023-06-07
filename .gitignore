@@ -1,1 +1,4 @@
+/.cache
 /build
+/source/CMakeUserPresets.json
+/test_package/CMakeUserPresets.json

@@ -1,11 +1,12 @@
 import os
-from conans import ConanFile, CMake
+from conan import ConanFile
+from conan.tools.cmake import CMake, cmake_layout
 
 
 class NewtypeTestConan(ConanFile):
-    settings = None
-    requires = "newtype/[~=1.0]@fmorgner/stable"
-    generators = "cmake"
+    settings = ("os", "arch", "compiler", "build_type")
+    requires = "newtype/[~2.0]"
+    generators = "CMakeDeps", "CMakeToolchain"
 
     def build(self):
         cmake = CMake(self)
@@ -13,5 +14,8 @@ class NewtypeTestConan(ConanFile):
         cmake.build()
 
     def test(self):
-        os.chdir("bin")
-        self.run(".%stest_package" % os.sep)
+        os.chdir(self.build_folder)
+        self.run(".%sTestPackage" % os.sep)
+
+    def layout(self):
+        cmake_layout(self, generator="Ninja Multi-Config")

@@ -1,4 +1,4 @@
-#include "newtype/new_type.hpp"
+#include "newtype/newtype.hpp"
 
 #include <iostream>
 

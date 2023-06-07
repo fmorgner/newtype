@@ -11,5 +11,9 @@
     "C_Cpp.autoAddFileAssociations": false,
 
     // RST Configuration
-    "restructuredtext.confPath": "${workspaceFolder}/doc/src"
+    "restructuredtext.confPath": "${workspaceFolder}/doc/src",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none"
 }
