@@ -5,6 +5,8 @@ project("newtype"
   DESCRIPTION "A library of types and functions to create strong type aliases"
 )
 
+enable_testing()
+
 # Project Options
 
 option(BUILD_EXAMPLES "Build the library examples" OFF)

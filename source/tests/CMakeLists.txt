@@ -1,10 +1,9 @@
-enable_testing()
-
 find_package("Catch2" "3.1"
   COMPONENTS "Catch2WithMain"
   REQUIRED
 )
 
+include("CTest")
 include("Catch")
 
 add_executable("${PROJECT_NAME}_tests"

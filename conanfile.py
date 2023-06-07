@@ -48,14 +48,14 @@ class NewtypeConan(ConanFile):
         self.test_requires("catch2/[~3.3]")
 
     def generate(self):
-        toolchain = CMakeToolchain(self)
+        toolchain = CMakeToolchain(self, generator="Ninja Multi-Config")
         toolchain.variables["CMAKE_EXPORT_COMPILE_COMMANDS"] = True
         toolchain.variables["PROJECT_VERSION"] = self.version
         toolchain.variables["PROJECT_DESCRIPTION"] = self.description
         toolchain.generate()
 
     def layout(self):
-        cmake_layout(self, generator="Ninja Multi-Config", src_folder="source")
+        cmake_layout(self, src_folder="source")
 
     def package(self):
         cmake = CMake(self)
