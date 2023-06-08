@@ -39,8 +39,9 @@ class NewtypeConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.configure()
-        cmake.build()
-        cmake.test()
+        if not self.conf.get("tools.build:skip_test", default=False):
+            cmake.build()
+            cmake.test()
 
     def build_requirements(self):
         self.tool_requires("cmake/[>3.25]")
