@@ -8,13 +8,13 @@ include("Catch")
 
 add_executable("${PROJECT_NAME}_tests"
   "src/arithmetic.cpp"
+  "src/constructors.cpp"
   "src/conversion.cpp"
   "src/derivation_clause.cpp"
   "src/equality_comparison.cpp"
   "src/hash.cpp"
   "src/io_operators.cpp"
   # "src/iterable_suite.cpp"
-  # "src/new_type_constructor_suite.cpp"
   # "src/relational_operators_suite.cpp"
 )
 
