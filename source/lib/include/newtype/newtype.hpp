@@ -335,11 +335,13 @@ namespace nt
     return lhs.decay() >= rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause, typename CharType, typename StreamTraits>
+  template<typename CharType,
+           typename StreamTraits,
+           nt::concepts::output_streamable<CharType, StreamTraits> BaseType,
+           typename TagType,
+           nt::contains<nt::Show> auto DerivationClause>
   auto operator<<(std::basic_ostream<CharType, StreamTraits> & output, new_type<BaseType, TagType, DerivationClause> const & source) noexcept(
-      impl::is_nothrow_output_streamable_v<std::basic_ostream<CharType, StreamTraits>, BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Show) && impl::is_output_streamable_v<std::basic_ostream<CharType, StreamTraits>, BaseType>,
-                          std::basic_ostream<CharType, StreamTraits>> &
+      nt::concepts::nothrow_output_streamable<BaseType, CharType, StreamTraits>) -> std::basic_ostream<CharType, StreamTraits> &
   {
     return output << source.decay();
   }

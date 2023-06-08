@@ -54,6 +54,21 @@ namespace nt::concepts
     } noexcept;
   };
 
+  template<typename SubjectType, typename CharType, typename StreamTraits>
+  concept output_streamable = requires(SubjectType subject) {
+    {
+      std::declval<std::basic_ostream<CharType, StreamTraits> &>() << subject
+    } -> std::same_as<std::basic_ostream<CharType, StreamTraits> &>;
+  };
+
+  template<typename SubjectType, typename CharType, typename StreamTraits>
+  concept nothrow_output_streamable = requires(SubjectType subject) {
+    requires output_streamable<SubjectType, CharType, StreamTraits>;
+    {
+      std::declval<std::basic_ostream<CharType, StreamTraits> &>() << subject
+    } noexcept;
+  };
+
   template<typename SubjectType>
   concept hashable = requires(SubjectType subject) {
     {

@@ -124,39 +124,6 @@ namespace nt::impl
     auto constexpr is_nothrow_greater_than_equal_to_comparable_v = is_nothrow_greater_than_equal_to_comparable<T>::value;
   }  // namespace relationally_comparable
 
-  inline namespace iostreamable
-  {
-
-    template<typename StreamType, typename T, typename = void>
-    struct is_output_streamable : std::false_type
-    {
-    };
-
-    template<typename StreamType, typename T>
-    struct is_output_streamable<StreamType, T, std::void_t<decltype(std::declval<StreamType &>() << std::declval<T const &>())>>
-        : std::true_type
-    {
-    };
-
-    template<typename StreamType, typename T>
-    auto constexpr is_output_streamable_v = is_output_streamable<StreamType, T>::value;
-
-    template<typename StreamType, typename T, typename = void>
-    struct is_nothrow_output_streamable : std::false_type
-    {
-    };
-
-    template<typename StreamType, typename T>
-    struct is_nothrow_output_streamable<StreamType, T, std::void_t<decltype(std::declval<StreamType &>() << std::declval<T const &>())>>
-        : std::bool_constant<noexcept(std::declval<StreamType &>() << std::declval<T const &>())>
-    {
-    };
-
-    template<typename StreamType, typename T>
-    auto constexpr is_nothrow_output_streamable_v = is_nothrow_output_streamable<StreamType, T>::value;
-
-  }  // namespace iostreamable
-
   inline namespace arithmetic
   {
 
