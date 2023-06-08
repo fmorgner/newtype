@@ -1,6 +1,7 @@
 #ifndef NEWTYPE_NEWTYPE_HPP
 #define NEWTYPE_NEWTYPE_HPP
 
+#include "newtype/concepts.hpp"
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
 #include "newtype/impl/new_type_iterator_types.hpp"
@@ -535,12 +536,10 @@ namespace nt
 namespace std
 {
   template<typename BaseType, typename TagType, auto DerivationClause>
+    requires(nt::concepts::hashable<BaseType> && DerivationClause(nt::Hash))
   struct hash<nt::new_type<BaseType, TagType, DerivationClause>>
   {
-    template<typename BaseTypeT = BaseType>
-    auto constexpr operator()(nt::new_type<BaseType, TagType, DerivationClause> const & object,
-                              std::enable_if_t<DerivationClause(nt::Hash) && nt::impl::is_hashable_v<BaseTypeT>> * = nullptr) const
-        -> std::size_t
+    auto constexpr operator()(nt::new_type<BaseType, TagType, DerivationClause> const & object) const
     {
       return std::hash<BaseType>{}(object.decay());
     }

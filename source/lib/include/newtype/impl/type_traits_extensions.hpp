@@ -469,25 +469,6 @@ namespace nt::impl
 
   }  // namespace compound_arithmetic
 
-  inline namespace std_support
-  {
-
-    template<typename T, typename = void>
-    struct is_hashable : std::false_type
-    {
-    };
-
-    template<typename T>
-    struct is_hashable<T, std::void_t<decltype(std::declval<std::hash<T> const &>()(std::declval<T const &>()))>>
-        : std::is_same<std::size_t, decltype(std::declval<std::hash<T> const &>()(std::declval<T const &>()))>
-    {
-    };
-
-    template<typename T>
-    auto constexpr is_hashable_v = is_hashable<T>::value;
-
-  }  // namespace std_support
-
   inline namespace iterable_begin
   {
     template<typename T, typename = void>
