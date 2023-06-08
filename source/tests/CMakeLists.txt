@@ -15,7 +15,7 @@ add_executable("${PROJECT_NAME}_tests"
   "src/hash.cpp"
   "src/io_operators.cpp"
   "src/iterable.cpp"
-  # "src/relational_operators_suite.cpp"
+  "src/relational_operators.cpp"
 )
 
 target_link_libraries("${PROJECT_NAME}_tests"
