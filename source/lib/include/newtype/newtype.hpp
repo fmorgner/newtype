@@ -353,11 +353,11 @@ namespace nt
     return input >> target.m_value;
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::addable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator+(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
-      impl::is_nothrow_addable_v<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_addable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
+      nt::concepts::nothrow_addable<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause>
   {
     return {lhs.decay() + rhs.decay()};
   }
@@ -372,11 +372,11 @@ namespace nt
     return lhs;
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::subtractable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator-(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
-      impl::is_nothrow_subtractable_v<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_subtractable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
+      nt::concepts::nothrow_subtractable<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause>
   {
     return {lhs.decay() - rhs.decay()};
   }
@@ -392,11 +392,11 @@ namespace nt
     return lhs;
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::multipliable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator*(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
-      impl::is_nothrow_multipliable_v<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_multipliable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
+      nt::concepts::nothrow_multipliable<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause>
   {
     return {lhs.decay() * rhs.decay()};
   }
@@ -412,11 +412,11 @@ namespace nt
     return lhs;
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::divisible BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator/(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
-      impl::is_nothrow_dividable_v<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_dividable_v<BaseType>, new_type<BaseType, TagType, DerivationClause>>
+      nt::concepts::nothrow_divisible<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause>
   {
     return {lhs.decay() / rhs.decay()};
   }

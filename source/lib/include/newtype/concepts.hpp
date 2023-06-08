@@ -9,6 +9,71 @@
 namespace nt::concepts
 {
 
+  inline namespace arithmetic
+  {
+
+    template<typename SubjectType>
+    concept addable = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs + rhs
+      } -> std::same_as<SubjectType>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_addable = requires(SubjectType lhs, SubjectType rhs) {
+      requires addable<SubjectType>;
+      {
+        lhs + rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept divisible = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs / rhs
+      } -> std::same_as<SubjectType>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_divisible = requires(SubjectType lhs, SubjectType rhs) {
+      requires divisible<SubjectType>;
+      {
+        lhs / rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept multipliable = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs * rhs
+      } -> std::same_as<SubjectType>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_multipliable = requires(SubjectType lhs, SubjectType rhs) {
+      requires multipliable<SubjectType>;
+      {
+        lhs / rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept subtractable = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs - rhs
+      } -> std::same_as<SubjectType>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_subtractable = requires(SubjectType lhs, SubjectType rhs) {
+      requires subtractable<SubjectType>;
+      {
+        lhs - rhs
+      } noexcept;
+    };
+
+  }  // namespace arithmetic
+
   inline namespace comparability
   {
 
