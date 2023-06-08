@@ -13,7 +13,7 @@ SCENARIO("Derivation Clause", "[infrastructure]")
 
     THEN("it doesn't contain any derivable")
     {
-      REQUIRE_FALSE(clause(nt::Show));
+      STATIC_REQUIRE_FALSE(clause(nt::Show));
     }
   }
 
@@ -23,42 +23,42 @@ SCENARIO("Derivation Clause", "[infrastructure]")
 
     THEN("it doesn't contain nt::EqBase")
     {
-      REQUIRE_FALSE(clause(nt::EqBase));
+      STATIC_REQUIRE_FALSE(clause(nt::EqBase));
     }
 
     THEN("it contains nt::Show")
     {
-      REQUIRE(clause(nt::Show));
+      STATIC_REQUIRE(clause(nt::Show));
     }
 
     THEN("it copares less-than one containing nt::Show and nt::EqBase")
     {
-      REQUIRE(clause < deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE(clause < deriving(nt::Show, nt::EqBase));
     }
 
     THEN("it does not compare less-than one conataining only nt::EqBase")
     {
-      REQUIRE_FALSE(clause < deriving(nt::EqBase));
+      STATIC_REQUIRE_FALSE(clause < deriving(nt::EqBase));
     }
 
     THEN("it does not compare greater-than one conataining only nt::EqBase")
     {
-      REQUIRE_FALSE(clause > deriving(nt::EqBase));
+      STATIC_REQUIRE_FALSE(clause > deriving(nt::EqBase));
     }
 
     THEN("it does not compare equal-to one containiing only nt::Arithmetic")
     {
-      REQUIRE_FALSE(clause == deriving(nt::Arithmetic));
+      STATIC_REQUIRE_FALSE(clause == deriving(nt::Arithmetic));
     }
 
     THEN("it compares not-equal-to one containing only nt::Arithmetic")
     {
-      REQUIRE(clause != deriving(nt::Arithmetic));
+      STATIC_REQUIRE(clause != deriving(nt::Arithmetic));
     }
 
     THEN("it compares less-than-equal to one containing both nt::Show and nt::EqBase")
     {
-      REQUIRE(clause <= deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE(clause <= deriving(nt::Show, nt::EqBase));
     }
   }
 
@@ -68,112 +68,112 @@ SCENARIO("Derivation Clause", "[infrastructure]")
 
     THEN("it contains nt::EqBase")
     {
-      REQUIRE(clause(nt::EqBase));
+      STATIC_REQUIRE(clause(nt::EqBase));
     }
 
     THEN("it contains nt::Show")
     {
-      REQUIRE(clause(nt::Show));
+      STATIC_REQUIRE(clause(nt::Show));
     }
 
     THEN("it contains both nt::Show and nt::EqBase")
     {
-      REQUIRE(clause(nt::Show, nt::EqBase));
+      STATIC_REQUIRE(clause(nt::Show, nt::EqBase));
     }
 
     THEN("it does not contain nt::Arithmetic")
     {
-      REQUIRE_FALSE(clause(nt::Arithmetic));
+      STATIC_REQUIRE_FALSE(clause(nt::Arithmetic));
     }
 
     THEN("it does not contain both nt::Arithmetic and nt::Show")
     {
-      REQUIRE_FALSE(clause(nt::Arithmetic, nt::Show));
+      STATIC_REQUIRE_FALSE(clause(nt::Arithmetic, nt::Show));
     }
 
     THEN("it does not compare less-than one containing nt::Show and nt::EqBase")
     {
-      REQUIRE_FALSE(clause < deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE_FALSE(clause < deriving(nt::Show, nt::EqBase));
     }
 
     THEN("it does not compare less-than one containing nt::EqBase and nt::Show")
     {
-      REQUIRE_FALSE(clause < deriving(nt::EqBase, nt::Show));
+      STATIC_REQUIRE_FALSE(clause < deriving(nt::EqBase, nt::Show));
     }
 
     THEN("it compares greater-than one containing only nt::Show")
     {
-      REQUIRE(clause > deriving(nt::Show));
+      STATIC_REQUIRE(clause > deriving(nt::Show));
     }
 
     THEN("it does not compare greater-than one containing both nt::Show and nt::EqBase")
     {
-      REQUIRE_FALSE(clause > deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE_FALSE(clause > deriving(nt::Show, nt::EqBase));
     }
 
     THEN("it does not compare greater-than one containing both nt::EqBase and nt::Show")
     {
-      REQUIRE_FALSE(clause > deriving(nt::EqBase, nt::Show));
+      STATIC_REQUIRE_FALSE(clause > deriving(nt::EqBase, nt::Show));
     }
 
     THEN("it compares equal-to one containing both nt::Show and nt::EqBase")
     {
-      REQUIRE(clause == deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE(clause == deriving(nt::Show, nt::EqBase));
     }
 
     THEN("it compares equal-to one containing both nt::EqBase and nt::Show")
     {
-      REQUIRE(clause == deriving(nt::EqBase, nt::Show));
+      STATIC_REQUIRE(clause == deriving(nt::EqBase, nt::Show));
     }
 
     THEN("it does not compare equal-to one containiing only nt::Arithmetic")
     {
-      REQUIRE_FALSE(clause == deriving(nt::Arithmetic));
+      STATIC_REQUIRE_FALSE(clause == deriving(nt::Arithmetic));
     }
 
     THEN("it does not compare equal-to one containiing all nt::Show, nt::EqBase, and nt::Arithmetic")
     {
-      REQUIRE_FALSE(clause == deriving(nt::Show, nt::EqBase, nt::Arithmetic));
+      STATIC_REQUIRE_FALSE(clause == deriving(nt::Show, nt::EqBase, nt::Arithmetic));
     }
 
     THEN("it does not compare not-equal-to one containing both nt::Show and nt::EqBase")
     {
-      REQUIRE_FALSE(clause != deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE_FALSE(clause != deriving(nt::Show, nt::EqBase));
     }
 
     THEN("it does not compare not-equal-to one containing both nt::Show and nt::EqBase")
     {
-      REQUIRE_FALSE(clause != deriving(nt::EqBase, nt::Show));
+      STATIC_REQUIRE_FALSE(clause != deriving(nt::EqBase, nt::Show));
     }
 
     THEN("it compares not-equal-to one containing only nt::Arithmetic")
     {
-      REQUIRE(clause != deriving(nt::Arithmetic));
+      STATIC_REQUIRE(clause != deriving(nt::Arithmetic));
     }
 
     THEN("it compares less-than-equal to one containing both nt::Show and nt::EqBase")
     {
-      REQUIRE(clause <= deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE(clause <= deriving(nt::Show, nt::EqBase));
     }
 
     THEN("a derivation clause containing only nt::Arithmetic does not compare less-than-equal to it")
     {
-      REQUIRE_FALSE(deriving(nt::Arithmetic) <= clause);
+      STATIC_REQUIRE_FALSE(deriving(nt::Arithmetic) <= clause);
     }
 
     THEN("it compares greather-than-equal to one containing only nt::Show")
     {
-      REQUIRE(clause >= deriving(nt::Show));
+      STATIC_REQUIRE(clause >= deriving(nt::Show));
     }
 
     THEN("it compares greather-than-equal to one containing both nt::Show and nt::EqBase")
     {
-      REQUIRE(clause >= deriving(nt::Show, nt::EqBase));
+      STATIC_REQUIRE(clause >= deriving(nt::Show, nt::EqBase));
     }
 
     THEN("it does not compare greather-than-eqaul to one containing only nt::Arithmetic")
     {
-      REQUIRE_FALSE(clause >= deriving(nt::Arithmetic));
+      STATIC_REQUIRE_FALSE(clause >= deriving(nt::Arithmetic));
     }
   }
 }

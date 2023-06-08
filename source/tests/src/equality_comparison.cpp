@@ -36,12 +36,12 @@ SCENARIO("Equality Comparison", "[compare]")
 
     THEN("equality comparison returns bool")
     {
-      REQUIRE(std::is_same_v<bool, decltype(std::declval<type_alias>() == std::declval<type_alias>())>);
+      STATIC_REQUIRE(std::is_same_v<bool, decltype(std::declval<type_alias>() == std::declval<type_alias>())>);
     }
 
     THEN("inequality comparison returns bool")
     {
-      REQUIRE(std::is_same_v<bool, decltype(std::declval<type_alias>() != std::declval<type_alias>())>);
+      STATIC_REQUIRE(std::is_same_v<bool, decltype(std::declval<type_alias>() != std::declval<type_alias>())>);
     }
   }
 
@@ -69,12 +69,12 @@ SCENARIO("Equality Comparison", "[compare]")
 
     THEN("it is nothrow-equality-comparable")
     {
-      REQUIRE(noexcept(std::declval<type_alias>() == std::declval<type_alias>()));
+      STATIC_REQUIRE(noexcept(std::declval<type_alias>() == std::declval<type_alias>()));
     }
 
     THEN("it is nothrow-inequality-comparable")
     {
-      REQUIRE(noexcept(std::declval<type_alias>() != std::declval<type_alias>()));
+      STATIC_REQUIRE(noexcept(std::declval<type_alias>() != std::declval<type_alias>()));
     }
   }
 
@@ -93,12 +93,12 @@ SCENARIO("Equality Comparison", "[compare]")
 
     THEN("it is not nothrow-equality-comparable")
     {
-      REQUIRE_FALSE(noexcept(std::declval<type_alias>() == std::declval<type_alias>()));
+      STATIC_REQUIRE_FALSE(noexcept(std::declval<type_alias>() == std::declval<type_alias>()));
     }
 
     THEN("it is not nothrow-inequality-comparable")
     {
-      REQUIRE_FALSE(noexcept(std::declval<type_alias>() != std::declval<type_alias>()));
+      STATIC_REQUIRE_FALSE(noexcept(std::declval<type_alias>() != std::declval<type_alias>()));
     }
   }
 }

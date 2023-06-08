@@ -15,7 +15,7 @@ SCENARIO("Hash", "[hash]")
 
     THEN("it is not hashable")
     {
-      REQUIRE_FALSE(nt::impl::is_hashable_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::impl::is_hashable_v<type_alias>);
     }
   }
 
@@ -25,7 +25,7 @@ SCENARIO("Hash", "[hash]")
 
     THEN("it is hashable")
     {
-      REQUIRE(nt::impl::is_hashable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_hashable_v<type_alias>);
     }
   }
 
@@ -38,7 +38,7 @@ SCENARIO("Hash", "[hash]")
 
     THEN("it is not hashable")
     {
-      REQUIRE_FALSE(nt::impl::is_hashable_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::impl::is_hashable_v<type_alias>);
     }
   }
 

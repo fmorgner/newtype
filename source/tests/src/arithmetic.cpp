@@ -23,7 +23,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is not addable")
     {
-      REQUIRE(!nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_addable_v<type_alias>);
     }
   }
 
@@ -33,7 +33,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is addable")
     {
-      REQUIRE(nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_addable_v<type_alias>);
     }
   }
 
@@ -43,7 +43,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is not addable")
     {
-      REQUIRE(!nt::impl::is_addable_v<addable_type> == nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_addable_v<addable_type> == nt::impl::is_addable_v<type_alias>);
     }
   }
 
@@ -53,7 +53,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is addable")
     {
-      REQUIRE(nt::impl::is_addable_v<addable_type> == nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_addable_v<addable_type> == nt::impl::is_addable_v<type_alias>);
     }
   }
 
@@ -63,7 +63,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("addition produces the same type")
     {
-      REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() + std::declval<type_alias const &>())>);
+      STATIC_REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() + std::declval<type_alias const &>())>);
     }
   }
 
@@ -96,7 +96,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is not subtractable")
     {
-      REQUIRE(!nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_subtractable_v<type_alias>);
     }
   }
 
@@ -106,7 +106,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is subtractable")
     {
-      REQUIRE(nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_subtractable_v<type_alias>);
     }
   }
 
@@ -116,7 +116,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is not addable")
     {
-      REQUIRE(!nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_subtractable_v<type_alias>);
     }
   }
 
@@ -126,7 +126,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is subtractable")
     {
-      REQUIRE(nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_subtractable_v<type_alias>);
     }
   }
 
@@ -136,7 +136,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("subtraction produces the same type")
     {
-      REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() - std::declval<type_alias const &>())>);
+      STATIC_REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() - std::declval<type_alias const &>())>);
     }
   }
 
@@ -169,7 +169,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is not multipliable")
     {
-      REQUIRE(!nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_multipliable_v<type_alias>);
     }
   }
 
@@ -179,7 +179,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is multipliable")
     {
-      REQUIRE(nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_multipliable_v<type_alias>);
     }
   }
 
@@ -189,7 +189,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is not multipliable")
     {
-      REQUIRE(!nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_multipliable_v<type_alias>);
     }
   }
 
@@ -199,7 +199,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is multipliable")
     {
-      REQUIRE(nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_multipliable_v<type_alias>);
     }
   }
 
@@ -209,7 +209,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("multiplication produces the same type")
     {
-      REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() * std::declval<type_alias const &>())>);
+      STATIC_REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() * std::declval<type_alias const &>())>);
     }
   }
 
@@ -242,7 +242,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is not divisible")
     {
-      REQUIRE(!nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_dividable_v<type_alias>);
     }
   }
 
@@ -252,7 +252,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is divisible")
     {
-      REQUIRE(nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_dividable_v<type_alias>);
     }
   }
 
@@ -262,7 +262,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is not divisible")
     {
-      REQUIRE(!nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(!nt::impl::is_dividable_v<type_alias>);
     }
   }
 
@@ -272,7 +272,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is divisible")
     {
-      REQUIRE(nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(nt::impl::is_dividable_v<type_alias>);
     }
   }
 
@@ -282,7 +282,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("division produces the same type")
     {
-      REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() / std::declval<type_alias const &>())>);
+      STATIC_REQUIRE(std::is_same_v<type_alias, decltype(std::declval<type_alias const &>() / std::declval<type_alias const &>())>);
     }
   }
 

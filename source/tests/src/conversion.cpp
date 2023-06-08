@@ -20,7 +20,7 @@ TEMPLATE_LIST_TEST_CASE("Scenario: Implicit Conversions", "[conversion]", test_t
 
     THEN("it is not implicitly convertible to the base type")
     {
-      REQUIRE(!std::is_convertible_v<type_alias, TestType>);
+      STATIC_REQUIRE(!std::is_convertible_v<type_alias, TestType>);
     }
   }
 
@@ -30,7 +30,7 @@ TEMPLATE_LIST_TEST_CASE("Scenario: Implicit Conversions", "[conversion]", test_t
 
     THEN("it is implicitly convertible to the base type")
     {
-      REQUIRE(std::is_convertible_v<type_alias, TestType>);
+      STATIC_REQUIRE(std::is_convertible_v<type_alias, TestType>);
     }
   }
 }
@@ -43,7 +43,7 @@ TEMPLATE_LIST_TEST_CASE("Scenario: Decay", "[conversion]", test_types)
 
     THEN("it's decay() member function returns a value of the base type")
     {
-      REQUIRE(std::is_same_v<TestType, decltype(std::declval<type_alias>().decay())>);
+      STATIC_REQUIRE(std::is_same_v<TestType, decltype(std::declval<type_alias>().decay())>);
     }
   }
 
@@ -89,7 +89,7 @@ SCENARIO("Nothrow Decay")
 
     THEN("the decay member function is nothrow-invokable")
     {
-      REQUIRE(noexcept(std::declval<type_alias>().decay()));
+      STATIC_REQUIRE(noexcept(std::declval<type_alias>().decay()));
     }
   }
 
@@ -99,7 +99,7 @@ SCENARIO("Nothrow Decay")
 
     THEN("the decay member function is not nothrow-invokable")
     {
-      REQUIRE(!noexcept(std::declval<type_alias>().decay()));
+      STATIC_REQUIRE(!noexcept(std::declval<type_alias>().decay()));
     }
   }
 }
@@ -119,7 +119,7 @@ SCENARIO("Nothrow Conversion")
 
     THEN("the decay member function is nothrow-invokable")
     {
-      REQUIRE(noexcept(std::declval<type_alias>().operator int()));
+      STATIC_REQUIRE(noexcept(std::declval<type_alias>().operator int()));
     }
   }
 
@@ -129,7 +129,7 @@ SCENARIO("Nothrow Conversion")
 
     THEN("the decay member function is not nothrow-invokable")
     {
-      REQUIRE(!noexcept(std::declval<type_alias>().operator strange_type()));
+      STATIC_REQUIRE(!noexcept(std::declval<type_alias>().operator strange_type()));
     }
   }
 }
