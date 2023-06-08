@@ -251,54 +251,52 @@ namespace nt
     }
   };
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::equality_comparable BaseType, typename TagType, auto DerivationClause>
   auto constexpr
   operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_equality_comparable_v<BaseType>)
-      -> std::enable_if_t<impl::is_equality_comparable_v<BaseType>, bool>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
   {
     return lhs.decay() == rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::equality_comparable BaseType, typename TagType, auto DerivationClause>
+    requires(DerivationClause(nt::EqBase))
   auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
-                            BaseType const & rhs) noexcept(impl::is_nothrow_equality_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_equality_comparable_v<BaseType>, bool>
+                            BaseType const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
   {
     return lhs.decay() == rhs;
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::equality_comparable BaseType, typename TagType, auto DerivationClause>
+    requires(DerivationClause(nt::EqBase))
   auto constexpr
   operator==(BaseType const & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_equality_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_equality_comparable_v<BaseType>, bool>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
   {
     return lhs == rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::inequality_comparable BaseType, typename TagType, auto DerivationClause>
   auto constexpr
   operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_inequality_comparable_v<BaseType>)
-      -> std::enable_if_t<impl::is_inequality_comparable_v<BaseType>, bool>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_inequality_comparable<BaseType>) -> bool
   {
     return lhs.decay() != rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::inequality_comparable BaseType, typename TagType, auto DerivationClause>
+    requires(DerivationClause(nt::EqBase))
   auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
-                            BaseType const & rhs) noexcept(impl::is_nothrow_inequality_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_inequality_comparable_v<BaseType>, bool>
+                            BaseType const & rhs) noexcept(nt::concepts::nothrow_inequality_comparable<BaseType>) -> bool
   {
     return lhs.decay() != rhs;
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::inequality_comparable BaseType, typename TagType, auto DerivationClause>
+    requires(DerivationClause(nt::EqBase))
   auto constexpr
   operator!=(BaseType const & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_inequality_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::EqBase) && impl::is_inequality_comparable_v<BaseType>, bool>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_inequality_comparable<BaseType>) -> bool
   {
     return lhs != rhs.decay();
   }

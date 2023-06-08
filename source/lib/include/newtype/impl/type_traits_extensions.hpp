@@ -11,65 +11,6 @@
 namespace nt::impl
 {
 
-  inline namespace equality_comparable
-  {
-
-    template<typename T, typename = void>
-    struct is_equality_comparable : std::false_type
-    {
-    };
-
-    template<typename T>
-    struct is_equality_comparable<T, std::void_t<decltype(std::declval<T const &>() == std::declval<T const &>())>> : std::true_type
-    {
-    };
-
-    template<typename T>
-    auto constexpr is_equality_comparable_v = is_equality_comparable<T>::value;
-
-    template<typename T, typename = void>
-    struct is_nothrow_equality_comparable : std::false_type
-    {
-    };
-
-    template<typename T>
-    struct is_nothrow_equality_comparable<T, std::void_t<decltype(std::declval<T const &>() == std::declval<T const &>())>>
-        : std::bool_constant<noexcept(std::declval<T const &>() == std::declval<T const &>())>
-    {
-    };
-
-    template<typename T>
-    auto constexpr is_nothrow_equality_comparable_v = is_nothrow_equality_comparable<T>::value;
-
-    template<typename T, typename = void>
-    struct is_inequality_comparable : std::false_type
-    {
-    };
-
-    template<typename T>
-    struct is_inequality_comparable<T, std::void_t<decltype(std::declval<T const &>() != std::declval<T const &>())>> : std::true_type
-    {
-    };
-
-    template<typename T>
-    auto constexpr is_inequality_comparable_v = is_inequality_comparable<T>::value;
-
-    template<typename T, typename = void>
-    struct is_nothrow_inequality_comparable : std::false_type
-    {
-    };
-
-    template<typename T>
-    struct is_nothrow_inequality_comparable<T, std::void_t<decltype(std::declval<T const &>() != std::declval<T const &>())>>
-        : std::bool_constant<noexcept(std::declval<T const &>() != std::declval<T const &>())>
-    {
-    };
-
-    template<typename T>
-    auto constexpr is_nothrow_inequality_comparable_v = is_nothrow_inequality_comparable<T>::value;
-
-  }  // namespace equality_comparable
-
   inline namespace relationally_comparable
   {
 

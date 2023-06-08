@@ -1,3 +1,4 @@
+#include "newtype/concepts.hpp"
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
 #include "newtype/newtype.hpp"
@@ -64,17 +65,17 @@ SCENARIO("Equality Comparison", "[compare]")
   {
     using type_alias = nt::new_type<int, struct tag>;
 
-    static_assert(noexcept(std::declval<type_alias::base_type>() == std::declval<type_alias::base_type>()));
-    static_assert(noexcept(std::declval<type_alias::base_type>() != std::declval<type_alias::base_type>()));
+    static_assert(nt::concepts::nothrow_equality_comparable<type_alias::base_type>);
+    static_assert(nt::concepts::nothrow_inequality_comparable<type_alias::base_type>);
 
     THEN("it is nothrow-equality-comparable")
     {
-      STATIC_REQUIRE(noexcept(std::declval<type_alias>() == std::declval<type_alias>()));
+      STATIC_REQUIRE(nt::concepts::nothrow_equality_comparable<type_alias>);
     }
 
     THEN("it is nothrow-inequality-comparable")
     {
-      STATIC_REQUIRE(noexcept(std::declval<type_alias>() != std::declval<type_alias>()));
+      STATIC_REQUIRE(nt::concepts::nothrow_inequality_comparable<type_alias>);
     }
   }
 
@@ -88,12 +89,12 @@ SCENARIO("Equality Comparison", "[compare]")
 
     using type_alias = nt::new_type<not_nothrow_comparable, struct tag>;
 
-    static_assert(!noexcept(std::declval<type_alias::base_type>() == std::declval<type_alias::base_type>()));
-    static_assert(!noexcept(std::declval<type_alias::base_type>() != std::declval<type_alias::base_type>()));
+    static_assert(!nt::concepts::nothrow_equality_comparable<type_alias::base_type>);
+    static_assert(!nt::concepts::nothrow_inequality_comparable<type_alias::base_type>);
 
     THEN("it is not nothrow-equality-comparable")
     {
-      STATIC_REQUIRE_FALSE(noexcept(std::declval<type_alias>() == std::declval<type_alias>()));
+      STATIC_REQUIRE_FALSE(nt::concepts::nothrow_equality_comparable<type_alias>);
     }
 
     THEN("it is not nothrow-inequality-comparable")
