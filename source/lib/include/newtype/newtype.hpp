@@ -299,38 +299,34 @@ namespace nt
     return lhs != rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::less_than_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
   auto constexpr
   operator<(new_type<BaseType, TagType, DerivationClause> const & lhs,
-            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_less_than_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Relational) && impl::is_less_than_comparable_v<BaseType>, bool>
+            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_less_than_comparable<BaseType>)
   {
     return lhs.decay() < rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::greater_than_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
   auto constexpr
   operator>(new_type<BaseType, TagType, DerivationClause> const & lhs,
-            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_greater_than_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Relational) && impl::is_greater_than_comparable_v<BaseType>, bool>
+            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_greater_than_comparable<BaseType>)
   {
     return lhs.decay() > rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::less_than_equal_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
   auto constexpr
   operator<=(new_type<BaseType, TagType, DerivationClause> const & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_less_than_equal_to_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Relational) && impl::is_less_than_equal_to_comparable_v<BaseType>, bool>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_less_than_equal_comparable<BaseType>)
   {
     return lhs.decay() <= rhs.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::greater_than_equal_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
   auto constexpr
   operator>=(new_type<BaseType, TagType, DerivationClause> const & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_greater_than_equal_to_comparable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Relational) && impl::is_greater_than_equal_to_comparable_v<BaseType>, bool>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_greater_than_equal_comparable<BaseType>)
   {
     return lhs.decay() >= rhs.decay();
   }

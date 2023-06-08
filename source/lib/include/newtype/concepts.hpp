@@ -42,6 +42,66 @@ namespace nt::concepts
       } noexcept;
     };
 
+    template<typename SubjectType>
+    concept less_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs < rhs
+      } -> std::convertible_to<bool>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_less_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      requires less_than_comparable<SubjectType>;
+      {
+        lhs < rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept less_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs <= rhs
+      } -> std::convertible_to<bool>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_less_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      requires less_than_equal_comparable<SubjectType>;
+      {
+        lhs <= rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept greater_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs > rhs
+      } -> std::convertible_to<bool>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_greater_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      requires greater_than_comparable<SubjectType>;
+      {
+        lhs > rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept greater_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      {
+        lhs >= rhs
+      } -> std::convertible_to<bool>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_greater_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
+      requires greater_than_equal_comparable<SubjectType>;
+      {
+        lhs >= rhs
+      } noexcept;
+    };
+
   }  // namespace comparability
 
   inline namespace iostreamable
