@@ -65,6 +65,9 @@ namespace nt
     }
   };
 
+  template<typename DerivationClause, auto Feature>
+  concept contains = requires(DerivationClause clause) { requires clause(Feature); };
+
 }  // namespace nt
 
 #endif

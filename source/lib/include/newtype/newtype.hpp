@@ -259,16 +259,14 @@ namespace nt
     return lhs.decay() == rhs.decay();
   }
 
-  template<nt::concepts::equality_comparable BaseType, typename TagType, auto DerivationClause>
-    requires(DerivationClause(nt::EqBase))
+  template<nt::concepts::equality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
   auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
                             BaseType const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
   {
     return lhs.decay() == rhs;
   }
 
-  template<nt::concepts::equality_comparable BaseType, typename TagType, auto DerivationClause>
-    requires(DerivationClause(nt::EqBase))
+  template<nt::concepts::equality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
   auto constexpr
   operator==(BaseType const & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
@@ -284,16 +282,14 @@ namespace nt
     return lhs.decay() != rhs.decay();
   }
 
-  template<nt::concepts::inequality_comparable BaseType, typename TagType, auto DerivationClause>
-    requires(DerivationClause(nt::EqBase))
+  template<nt::concepts::inequality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
   auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
                             BaseType const & rhs) noexcept(nt::concepts::nothrow_inequality_comparable<BaseType>) -> bool
   {
     return lhs.decay() != rhs;
   }
 
-  template<nt::concepts::inequality_comparable BaseType, typename TagType, auto DerivationClause>
-    requires(DerivationClause(nt::EqBase))
+  template<nt::concepts::inequality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
   auto constexpr
   operator!=(BaseType const & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_inequality_comparable<BaseType>) -> bool
@@ -533,8 +529,7 @@ namespace nt
 
 namespace std
 {
-  template<typename BaseType, typename TagType, auto DerivationClause>
-    requires(nt::concepts::hashable<BaseType> && DerivationClause(nt::Hash))
+  template<nt::concepts::hashable BaseType, typename TagType, nt::contains<nt::Hash> auto DerivationClause>
   struct hash<nt::new_type<BaseType, TagType, DerivationClause>>
   {
     auto constexpr operator()(nt::new_type<BaseType, TagType, DerivationClause> const & object) const
