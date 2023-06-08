@@ -14,7 +14,7 @@ add_executable("${PROJECT_NAME}_tests"
   "src/equality_comparison.cpp"
   "src/hash.cpp"
   "src/io_operators.cpp"
-  # "src/iterable_suite.cpp"
+  "src/iterable.cpp"
   # "src/relational_operators_suite.cpp"
 )
 
