@@ -9,12 +9,7 @@ target_compile_features("${PROJECT_NAME}" INTERFACE
   "cxx_std_20"
 )
 
-install(TARGETS "${PROJECT_NAME}"
-  EXPORT "${PROJECT_NAME}Targets"
-  PUBLIC_HEADER DESTINATION "include"
-)
-
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/"
+install(DIRECTORY "include/"
   DESTINATION "include"
 )
 
