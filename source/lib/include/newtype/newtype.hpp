@@ -25,11 +25,13 @@ namespace nt
     static_assert(!std::is_reference_v<BaseType>, "The base type must not be a reference type");
     static_assert(!std::is_void_v<std::remove_cv_t<BaseType>>, "The base type must not be possibly cv-qualified void");
 
-    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV, typename CharType, typename StreamTraits>
+    template<typename CharType,
+             typename StreamTraits,
+             nt::concepts::input_streamable<CharType, StreamTraits> BaseTypeT,
+             typename TagTypeT,
+             nt::contains<nt::Read> auto DerivationClauseV>
     auto friend operator>>(std::basic_istream<CharType, StreamTraits> &, new_type<BaseTypeT, TagTypeT, DerivationClauseV> &) noexcept(
-        impl::is_nothrow_input_streamable_v<std::basic_istream<CharType, StreamTraits>, BaseTypeT>)
-        -> std::enable_if_t<DerivationClauseV(nt::Read) && impl::is_input_streamable_v<std::basic_istream<CharType, StreamTraits>, BaseTypeT>,
-                            std::basic_istream<CharType, StreamTraits>> &;
+        nt::concepts::nothrow_input_streamable<BaseTypeT, CharType, StreamTraits>) -> std::basic_istream<CharType, StreamTraits> &;
 
     template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
     auto constexpr friend
@@ -342,11 +344,13 @@ namespace nt
     return output << source.decay();
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause, typename CharType, typename StreamTraits>
+  template<typename CharType,
+           typename StreamTraits,
+           nt::concepts::input_streamable<CharType, StreamTraits> BaseType,
+           typename TagType,
+           nt::contains<nt::Read> auto DerivationClause>
   auto operator>>(std::basic_istream<CharType, StreamTraits> & input, new_type<BaseType, TagType, DerivationClause> & target) noexcept(
-      impl::is_nothrow_input_streamable_v<std::basic_istream<CharType, StreamTraits>, BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Read) && impl::is_input_streamable_v<std::basic_istream<CharType, StreamTraits>, BaseType>,
-                          std::basic_istream<CharType, StreamTraits>> &
+      nt::concepts::nothrow_input_streamable<BaseType, CharType, StreamTraits>) -> std::basic_istream<CharType, StreamTraits> &
   {
     return input >> target.m_value;
   }

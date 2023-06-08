@@ -4,6 +4,7 @@
 #include <concepts>
 #include <cstddef>
 #include <functional>
+#include <iosfwd>
 
 namespace nt::concepts
 {
@@ -35,6 +36,21 @@ namespace nt::concepts
     requires inequality_comparable<SubjectType>;
     {
       lhs != rhs
+    } noexcept;
+  };
+
+  template<typename SubjectType, typename CharType, typename StreamTraits>
+  concept input_streamable = requires(SubjectType subject) {
+    {
+      std::declval<std::basic_istream<CharType, StreamTraits> &>() >> subject
+    } -> std::same_as<std::basic_istream<CharType, StreamTraits> &>;
+  };
+
+  template<typename SubjectType, typename CharType, typename StreamTraits>
+  concept nothrow_input_streamable = requires(SubjectType subject) {
+    requires input_streamable<SubjectType, CharType, StreamTraits>;
+    {
+      std::declval<std::basic_istream<CharType, StreamTraits> &>() >> subject
     } noexcept;
   };
 

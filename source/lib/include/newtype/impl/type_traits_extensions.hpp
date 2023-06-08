@@ -155,33 +155,6 @@ namespace nt::impl
     template<typename StreamType, typename T>
     auto constexpr is_nothrow_output_streamable_v = is_nothrow_output_streamable<StreamType, T>::value;
 
-    template<typename StreamType, typename T, typename = void>
-    struct is_input_streamable : std::false_type
-    {
-    };
-
-    template<typename StreamType, typename T>
-    struct is_input_streamable<StreamType, T, std::void_t<decltype(std::declval<StreamType &>() >> std::declval<T &>())>> : std::true_type
-    {
-    };
-
-    template<typename StreamType, typename T>
-    auto constexpr is_input_streamable_v = is_input_streamable<StreamType, T>::value;
-
-    template<typename StreamType, typename T, typename = void>
-    struct is_nothrow_input_streamable : std::false_type
-    {
-    };
-
-    template<typename StreamType, typename T>
-    struct is_nothrow_input_streamable<StreamType, T, std::void_t<decltype(std::declval<StreamType &>() >> std::declval<T &>())>>
-        : std::bool_constant<noexcept(std::declval<StreamType &>() >> std::declval<T &>())>
-    {
-    };
-
-    template<typename StreamType, typename T>
-    auto constexpr is_nothrow_input_streamable_v = is_nothrow_input_streamable<StreamType, T>::value;
-
   }  // namespace iostreamable
 
   inline namespace arithmetic
