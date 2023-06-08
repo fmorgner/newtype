@@ -537,9 +537,9 @@ namespace std
   template<typename BaseType, typename TagType, auto DerivationClause>
   struct hash<nt::new_type<BaseType, TagType, DerivationClause>>
   {
-    template<typename BaseTypeT = BaseType, auto DerivationClauseV = DerivationClause>
+    template<typename BaseTypeT = BaseType>
     auto constexpr operator()(nt::new_type<BaseType, TagType, DerivationClause> const & object,
-                              std::enable_if_t<DerivationClauseV(nt::Hash) && nt::impl::is_hashable_v<BaseTypeT>> * = nullptr) const
+                              std::enable_if_t<DerivationClause(nt::Hash) && nt::impl::is_hashable_v<BaseTypeT>> * = nullptr) const
         -> std::size_t
     {
       return std::hash<BaseType>{}(object.decay());
