@@ -770,42 +770,6 @@ namespace nt
     {
       return (*this)(derivable<DerivableTag>{}) && (*this)(derivable<RemainingDerivableTags>{}...);
     }
-
-    template<typename... OtherDerivableTags>
-    auto constexpr operator<(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
-    {
-      return (sizeof...(DerivableTags) < sizeof...(OtherDerivableTags)) && other(derivable<DerivableTags>{}...);
-    }
-
-    template<typename... OtherDerivableTags>
-    auto constexpr operator>(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
-    {
-      return other < *this;
-    }
-
-    template<typename... OtherDerivableTags>
-    auto constexpr operator==(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
-    {
-      return sizeof...(DerivableTags) == sizeof...(OtherDerivableTags) && other(derivable<DerivableTags>{}...);
-    }
-
-    template<typename... OtherDerivableTags>
-    auto constexpr operator!=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
-    {
-      return !(*this == other);
-    }
-
-    template<typename... OtherDerivableTags>
-    auto constexpr operator<=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
-    {
-      return *this < other || *this == other;
-    }
-
-    template<typename... OtherDerivableTags>
-    auto constexpr operator>=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
-    {
-      return *this > other || *this == other;
-    }
   };
 
   template<typename DerivationClause, auto... Features>
