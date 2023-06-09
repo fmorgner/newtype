@@ -747,6 +747,7 @@ namespace nt
     auto constexpr Read = derivable<struct read_tag>{};
     auto constexpr Relational = derivable<struct relational_tag>{};
     auto constexpr Show = derivable<struct show_tag>{};
+    auto constexpr ThreewayCompare = derivable<struct threeway_compare_tag>{};
 
   }  // namespace derivables
 
@@ -767,6 +768,9 @@ namespace nt
   template<typename DerivationClause, auto... Features>
   concept derives = requires(DerivationClause clause) { requires DerivationClause::template derives<Features...>::value; };
 
+  template<typename DerivationClause, auto... Features>
+  concept doesnt_derive = !derives<DerivationClause, Features...>;
+
   template<typename... DerivableTags>
   auto constexpr deriving(derivable<DerivableTags>... features) noexcept -> derivation_clause<DerivableTags...>
   {
@@ -780,6 +784,8 @@ namespace nt
   {
     static_assert(!std::is_reference_v<BaseType>, "The base type must not be a reference type");
     static_assert(!std::is_void_v<std::remove_cv_t<BaseType>>, "The base type must not be possibly cv-qualified void");
+    static_assert(!derives<decltype(DerivationClause), nt::Relational, nt::ThreewayCompare>,
+                  "Cannot derive both nt::Relational and nt::ThreewayCompare at the same time.");
 
     template<typename CharType,
              typename StreamTraits,
@@ -985,10 +991,17 @@ namespace nt
     }
   };
 
-  template<nt::concepts::equality_comparable BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::equality_comparable BaseType, typename TagType, doesnt_derive<nt::ThreewayCompare> auto DerivationClause>
   auto constexpr
   operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
+  {
+    return lhs.decay() == rhs.decay();
+  }
+
+  template<std::three_way_comparable BaseType, typename TagType, derives<nt::ThreewayCompare> auto DerivationClause>
+  auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                            new_type<BaseType, TagType, DerivationClause> const & rhs) -> bool
   {
     return lhs.decay() == rhs.decay();
   }
@@ -1006,6 +1019,13 @@ namespace nt
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
   {
     return lhs == rhs.decay();
+  }
+
+  template<std::three_way_comparable BaseType, typename TagType, nt::derives<nt::ThreewayCompare> auto DerivationClause>
+  auto constexpr operator<=>(new_type<BaseType, TagType, DerivationClause> const & lhs,
+                             new_type<BaseType, TagType, DerivationClause> const & rhs)
+  {
+    return lhs.decay() <=> rhs.decay();
   }
 
   template<nt::concepts::inequality_comparable BaseType, typename TagType, auto DerivationClause>

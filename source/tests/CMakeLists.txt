@@ -6,16 +6,15 @@ find_package("Catch2" "3.1"
 include("CTest")
 include("Catch")
 
+file(GLOB SOURCES
+  RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+  CONFIGURE_DEPENDS
+  "src/*.cpp"
+)
+
+
 add_executable("${PROJECT_NAME}_tests"
-  "src/arithmetic.cpp"
-  "src/constructors.cpp"
-  "src/conversion.cpp"
-  "src/derivation_clause.cpp"
-  "src/equality_comparison.cpp"
-  "src/hash.cpp"
-  "src/io_operators.cpp"
-  "src/iterable.cpp"
-  "src/relational_operators.cpp"
+  ${SOURCES}
 )
 
 target_link_libraries("${PROJECT_NAME}_tests"
