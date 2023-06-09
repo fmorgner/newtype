@@ -12,10 +12,10 @@ namespace nt
 
     char const * const name;
   } version{
-      .major = 1,
-      .minor = 1,
+      .major = 2,
+      .minor = 0,
       .patch = 0,
-      .name = "Anastasia",
+      .name = "Brynn",
   };
 
 }  // namespace nt

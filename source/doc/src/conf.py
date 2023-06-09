@@ -6,10 +6,10 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'newtype'
-copyright = '2020, Felix Morgner'
+copyright = '2023, Felix Morgner'
 author = 'Felix Morgner'
-version = '1.1'
-release = '1.1.0'
+version = '2.0'
+release = '2.0.0'
 
 
 # -- General configuration ---------------------------------------------------
