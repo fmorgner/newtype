@@ -10,7 +10,7 @@ target_compile_features("${PROJECT_NAME}" INTERFACE
 )
 
 install(DIRECTORY "include/"
-  DESTINATION "include"
+  TYPE INCLUDE
 )
 
 add_library("${PROJECT_NAME}::${PROJECT_NAME}" ALIAS "${PROJECT_NAME}")
