@@ -1,8 +1,6 @@
 #ifndef NEWTYPE_NEWTYPE_HPP
 #define NEWTYPE_NEWTYPE_HPP
 
-#include "newtype/derivable.hpp"
-#include "newtype/deriving.hpp"
 #include "newtype/impl/new_type_iterator_types.hpp"
 #include "newtype/impl/new_type_storage.hpp"
 
@@ -538,6 +536,95 @@ namespace nt
     }
 
   }  // namespace concepts
+
+  template<typename DerivableTag>
+  struct derivable final
+  {
+    using tag_type = DerivableTag;
+  };
+
+  inline namespace derivables
+  {
+
+    auto constexpr Arithmetic = derivable<struct arithmetic_tag>{};
+    auto constexpr EqBase = derivable<struct eq_base_tag>{};
+    auto constexpr Hash = derivable<struct hash_tag>{};
+    auto constexpr ImplicitConversion = derivable<struct implicit_conversion_tag>{};
+    auto constexpr Indirection = derivable<struct indirection_tag>{};
+    auto constexpr Iterable = derivable<struct iterable_tag>{};
+    auto constexpr Read = derivable<struct read_tag>{};
+    auto constexpr Relational = derivable<struct relational_tag>{};
+    auto constexpr Show = derivable<struct show_tag>{};
+
+  }  // namespace derivables
+
+  template<typename... DerivableTags>
+  struct derivation_clause
+  {
+    template<auto... Needles>
+    using contains = std::disjunction<std::is_same<DerivableTags, typename decltype(Needles)::tag_type>...>;
+
+    constexpr derivation_clause(derivable<DerivableTags>...) noexcept
+    {
+    }
+
+    template<typename DerivableTag>
+    auto constexpr operator()(derivable<DerivableTag>) const noexcept -> bool
+    {
+      return (std::is_same_v<DerivableTags, DerivableTag> || ...);
+    }
+
+    template<typename DerivableTag, typename... RemainingDerivableTags>
+    auto constexpr operator()(derivable<DerivableTag>, derivable<RemainingDerivableTags>...) const noexcept -> bool
+    {
+      return (*this)(derivable<DerivableTag>{}) && (*this)(derivable<RemainingDerivableTags>{}...);
+    }
+
+    template<typename... OtherDerivableTags>
+    auto constexpr operator<(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
+    {
+      return (sizeof...(DerivableTags) < sizeof...(OtherDerivableTags)) && other(derivable<DerivableTags>{}...);
+    }
+
+    template<typename... OtherDerivableTags>
+    auto constexpr operator>(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
+    {
+      return other < *this;
+    }
+
+    template<typename... OtherDerivableTags>
+    auto constexpr operator==(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
+    {
+      return sizeof...(DerivableTags) == sizeof...(OtherDerivableTags) && other(derivable<DerivableTags>{}...);
+    }
+
+    template<typename... OtherDerivableTags>
+    auto constexpr operator!=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
+    {
+      return !(*this == other);
+    }
+
+    template<typename... OtherDerivableTags>
+    auto constexpr operator<=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
+    {
+      return *this < other || *this == other;
+    }
+
+    template<typename... OtherDerivableTags>
+    auto constexpr operator>=(derivation_clause<OtherDerivableTags...> other) const noexcept -> bool
+    {
+      return *this > other || *this == other;
+    }
+  };
+
+  template<typename DerivationClause, auto... Features>
+  concept contains = requires(DerivationClause clause) { requires DerivationClause::template contains<Features...>::value; };
+
+  template<typename... DerivableTags>
+  auto constexpr deriving(derivable<DerivableTags>... features) noexcept -> derivation_clause<DerivableTags...>
+  {
+    return {features...};
+  }
 
   template<typename BaseType, typename TagType, auto DerivationClause = deriving()>
   class new_type

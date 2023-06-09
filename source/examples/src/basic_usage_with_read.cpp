@@ -1,5 +1,3 @@
-#include <newtype/derivable.hpp>
-#include <newtype/deriving.hpp>
 #include <newtype/newtype.hpp>
 
 #include <iostream>
