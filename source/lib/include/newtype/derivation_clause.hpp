@@ -2,7 +2,6 @@
 #define NEWTYPE_DERIVATION_CLAUSE_HPP
 
 #include "newtype/derivable.hpp"
-#include "newtype/version.hpp"
 
 #include <type_traits>
 

@@ -1,8 +1,6 @@
 #ifndef NEWTYPE_IMPL_NEW_TYPE_ITERATOR_TYPES_HPP
 #define NEWTYPE_IMPL_NEW_TYPE_ITERATOR_TYPES_HPP
 
-#include "newtype/version.hpp"
-
 #include <type_traits>
 
 namespace nt::impl

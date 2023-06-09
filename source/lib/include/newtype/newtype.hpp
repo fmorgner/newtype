@@ -5,7 +5,6 @@
 #include "newtype/deriving.hpp"
 #include "newtype/impl/new_type_iterator_types.hpp"
 #include "newtype/impl/new_type_storage.hpp"
-#include "newtype/version.hpp"
 
 #include <functional>
 #include <istream>
@@ -14,6 +13,24 @@
 
 namespace nt
 {
+
+  inline namespace lib
+  {
+    constexpr struct
+    {
+      int const major;
+      int const minor;
+      int const patch;
+
+      char const * const name;
+    } version{
+        .major = 2,
+        .minor = 0,
+        .patch = 0,
+        .name = "Brynn",
+    };
+
+  }  // namespace lib
 
   namespace concepts
   {
