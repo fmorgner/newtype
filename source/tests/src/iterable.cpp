@@ -63,308 +63,308 @@ SCENARIO("Iterators", "[iterators]")
   GIVEN("A new_type over a non-iterable base type not deriving nt::Iterable")
   {
     using type_alias = nt::new_type<int, struct tag>;
-    static_assert(!nt::impl::has_begin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_begin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_cbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rbegin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_crbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_end_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_end_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_cend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rend_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_crend_v<type_alias::base_type>);
+    static_assert(!nt::concepts::beginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::beginnable<type_alias::base_type const>);
+    static_assert(!nt::concepts::cbeginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::rbeginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::rbeginnable<type_alias::base_type const>);
+    static_assert(!nt::concepts::crbeginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::endable<type_alias::base_type>);
+    static_assert(!nt::concepts::endable<type_alias::base_type const>);
+    static_assert(!nt::concepts::cendable<type_alias::base_type>);
+    static_assert(!nt::concepts::rendable<type_alias::base_type>);
+    static_assert(!nt::concepts::rendable<type_alias::base_type const>);
+    static_assert(!nt::concepts::crendable<type_alias::base_type>);
 
     THEN("it has no begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::beginnable<type_alias>);
     }
 
     THEN("it has no constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::beginnable<type_alias const>);
     }
 
     THEN("it has no cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::cbeginnable<type_alias>);
     }
 
     THEN("it has no rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rbeginnable<type_alias>);
     }
 
     THEN("it has no constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rbeginnable<type_alias const>);
     }
 
     THEN("it has no crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::crbeginnable<type_alias>);
     }
 
     THEN("it has no end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::endable<type_alias>);
     }
 
     THEN("it has no constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::endable<type_alias const>);
     }
 
     THEN("it has no cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::cendable<type_alias>);
     }
 
     THEN("it has no rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rendable<type_alias>);
     }
 
     THEN("it has no constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rendable<type_alias const>);
     }
 
     THEN("it has no crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::crendable<type_alias>);
     }
   }
 
   GIVEN("A new_type over a non-iterable base type deriving nt::Iterable")
   {
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    static_assert(!nt::impl::has_begin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_begin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_cbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rbegin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_crbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_end_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_end_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_cend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_rend_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_crend_v<type_alias::base_type>);
+    static_assert(!nt::concepts::beginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::beginnable<type_alias::base_type const>);
+    static_assert(!nt::concepts::cbeginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::rbeginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::rbeginnable<type_alias::base_type const>);
+    static_assert(!nt::concepts::crbeginnable<type_alias::base_type>);
+    static_assert(!nt::concepts::endable<type_alias::base_type>);
+    static_assert(!nt::concepts::endable<type_alias::base_type const>);
+    static_assert(!nt::concepts::cendable<type_alias::base_type>);
+    static_assert(!nt::concepts::rendable<type_alias::base_type>);
+    static_assert(!nt::concepts::rendable<type_alias::base_type const>);
+    static_assert(!nt::concepts::crendable<type_alias::base_type>);
 
     THEN("it has no begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::beginnable<type_alias>);
     }
 
     THEN("it has no constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::beginnable<type_alias const>);
     }
 
     THEN("it has no cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::cbeginnable<type_alias>);
     }
 
     THEN("it has no rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rbeginnable<type_alias>);
     }
 
     THEN("it has no constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rbeginnable<type_alias const>);
     }
 
     THEN("it has no crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::crbeginnable<type_alias>);
     }
 
     THEN("it has no end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::endable<type_alias>);
     }
 
     THEN("it has no constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::endable<type_alias const>);
     }
 
     THEN("it has no cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::cendable<type_alias>);
     }
 
     THEN("it has no rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rendable<type_alias>);
     }
 
     THEN("it has no constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rendable<type_alias const>);
     }
 
     THEN("it has no crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::crendable<type_alias>);
     }
   }
 
   GIVEN("A new_type over an iterable base type not deriving nt::Iterable")
   {
     using type_alias = nt::new_type<std::array<int, 1>, struct tag>;
-    static_assert(nt::impl::has_begin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_begin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_cbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rbegin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_crbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_end_v<type_alias::base_type>);
-    static_assert(nt::impl::has_end_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_cend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rend_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_crend_v<type_alias::base_type>);
+    static_assert(nt::concepts::beginnable<type_alias::base_type>);
+    static_assert(nt::concepts::const_beginnable<type_alias::base_type>);
+    static_assert(nt::concepts::cbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::rbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::const_rbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::crbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::endable<type_alias::base_type>);
+    static_assert(nt::concepts::const_endable<type_alias::base_type>);
+    static_assert(nt::concepts::cendable<type_alias::base_type>);
+    static_assert(nt::concepts::rendable<type_alias::base_type>);
+    static_assert(nt::concepts::const_rendable<type_alias::base_type>);
+    static_assert(nt::concepts::crendable<type_alias::base_type>);
 
     THEN("it has no begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::beginnable<type_alias>);
     }
 
     THEN("it has no constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::beginnable<type_alias const>);
     }
 
     THEN("it has no cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::cbeginnable<type_alias>);
     }
 
     THEN("it has no rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rbeginnable<type_alias>);
     }
 
     THEN("it has no constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rbeginnable<type_alias const>);
     }
 
     THEN("it has no crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::crbeginnable<type_alias>);
     }
 
     THEN("it has no end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::endable<type_alias>);
     }
 
     THEN("it has no constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::endable<type_alias const>);
     }
 
     THEN("it has no cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::cendable<type_alias>);
     }
 
     THEN("it has no rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rendable<type_alias>);
     }
 
     THEN("it has no constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::rendable<type_alias const>);
     }
 
     THEN("it has no crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::crendable<type_alias>);
     }
   }
 
   GIVEN("A new_type over an iterable base type deriving nt::Iterable")
   {
     using type_alias = nt::new_type<std::array<int, 1>, struct tag, deriving(nt::Iterable)>;
-    static_assert(nt::impl::has_begin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_begin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_cbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rbegin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_crbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_end_v<type_alias::base_type>);
-    static_assert(nt::impl::has_end_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_cend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_rend_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_crend_v<type_alias::base_type>);
+    static_assert(nt::concepts::beginnable<type_alias::base_type>);
+    static_assert(nt::concepts::const_beginnable<type_alias::base_type>);
+    static_assert(nt::concepts::cbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::rbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::const_rbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::crbeginnable<type_alias::base_type>);
+    static_assert(nt::concepts::endable<type_alias::base_type>);
+    static_assert(nt::concepts::const_endable<type_alias::base_type>);
+    static_assert(nt::concepts::cendable<type_alias::base_type>);
+    static_assert(nt::concepts::rendable<type_alias::base_type>);
+    static_assert(nt::concepts::const_rendable<type_alias::base_type>);
+    static_assert(nt::concepts::crendable<type_alias::base_type>);
 
     THEN("it has begin")
     {
-      STATIC_REQUIRE(nt::impl::has_begin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::beginnable<type_alias>);
     }
 
     THEN("it has constant begin")
     {
-      STATIC_REQUIRE(nt::impl::has_begin_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_beginnable<type_alias>);
     }
 
     THEN("it has cbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_cbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::cbeginnable<type_alias>);
     }
 
     THEN("it has rbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_rbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::rbeginnable<type_alias>);
     }
 
     THEN("it has constant rbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_rbegin_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_rbeginnable<type_alias>);
     }
 
     THEN("it has crbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_crbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::crbeginnable<type_alias>);
     }
 
     THEN("it has end")
     {
-      STATIC_REQUIRE(nt::impl::has_end_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::endable<type_alias>);
     }
 
     THEN("it has constant end")
     {
-      STATIC_REQUIRE(nt::impl::has_end_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_endable<type_alias>);
     }
 
     THEN("it has cend")
     {
-      STATIC_REQUIRE(nt::impl::has_cend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::cendable<type_alias>);
     }
 
     THEN("it has rend")
     {
-      STATIC_REQUIRE(nt::impl::has_rend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::rendable<type_alias>);
     }
 
     THEN("it has constant rend")
     {
-      STATIC_REQUIRE(nt::impl::has_rend_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_rendable<type_alias>);
     }
 
     THEN("it has crend")
     {
-      STATIC_REQUIRE(nt::impl::has_crend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::crendable<type_alias>);
     }
   }
 }
@@ -374,308 +374,308 @@ SCENARIO("Iterators (member)", "[iterators]")
   GIVEN("A new_type over a non-iterable base type not deriving nt::Iterable")
   {
     using type_alias = nt::new_type<int, struct tag>;
-    static_assert(!nt::impl::has_member_begin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_begin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_cbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rbegin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_crbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_end_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_end_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_cend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rend_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_crend_v<type_alias::base_type>);
+    static_assert(!nt::concepts::member_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_cbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_crbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_end<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_end<type_alias::base_type>);
+    static_assert(!nt::concepts::member_cend<type_alias::base_type>);
+    static_assert(!nt::concepts::member_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::member_crend<type_alias::base_type>);
 
     THEN("it has no member begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_begin<type_alias>);
     }
 
     THEN("it has no member constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_begin<type_alias const>);
     }
 
     THEN("it has no member cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_cbegin<type_alias>);
     }
 
     THEN("it has no member rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rbegin<type_alias>);
     }
 
     THEN("it has no member constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rbegin<type_alias const>);
     }
 
     THEN("it has no member crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_crbegin<type_alias>);
     }
 
     THEN("it has no member end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_end<type_alias>);
     }
 
     THEN("it has no member constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_end<type_alias const>);
     }
 
     THEN("it has no member cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_cend<type_alias>);
     }
 
     THEN("it has no member rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rend<type_alias>);
     }
 
     THEN("it has no member constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rend<type_alias const>);
     }
 
     THEN("it has no member crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_crend<type_alias>);
     }
   }
 
   GIVEN("A new_type over a non-iterable base type deriving nt::Iterable")
   {
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    static_assert(!nt::impl::has_member_begin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_begin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_cbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rbegin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_crbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_end_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_end_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_cend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_member_rend_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_member_crend_v<type_alias::base_type>);
+    static_assert(!nt::concepts::member_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_cbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_crbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::member_end<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_end<type_alias::base_type>);
+    static_assert(!nt::concepts::member_cend<type_alias::base_type>);
+    static_assert(!nt::concepts::member_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::const_member_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::member_crend<type_alias::base_type>);
 
     THEN("it has no member begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_begin<type_alias>);
     }
 
     THEN("it has no member constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_begin<type_alias const>);
     }
 
     THEN("it has no member cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_cbegin<type_alias>);
     }
 
     THEN("it has no member rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rbegin<type_alias>);
     }
 
     THEN("it has no member constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rbegin<type_alias const>);
     }
 
     THEN("it has no member crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_crbegin<type_alias>);
     }
 
     THEN("it has no member end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_end<type_alias>);
     }
 
     THEN("it has no member constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_end<type_alias const>);
     }
 
     THEN("it has no member cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_cend<type_alias>);
     }
 
     THEN("it has no member rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rend<type_alias>);
     }
 
     THEN("it has no member constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rend<type_alias const>);
     }
 
     THEN("it has no member crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_crend<type_alias>);
     }
   }
 
   GIVEN("A new_type over an iterable base type not deriving nt::Iterable")
   {
     using type_alias = nt::new_type<std::array<int, 1>, struct tag>;
-    static_assert(nt::impl::has_member_begin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_begin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_cbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rbegin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_crbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_end_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_end_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_cend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rend_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_crend_v<type_alias::base_type>);
+    static_assert(nt::concepts::member_begin<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_begin<type_alias::base_type>);
+    static_assert(nt::concepts::member_cbegin<type_alias::base_type>);
+    static_assert(nt::concepts::member_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::member_crbegin<type_alias::base_type>);
+    static_assert(nt::concepts::member_end<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_end<type_alias::base_type>);
+    static_assert(nt::concepts::member_cend<type_alias::base_type>);
+    static_assert(nt::concepts::member_rend<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_rend<type_alias::base_type>);
+    static_assert(nt::concepts::member_crend<type_alias::base_type>);
 
     THEN("it has no member begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_begin<type_alias>);
     }
 
     THEN("it has no member constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_begin<type_alias const>);
     }
 
     THEN("it has no member cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_cbegin<type_alias>);
     }
 
     THEN("it has no member rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rbegin<type_alias>);
     }
 
     THEN("it has no member constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rbegin<type_alias const>);
     }
 
     THEN("it has no member crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_crbegin<type_alias>);
     }
 
     THEN("it has no member end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_end<type_alias>);
     }
 
     THEN("it has no member constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_end<type_alias const>);
     }
 
     THEN("it has no member cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_cend<type_alias>);
     }
 
     THEN("it has no member rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rend<type_alias>);
     }
 
     THEN("it has no member constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_rend<type_alias const>);
     }
 
     THEN("it has no member crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_member_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::member_crend<type_alias>);
     }
   }
 
   GIVEN("A new_type over an iterable base type deriving nt::Iterable")
   {
     using type_alias = nt::new_type<std::array<int, 1>, struct tag, deriving(nt::Iterable)>;
-    static_assert(nt::impl::has_member_begin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_begin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_cbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rbegin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_crbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_end_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_end_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_cend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_member_rend_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_member_crend_v<type_alias::base_type>);
+    static_assert(nt::concepts::member_begin<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_begin<type_alias::base_type>);
+    static_assert(nt::concepts::member_cbegin<type_alias::base_type>);
+    static_assert(nt::concepts::member_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::member_crbegin<type_alias::base_type>);
+    static_assert(nt::concepts::member_end<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_end<type_alias::base_type>);
+    static_assert(nt::concepts::member_cend<type_alias::base_type>);
+    static_assert(nt::concepts::member_rend<type_alias::base_type>);
+    static_assert(nt::concepts::const_member_rend<type_alias::base_type>);
+    static_assert(nt::concepts::member_crend<type_alias::base_type>);
 
     THEN("it has member begin")
     {
-      STATIC_REQUIRE(nt::impl::has_member_begin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_begin<type_alias>);
     }
 
     THEN("it has member constant begin")
     {
-      STATIC_REQUIRE(nt::impl::has_member_begin_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_member_begin<type_alias>);
     }
 
     THEN("it has member cbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_member_cbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_cbegin<type_alias>);
     }
 
     THEN("it has member rbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_member_rbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_rbegin<type_alias>);
     }
 
     THEN("it has member constant rbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_member_rbegin_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_member_rbegin<type_alias>);
     }
 
     THEN("it has member crbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_member_crbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_crbegin<type_alias>);
     }
 
     THEN("it has member end")
     {
-      STATIC_REQUIRE(nt::impl::has_member_end_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_end<type_alias>);
     }
 
     THEN("it has member constant end")
     {
-      STATIC_REQUIRE(nt::impl::has_member_end_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_member_end<type_alias>);
     }
 
     THEN("it has member cend")
     {
-      STATIC_REQUIRE(nt::impl::has_member_cend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_cend<type_alias>);
     }
 
     THEN("it has member rend")
     {
-      STATIC_REQUIRE(nt::impl::has_member_rend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_rend<type_alias>);
     }
 
     THEN("it has member constant rend")
     {
-      STATIC_REQUIRE(nt::impl::has_member_rend_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_member_rend<type_alias>);
     }
 
     THEN("it has member crend")
     {
-      STATIC_REQUIRE(nt::impl::has_member_crend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::member_crend<type_alias>);
     }
   }
 }
@@ -685,308 +685,308 @@ SCENARIO("Iterators (free)", "[iterators]")
   GIVEN("A new_type over a non-iterable base type not deriving nt::Iterable")
   {
     using type_alias = nt::new_type<int, struct tag>;
-    static_assert(!nt::impl::has_free_begin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_begin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_cbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rbegin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_crbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_end_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_end_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_cend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rend_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_crend_v<type_alias::base_type>);
+    static_assert(!nt::concepts::free_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_cbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_crbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_end<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_end<type_alias::base_type>);
+    static_assert(!nt::concepts::free_cend<type_alias::base_type>);
+    static_assert(!nt::concepts::free_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::free_crend<type_alias::base_type>);
 
     THEN("it has no free begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_begin<type_alias>);
     }
 
     THEN("it has no free constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_begin<type_alias>);
     }
 
     THEN("it has no free cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_cbegin<type_alias>);
     }
 
     THEN("it has no free rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rbegin<type_alias>);
     }
 
     THEN("it has no free constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_rbegin<type_alias>);
     }
 
     THEN("it has no free crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_crbegin<type_alias>);
     }
 
     THEN("it has no free end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_end<type_alias>);
     }
 
     THEN("it has no free constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_end<type_alias>);
     }
 
     THEN("it has no free cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_cend<type_alias>);
     }
 
     THEN("it has no free rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rend<type_alias>);
     }
 
     THEN("it has no free constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_rend<type_alias>);
     }
 
     THEN("it has no free crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_crend<type_alias>);
     }
   }
 
   GIVEN("A new_type over a non-iterable base type deriving nt::Iterable")
   {
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Iterable)>;
-    static_assert(!nt::impl::has_free_begin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_begin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_cbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rbegin_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_crbegin_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_end_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_end_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_cend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rend_v<type_alias::base_type>);
-    static_assert(!nt::impl::has_free_rend_v<type_alias::base_type const>);
-    static_assert(!nt::impl::has_free_crend_v<type_alias::base_type>);
+    static_assert(!nt::concepts::free_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_begin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_cbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_rbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_crbegin<type_alias::base_type>);
+    static_assert(!nt::concepts::free_end<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_end<type_alias::base_type>);
+    static_assert(!nt::concepts::free_cend<type_alias::base_type>);
+    static_assert(!nt::concepts::free_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::const_free_rend<type_alias::base_type>);
+    static_assert(!nt::concepts::free_crend<type_alias::base_type>);
 
     THEN("it has no free begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_begin<type_alias>);
     }
 
     THEN("it has no free constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_begin<type_alias>);
     }
 
     THEN("it has no free cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_cbegin<type_alias>);
     }
 
     THEN("it has no free rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rbegin<type_alias>);
     }
 
     THEN("it has no free constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_rbegin<type_alias>);
     }
 
     THEN("it has no free crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_crbegin<type_alias>);
     }
 
     THEN("it has no free end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_end<type_alias>);
     }
 
     THEN("it has no free constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_end<type_alias>);
     }
 
     THEN("it has no free cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_cend<type_alias>);
     }
 
     THEN("it has no free rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rend<type_alias>);
     }
 
     THEN("it has no free constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::const_free_rend<type_alias>);
     }
 
     THEN("it has no free crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_crend<type_alias>);
     }
   }
 
   GIVEN("A new_type over an iterable base type not deriving nt::Iterable")
   {
     using type_alias = nt::new_type<std::array<int, 1>, struct tag>;
-    static_assert(nt::impl::has_free_begin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_begin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_cbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rbegin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_crbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_end_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_end_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_cend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rend_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_crend_v<type_alias::base_type>);
+    static_assert(nt::concepts::free_begin<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_begin<type_alias::base_type>);
+    static_assert(nt::concepts::free_cbegin<type_alias::base_type>);
+    static_assert(nt::concepts::free_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::free_crbegin<type_alias::base_type>);
+    static_assert(nt::concepts::free_end<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_end<type_alias::base_type>);
+    static_assert(nt::concepts::free_cend<type_alias::base_type>);
+    static_assert(nt::concepts::free_rend<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_rend<type_alias::base_type>);
+    static_assert(nt::concepts::free_crend<type_alias::base_type>);
 
     THEN("it has no free begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_begin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_begin<type_alias>);
     }
 
     THEN("it has no free constant begin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_begin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_begin<type_alias const>);
     }
 
     THEN("it has no free cbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_cbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_cbegin<type_alias>);
     }
 
     THEN("it has no free rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rbegin<type_alias>);
     }
 
     THEN("it has no free constant rbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rbegin_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rbegin<type_alias const>);
     }
 
     THEN("it has no free crbegin")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_crbegin_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_crbegin<type_alias>);
     }
 
     THEN("it has no free end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_end_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_end<type_alias>);
     }
 
     THEN("it has no free constant end")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_end_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_end<type_alias const>);
     }
 
     THEN("it has no free cend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_cend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_cend<type_alias>);
     }
 
     THEN("it has no free rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rend<type_alias>);
     }
 
     THEN("it has no free constant rend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_rend_v<type_alias const>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_rend<type_alias const>);
     }
 
     THEN("it has no free crend")
     {
-      STATIC_REQUIRE_FALSE(nt::impl::has_free_crend_v<type_alias>);
+      STATIC_REQUIRE_FALSE(nt::concepts::free_crend<type_alias>);
     }
   }
 
   GIVEN("A new_type over an iterable base type deriving nt::Iterable")
   {
     using type_alias = nt::new_type<std::array<int, 1>, struct tag, deriving(nt::Iterable)>;
-    static_assert(nt::impl::has_free_begin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_begin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_cbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rbegin_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_crbegin_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_end_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_end_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_cend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rend_v<type_alias::base_type>);
-    static_assert(nt::impl::has_free_rend_v<type_alias::base_type const>);
-    static_assert(nt::impl::has_free_crend_v<type_alias::base_type>);
+    static_assert(nt::concepts::free_begin<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_begin<type_alias::base_type>);
+    static_assert(nt::concepts::free_cbegin<type_alias::base_type>);
+    static_assert(nt::concepts::free_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_rbegin<type_alias::base_type>);
+    static_assert(nt::concepts::free_crbegin<type_alias::base_type>);
+    static_assert(nt::concepts::free_end<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_end<type_alias::base_type>);
+    static_assert(nt::concepts::free_cend<type_alias::base_type>);
+    static_assert(nt::concepts::free_rend<type_alias::base_type>);
+    static_assert(nt::concepts::const_free_rend<type_alias::base_type>);
+    static_assert(nt::concepts::free_crend<type_alias::base_type>);
 
     THEN("it has free begin")
     {
-      STATIC_REQUIRE(nt::impl::has_free_begin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_begin<type_alias>);
     }
 
     THEN("it has free constant begin")
     {
-      STATIC_REQUIRE(nt::impl::has_free_begin_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_free_begin<type_alias>);
     }
 
     THEN("it has free cbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_free_cbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_cbegin<type_alias>);
     }
 
     THEN("it has free rbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_free_rbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_rbegin<type_alias>);
     }
 
     THEN("it has free constant rbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_free_rbegin_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_free_rbegin<type_alias>);
     }
 
     THEN("it has free crbegin")
     {
-      STATIC_REQUIRE(nt::impl::has_free_crbegin_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_crbegin<type_alias>);
     }
 
     THEN("it has free end")
     {
-      STATIC_REQUIRE(nt::impl::has_free_end_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_end<type_alias>);
     }
 
     THEN("it has free constant end")
     {
-      STATIC_REQUIRE(nt::impl::has_free_end_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_free_end<type_alias>);
     }
 
     THEN("it has free cend")
     {
-      STATIC_REQUIRE(nt::impl::has_free_cend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_cend<type_alias>);
     }
 
     THEN("it has free rend")
     {
-      STATIC_REQUIRE(nt::impl::has_free_rend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_rend<type_alias>);
     }
 
     THEN("it has free constant rend")
     {
-      STATIC_REQUIRE(nt::impl::has_free_rend_v<type_alias const>);
+      STATIC_REQUIRE(nt::concepts::const_free_rend<type_alias>);
     }
 
     THEN("it has free crend")
     {
-      STATIC_REQUIRE(nt::impl::has_free_crend_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::free_crend<type_alias>);
     }
   }
 }
