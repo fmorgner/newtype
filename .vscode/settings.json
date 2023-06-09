@@ -15,9 +15,8 @@
     "C_Cpp.autocomplete": "default",
 
     // RST Configuration
-    "restructuredtext.confPath": "${workspaceFolder}/doc/src",
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
-    "python.formatting.provider": "none"
+    "esbonio.sphinx.confDir": "${workspaceFolder}/doc/src"
 }
