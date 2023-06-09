@@ -83,7 +83,7 @@ SCENARIO("Stream Output")
     using type_alias = nt::new_type<int, struct tag, deriving(nt::Show)>;
     static_assert(has_stream_output_v<type_alias::base_type>);
 
-    THEN("it has the stream input operator")
+    THEN("it has the stream output operator")
     {
       STATIC_REQUIRE(has_stream_output_v<type_alias>);
     }

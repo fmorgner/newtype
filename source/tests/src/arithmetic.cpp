@@ -1,6 +1,5 @@
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
-#include "newtype/impl/type_traits_extensions.hpp"
 #include "newtype/newtype.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -23,7 +22,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is not addable")
     {
-      STATIC_REQUIRE(!nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::addable<type_alias>);
     }
   }
 
@@ -33,7 +32,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is addable")
     {
-      STATIC_REQUIRE(nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::addable<type_alias>);
     }
   }
 
@@ -43,7 +42,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is not addable")
     {
-      STATIC_REQUIRE(!nt::impl::is_addable_v<addable_type> == nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::addable<addable_type> == nt::concepts::addable<type_alias>);
     }
   }
 
@@ -53,7 +52,7 @@ SCENARIO("Addition", "[arithmetic]")
 
     THEN("it is addable")
     {
-      STATIC_REQUIRE(nt::impl::is_addable_v<addable_type> == nt::impl::is_addable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::addable<addable_type> == nt::concepts::addable<type_alias>);
     }
   }
 
@@ -96,7 +95,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is not subtractable")
     {
-      STATIC_REQUIRE(!nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::subtractable<type_alias>);
     }
   }
 
@@ -106,7 +105,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is subtractable")
     {
-      STATIC_REQUIRE(nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::subtractable<type_alias>);
     }
   }
 
@@ -116,7 +115,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is not addable")
     {
-      STATIC_REQUIRE(!nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::subtractable<type_alias>);
     }
   }
 
@@ -126,7 +125,7 @@ SCENARIO("Subtraction", "[arithmetic]")
 
     THEN("it is subtractable")
     {
-      STATIC_REQUIRE(nt::impl::is_subtractable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::subtractable<type_alias>);
     }
   }
 
@@ -169,7 +168,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is not multipliable")
     {
-      STATIC_REQUIRE(!nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::multipliable<type_alias>);
     }
   }
 
@@ -179,7 +178,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is multipliable")
     {
-      STATIC_REQUIRE(nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::multipliable<type_alias>);
     }
   }
 
@@ -189,7 +188,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is not multipliable")
     {
-      STATIC_REQUIRE(!nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::multipliable<type_alias>);
     }
   }
 
@@ -199,7 +198,7 @@ SCENARIO("Multiplication", "[arithmetic]")
 
     THEN("it is multipliable")
     {
-      STATIC_REQUIRE(nt::impl::is_multipliable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::multipliable<type_alias>);
     }
   }
 
@@ -242,7 +241,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is not divisible")
     {
-      STATIC_REQUIRE(!nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::divisible<type_alias>);
     }
   }
 
@@ -252,7 +251,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is divisible")
     {
-      STATIC_REQUIRE(nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::divisible<type_alias>);
     }
   }
 
@@ -262,7 +261,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is not divisible")
     {
-      STATIC_REQUIRE(!nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(!nt::concepts::divisible<type_alias>);
     }
   }
 
@@ -272,7 +271,7 @@ SCENARIO("Division", "[arithmetic]")
 
     THEN("it is divisible")
     {
-      STATIC_REQUIRE(nt::impl::is_dividable_v<type_alias>);
+      STATIC_REQUIRE(nt::concepts::divisible<type_alias>);
     }
   }
 

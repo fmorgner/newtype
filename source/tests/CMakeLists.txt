@@ -28,6 +28,7 @@ target_compile_options("${PROJECT_NAME}_tests" PRIVATE
   "$<$<CXX_COMPILER_ID:GNU,Clang>:-Wextra>"
   "$<$<CXX_COMPILER_ID:GNU,Clang>:-Werror>"
   "$<$<CXX_COMPILER_ID:GNU,Clang>:-pedantic-errors>"
+  "$<$<CXX_COMPILER_ID:GNU>:-fconcepts-diagnostics-depth=5>"  
 )
 
 catch_discover_tests("${PROJECT_NAME}_tests")

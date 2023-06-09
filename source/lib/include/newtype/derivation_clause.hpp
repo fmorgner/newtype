@@ -12,6 +12,9 @@ namespace nt
   template<typename... DerivableTags>
   struct derivation_clause
   {
+    template<auto... Needles>
+    using contains = std::disjunction<std::is_same<DerivableTags, typename decltype(Needles)::tag_type>...>;
+
     constexpr derivation_clause(derivable<DerivableTags>...) noexcept
     {
     }
@@ -64,6 +67,9 @@ namespace nt
       return *this > other || *this == other;
     }
   };
+
+  template<typename DerivationClause, auto... Features>
+  concept contains = requires(DerivationClause clause) { requires DerivationClause::template contains<Features...>::value; };
 
 }  // namespace nt
 
