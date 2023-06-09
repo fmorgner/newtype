@@ -18,14 +18,6 @@ class NewtypeConan(ConanFile):
         "revision": "auto"
     }
 
-    options = {
-        "enable_docs": [False, True],
-    }
-
-    default_options = {
-        "enable_docs": False,
-    }
-
     generators = [
         "CMakeDeps"
     ]
