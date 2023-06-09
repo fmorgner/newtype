@@ -1,6 +1,7 @@
 #ifndef NEWTYPE_NEWTYPE_HPP
 #define NEWTYPE_NEWTYPE_HPP
 
+#include <algorithm>
 #include <functional>
 #include <istream>
 #include <ostream>
@@ -752,28 +753,19 @@ namespace nt
   template<typename... DerivableTags>
   struct derivation_clause
   {
+    template<auto Needle>
+    using derives_one = std::disjunction<std::is_same<typename decltype(Needle)::tag_type, DerivableTags>...>;
+
     template<auto... Needles>
-    using contains = std::disjunction<std::is_same<DerivableTags, typename decltype(Needles)::tag_type>...>;
+    using derives = std::conjunction<derives_one<Needles>...>;
 
     constexpr derivation_clause(derivable<DerivableTags>...) noexcept
     {
     }
-
-    template<typename DerivableTag>
-    auto constexpr operator()(derivable<DerivableTag>) const noexcept -> bool
-    {
-      return (std::is_same_v<DerivableTags, DerivableTag> || ...);
-    }
-
-    template<typename DerivableTag, typename... RemainingDerivableTags>
-    auto constexpr operator()(derivable<DerivableTag>, derivable<RemainingDerivableTags>...) const noexcept -> bool
-    {
-      return (*this)(derivable<DerivableTag>{}) && (*this)(derivable<RemainingDerivableTags>{}...);
-    }
   };
 
   template<typename DerivationClause, auto... Features>
-  concept contains = requires(DerivationClause clause) { requires DerivationClause::template contains<Features...>::value; };
+  concept derives = requires(DerivationClause clause) { requires DerivationClause::template derives<Features...>::value; };
 
   template<typename... DerivableTags>
   auto constexpr deriving(derivable<DerivableTags>... features) noexcept -> derivation_clause<DerivableTags...>
@@ -784,7 +776,7 @@ namespace nt
   template<typename BaseType, typename TagType, auto DerivationClause = deriving()>
   class new_type
       : impl::new_type_move_assignment<BaseType, TagType>
-      , public impl::new_type_iterator_types<BaseType, DerivationClause(nt::Iterable)>
+      , public impl::new_type_iterator_types<BaseType, nt::derives<decltype(DerivationClause), nt::Iterable>>
   {
     static_assert(!std::is_reference_v<BaseType>, "The base type must not be a reference type");
     static_assert(!std::is_void_v<std::remove_cv_t<BaseType>>, "The base type must not be possibly cv-qualified void");
@@ -793,79 +785,79 @@ namespace nt
              typename StreamTraits,
              nt::concepts::input_streamable<CharType, StreamTraits> BaseTypeT,
              typename TagTypeT,
-             nt::contains<nt::Read> auto DerivationClauseV>
+             nt::derives<nt::Read> auto DerivationClauseV>
     auto friend operator>>(std::basic_istream<CharType, StreamTraits> &, new_type<BaseTypeT, TagTypeT, DerivationClauseV> &) noexcept(
         nt::concepts::nothrow_input_streamable<BaseTypeT, CharType, StreamTraits>) -> std::basic_istream<CharType, StreamTraits> &;
 
-    template<nt::concepts::compound_addable BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
+    template<nt::concepts::compound_addable BaseTypeT, typename TagTypeT, nt::derives<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator+=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
                new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_addable<BaseTypeT>)
         -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
-    template<nt::concepts::compound_subtractable BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
+    template<nt::concepts::compound_subtractable BaseTypeT, typename TagTypeT, nt::derives<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator-=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
                new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_subtractable<BaseTypeT>)
         -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
-    template<nt::concepts::compound_multipliable BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
+    template<nt::concepts::compound_multipliable BaseTypeT, typename TagTypeT, nt::derives<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator*=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
                new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_multipliable<BaseTypeT>)
         -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
-    template<nt::concepts::compound_divisible BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
+    template<nt::concepts::compound_divisible BaseTypeT, typename TagTypeT, nt::derives<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator/=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
                new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_divisible<BaseTypeT>)
         -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
-    template<nt::concepts::free_begin BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_begin BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend begin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::iterator;
 
-    template<nt::concepts::const_free_begin BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::const_free_begin BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend begin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator;
 
-    template<nt::concepts::free_cbegin BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_cbegin BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend cbegin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator;
 
-    template<nt::concepts::free_rbegin BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_rbegin BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend rbegin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::reverse_iterator;
 
-    template<nt::concepts::const_free_rbegin BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::const_free_rbegin BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend rbegin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_reverse_iterator;
 
-    template<nt::concepts::free_crbegin BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_crbegin BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend crbegin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_reverse_iterator;
 
-    template<nt::concepts::free_end BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_end BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend end(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::iterator;
 
-    template<nt::concepts::const_free_end BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::const_free_end BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend end(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator;
 
-    template<nt::concepts::free_cend BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_cend BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend cend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_iterator;
 
-    template<nt::concepts::free_rend BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_rend BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend rend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::reverse_iterator;
 
-    template<nt::concepts::const_free_rend BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::const_free_rend BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend rend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_reverse_iterator;
 
-    template<nt::concepts::free_crend BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
+    template<nt::concepts::free_crend BaseTypeT, typename TagTypeT, nt::derives<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend crend(new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & obj) ->
         typename new_type<BaseTypeT, TagTypeT, DerivationClauseV>::const_reverse_iterator;
 
@@ -894,99 +886,99 @@ namespace nt
 
     template<typename DerivationClauseT = decltype(DerivationClause)>
     constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
-      requires(nt::contains<DerivationClauseT, nt::ImplicitConversion>)
+      requires(nt::derives<DerivationClauseT, nt::ImplicitConversion>)
     {
       return decay();
     }
 
     template<typename DerivationClauseT = decltype(DerivationClause)>
     explicit constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
-      requires(!nt::contains<DerivationClauseT, nt::ImplicitConversion>)
+      requires(!nt::derives<DerivationClauseT, nt::ImplicitConversion>)
     {
       return decay();
     }
 
     template<typename DerivationClauseT = decltype(DerivationClause)>
-      requires(nt::contains<DerivationClauseT, nt::Indirection>)
+      requires(nt::derives<DerivationClauseT, nt::Indirection>)
     auto constexpr operator->() noexcept -> BaseType *
     {
       return std::addressof(this->m_value);
     }
 
     template<typename DerivationClauseT = decltype(DerivationClause)>
-      requires(nt::contains<DerivationClauseT, nt::Indirection>)
+      requires(nt::derives<DerivationClauseT, nt::Indirection>)
     auto constexpr operator->() const noexcept -> BaseType const *
     {
       return std::addressof(this->m_value);
     }
 
-    template<nt::concepts::member_begin BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_begin BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr begin() -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::iterator
     {
       return this->m_value.begin();
     }
 
-    template<nt::concepts::const_member_begin BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::const_member_begin BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr begin() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_iterator
     {
       return this->m_value.begin();
     }
 
-    template<nt::concepts::member_cbegin BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_cbegin BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr cbegin() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_iterator
     {
       return this->m_value.cbegin();
     }
 
-    template<nt::concepts::member_cbegin BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_cbegin BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr rbegin() -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::reverse_iterator
     {
       return this->m_value.rbegin();
     }
 
-    template<nt::concepts::member_cbegin BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_cbegin BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr rbegin() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_reverse_iterator
     {
       return this->m_value.rbegin();
     }
 
-    template<nt::concepts::member_crbegin BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_crbegin BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr crbegin() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_reverse_iterator
     {
       return this->m_value.crbegin();
     }
 
-    template<nt::concepts::member_end BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_end BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr end() -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::iterator
     {
       return this->m_value.end();
     }
 
-    template<nt::concepts::const_member_end BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::const_member_end BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr end() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_iterator
     {
       return this->m_value.end();
     }
 
-    template<nt::concepts::member_cend BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_cend BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr cend() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_iterator
     {
       return this->m_value.cend();
     }
 
-    template<nt::concepts::member_rend BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::member_rend BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr rend() -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::reverse_iterator
     {
       return this->m_value.rend();
     }
 
-    template<nt::concepts::const_member_rend BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::const_member_rend BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr rend() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_reverse_iterator
     {
       return this->m_value.rend();
     }
 
-    template<nt::concepts::const_member_rend BaseTypeT = BaseType, nt::contains<nt::Iterable> auto DerivationClauseV = DerivationClause>
+    template<nt::concepts::const_member_rend BaseTypeT = BaseType, nt::derives<nt::Iterable> auto DerivationClauseV = DerivationClause>
     auto constexpr crend() const -> typename new_type<BaseTypeT, TagType, DerivationClauseV>::const_reverse_iterator
     {
       return this->m_value.crend();
@@ -1001,14 +993,14 @@ namespace nt
     return lhs.decay() == rhs.decay();
   }
 
-  template<nt::concepts::equality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
+  template<nt::concepts::equality_comparable BaseType, typename TagType, nt::derives<nt::EqBase> auto DerivationClause>
   auto constexpr operator==(new_type<BaseType, TagType, DerivationClause> const & lhs,
                             BaseType const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
   {
     return lhs.decay() == rhs;
   }
 
-  template<nt::concepts::equality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
+  template<nt::concepts::equality_comparable BaseType, typename TagType, nt::derives<nt::EqBase> auto DerivationClause>
   auto constexpr
   operator==(BaseType const & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_equality_comparable<BaseType>) -> bool
@@ -1024,14 +1016,14 @@ namespace nt
     return lhs.decay() != rhs.decay();
   }
 
-  template<nt::concepts::inequality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
+  template<nt::concepts::inequality_comparable BaseType, typename TagType, nt::derives<nt::EqBase> auto DerivationClause>
   auto constexpr operator!=(new_type<BaseType, TagType, DerivationClause> const & lhs,
                             BaseType const & rhs) noexcept(nt::concepts::nothrow_inequality_comparable<BaseType>) -> bool
   {
     return lhs.decay() != rhs;
   }
 
-  template<nt::concepts::inequality_comparable BaseType, typename TagType, nt::contains<nt::EqBase> auto DerivationClause>
+  template<nt::concepts::inequality_comparable BaseType, typename TagType, nt::derives<nt::EqBase> auto DerivationClause>
   auto constexpr
   operator!=(BaseType const & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_inequality_comparable<BaseType>) -> bool
@@ -1039,7 +1031,7 @@ namespace nt
     return lhs != rhs.decay();
   }
 
-  template<nt::concepts::less_than_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
+  template<nt::concepts::less_than_comparable BaseType, typename TagType, nt::derives<nt::Relational> auto DerivationClause>
   auto constexpr
   operator<(new_type<BaseType, TagType, DerivationClause> const & lhs,
             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_less_than_comparable<BaseType>)
@@ -1047,7 +1039,7 @@ namespace nt
     return lhs.decay() < rhs.decay();
   }
 
-  template<nt::concepts::greater_than_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
+  template<nt::concepts::greater_than_comparable BaseType, typename TagType, nt::derives<nt::Relational> auto DerivationClause>
   auto constexpr
   operator>(new_type<BaseType, TagType, DerivationClause> const & lhs,
             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_greater_than_comparable<BaseType>)
@@ -1055,7 +1047,7 @@ namespace nt
     return lhs.decay() > rhs.decay();
   }
 
-  template<nt::concepts::less_than_equal_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
+  template<nt::concepts::less_than_equal_comparable BaseType, typename TagType, nt::derives<nt::Relational> auto DerivationClause>
   auto constexpr
   operator<=(new_type<BaseType, TagType, DerivationClause> const & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_less_than_equal_comparable<BaseType>)
@@ -1063,7 +1055,7 @@ namespace nt
     return lhs.decay() <= rhs.decay();
   }
 
-  template<nt::concepts::greater_than_equal_comparable BaseType, typename TagType, nt::contains<nt::Relational> auto DerivationClause>
+  template<nt::concepts::greater_than_equal_comparable BaseType, typename TagType, nt::derives<nt::Relational> auto DerivationClause>
   auto constexpr
   operator>=(new_type<BaseType, TagType, DerivationClause> const & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_greater_than_equal_comparable<BaseType>)
@@ -1075,7 +1067,7 @@ namespace nt
            typename StreamTraits,
            nt::concepts::output_streamable<CharType, StreamTraits> BaseType,
            typename TagType,
-           nt::contains<nt::Show> auto DerivationClause>
+           nt::derives<nt::Show> auto DerivationClause>
   auto operator<<(std::basic_ostream<CharType, StreamTraits> & output, new_type<BaseType, TagType, DerivationClause> const & source) noexcept(
       nt::concepts::nothrow_output_streamable<BaseType, CharType, StreamTraits>) -> std::basic_ostream<CharType, StreamTraits> &
   {
@@ -1086,14 +1078,14 @@ namespace nt
            typename StreamTraits,
            nt::concepts::input_streamable<CharType, StreamTraits> BaseType,
            typename TagType,
-           nt::contains<nt::Read> auto DerivationClause>
+           nt::derives<nt::Read> auto DerivationClause>
   auto operator>>(std::basic_istream<CharType, StreamTraits> & input, new_type<BaseType, TagType, DerivationClause> & target) noexcept(
       nt::concepts::nothrow_input_streamable<BaseType, CharType, StreamTraits>) -> std::basic_istream<CharType, StreamTraits> &
   {
     return input >> target.m_value;
   }
 
-  template<nt::concepts::addable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::addable BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator+(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
       nt::concepts::nothrow_addable<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
@@ -1102,7 +1094,7 @@ namespace nt
     return {lhs.decay() + rhs.decay()};
   }
 
-  template<nt::concepts::compound_addable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::compound_addable BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator+=(new_type<BaseType, TagType, DerivationClause> & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_addable<BaseType>)
@@ -1112,7 +1104,7 @@ namespace nt
     return lhs;
   }
 
-  template<nt::concepts::subtractable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::subtractable BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator-(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
       nt::concepts::nothrow_subtractable<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
@@ -1121,7 +1113,7 @@ namespace nt
     return {lhs.decay() - rhs.decay()};
   }
 
-  template<nt::concepts::compound_subtractable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::compound_subtractable BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator-=(new_type<BaseType, TagType, DerivationClause> & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_subtractable<BaseType>)
@@ -1131,7 +1123,7 @@ namespace nt
     return lhs;
   }
 
-  template<nt::concepts::multipliable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::multipliable BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator*(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
       nt::concepts::nothrow_multipliable<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
@@ -1140,7 +1132,7 @@ namespace nt
     return {lhs.decay() * rhs.decay()};
   }
 
-  template<nt::concepts::compound_multipliable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::compound_multipliable BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator*=(new_type<BaseType, TagType, DerivationClause> & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_multipliable<BaseType>)
@@ -1150,7 +1142,7 @@ namespace nt
     return lhs;
   }
 
-  template<nt::concepts::divisible BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::divisible BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator/(new_type<BaseType, TagType, DerivationClause> const & lhs, new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(
       nt::concepts::nothrow_divisible<BaseType> && std::is_nothrow_copy_constructible_v<BaseType>)
@@ -1159,7 +1151,7 @@ namespace nt
     return {lhs.decay() / rhs.decay()};
   }
 
-  template<nt::concepts::compound_divisible BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  template<nt::concepts::compound_divisible BaseType, typename TagType, nt::derives<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator/=(new_type<BaseType, TagType, DerivationClause> & lhs,
              new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_divisible<BaseType>)
@@ -1169,82 +1161,82 @@ namespace nt
     return lhs;
   }
 
-  template<nt::concepts::free_begin BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_begin BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr begin(new_type<BaseType, TagType, DerivationClause> & obj) -> typename new_type<BaseType, TagType, DerivationClause>::iterator
   {
     return begin(obj.m_value);
   }
 
-  template<nt::concepts::const_free_begin BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::const_free_begin BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr begin(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_iterator
   {
     return begin(obj.m_value);
   }
 
-  template<nt::concepts::free_cbegin BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_cbegin BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr cbegin(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_iterator
   {
     return cbegin(obj.m_value);
   }
 
-  template<nt::concepts::free_rbegin BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_rbegin BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr rbegin(new_type<BaseType, TagType, DerivationClause> & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::reverse_iterator
   {
     return rbegin(obj.m_value);
   }
 
-  template<nt::concepts::const_free_rbegin BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::const_free_rbegin BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr rbegin(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator
   {
     return rbegin(obj.m_value);
   }
 
-  template<nt::concepts::free_crbegin BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_crbegin BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr crbegin(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator
   {
     return crbegin(obj.m_value);
   }
 
-  template<nt::concepts::free_end BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_end BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr end(new_type<BaseType, TagType, DerivationClause> & obj) -> typename new_type<BaseType, TagType, DerivationClause>::iterator
   {
     return end(obj.m_value);
   }
 
-  template<nt::concepts::const_free_end BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::const_free_end BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr end(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_iterator
   {
     return end(obj.m_value);
   }
 
-  template<nt::concepts::free_cend BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_cend BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr cend(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_iterator
   {
     return cend(obj.m_value);
   }
 
-  template<nt::concepts::free_rend BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_rend BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr rend(new_type<BaseType, TagType, DerivationClause> & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::reverse_iterator
   {
     return rend(obj.m_value);
   }
 
-  template<nt::concepts::const_free_rend BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::const_free_rend BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr rend(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator
   {
     return rend(obj.m_value);
   }
 
-  template<nt::concepts::free_crend BaseType, typename TagType, nt::contains<nt::Iterable> auto DerivationClause>
+  template<nt::concepts::free_crend BaseType, typename TagType, nt::derives<nt::Iterable> auto DerivationClause>
   auto constexpr crend(new_type<BaseType, TagType, DerivationClause> const & obj) ->
       typename new_type<BaseType, TagType, DerivationClause>::const_reverse_iterator
   {
@@ -1255,7 +1247,7 @@ namespace nt
 
 namespace std
 {
-  template<nt::concepts::hashable BaseType, typename TagType, nt::contains<nt::Hash> auto DerivationClause>
+  template<nt::concepts::hashable BaseType, typename TagType, nt::derives<nt::Hash> auto DerivationClause>
   struct hash<nt::new_type<BaseType, TagType, DerivationClause>>
   {
     auto constexpr operator()(nt::new_type<BaseType, TagType, DerivationClause> const & object) const

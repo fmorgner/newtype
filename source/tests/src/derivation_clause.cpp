@@ -12,7 +12,7 @@ SCENARIO("Derivation Clause", "[infrastructure]")
 
     THEN("it doesn't contain any derivable")
     {
-      STATIC_REQUIRE_FALSE(clause(nt::Show));
+      STATIC_REQUIRE_FALSE(nt::derives<decltype(clause), nt::Show>);
     }
   }
 
@@ -22,12 +22,12 @@ SCENARIO("Derivation Clause", "[infrastructure]")
 
     THEN("it doesn't contain nt::EqBase")
     {
-      STATIC_REQUIRE_FALSE(clause(nt::EqBase));
+      STATIC_REQUIRE_FALSE(nt::derives<decltype(clause), nt::EqBase>);
     }
 
     THEN("it contains nt::Show")
     {
-      STATIC_REQUIRE(clause(nt::Show));
+      STATIC_REQUIRE(nt::derives<decltype(clause), nt::Show>);
     }
   }
 
@@ -37,27 +37,27 @@ SCENARIO("Derivation Clause", "[infrastructure]")
 
     THEN("it contains nt::EqBase")
     {
-      STATIC_REQUIRE(clause(nt::EqBase));
+      STATIC_REQUIRE(nt::derives<decltype(clause), nt::EqBase>);
     }
 
     THEN("it contains nt::Show")
     {
-      STATIC_REQUIRE(clause(nt::Show));
+      STATIC_REQUIRE(nt::derives<decltype(clause), nt::Show>);
     }
 
     THEN("it contains both nt::Show and nt::EqBase")
     {
-      STATIC_REQUIRE(clause(nt::Show, nt::EqBase));
+      STATIC_REQUIRE(nt::derives<decltype(clause), nt::Show, nt::EqBase>);
     }
 
     THEN("it does not contain nt::Arithmetic")
     {
-      STATIC_REQUIRE_FALSE(clause(nt::Arithmetic));
+      STATIC_REQUIRE_FALSE(nt::derives<decltype(clause), nt::Arithmetic>);
     }
 
     THEN("it does not contain both nt::Arithmetic and nt::Show")
     {
-      STATIC_REQUIRE_FALSE(clause(nt::Arithmetic, nt::Show));
+      STATIC_REQUIRE_FALSE(nt::derives<decltype(clause), nt::Arithmetic, nt::Show>);
     }
   }
 }
