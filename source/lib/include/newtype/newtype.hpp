@@ -6,7 +6,6 @@
 #include "newtype/deriving.hpp"
 #include "newtype/impl/new_type_iterator_types.hpp"
 #include "newtype/impl/new_type_storage.hpp"
-#include "newtype/impl/type_traits_extensions.hpp"
 #include "newtype/version.hpp"
 
 #include <functional>
@@ -33,33 +32,29 @@ namespace nt
     auto friend operator>>(std::basic_istream<CharType, StreamTraits> &, new_type<BaseTypeT, TagTypeT, DerivationClauseV> &) noexcept(
         nt::concepts::nothrow_input_streamable<BaseTypeT, CharType, StreamTraits>) -> std::basic_istream<CharType, StreamTraits> &;
 
-    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    template<nt::concepts::compound_addable BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator+=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
-               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(impl::is_nothrow_add_assignable_v<BaseTypeT>)
-        -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_add_assignable_v<BaseTypeT>,
-                            new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
+               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_addable<BaseTypeT>)
+        -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
-    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    template<nt::concepts::compound_subtractable BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator-=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
-               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(impl::is_nothrow_subtract_assignable_v<BaseTypeT>)
-        -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_subtract_assignable_v<BaseTypeT>,
-                            new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
+               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_subtractable<BaseTypeT>)
+        -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
-    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    template<nt::concepts::compound_multipliable BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator*=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
-               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(impl::is_nothrow_multiply_assignable_v<BaseTypeT>)
-        -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_multiply_assignable_v<BaseTypeT>,
-                            new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
+               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_multipliable<BaseTypeT>)
+        -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
-    template<typename BaseTypeT, typename TagTypeT, auto DerivationClauseV>
+    template<nt::concepts::compound_divisible BaseTypeT, typename TagTypeT, nt::contains<nt::Arithmetic> auto DerivationClauseV>
     auto constexpr friend
     operator/=(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & lhs,
-               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(impl::is_nothrow_divide_assignable_v<BaseTypeT>)
-        -> std::enable_if_t<DerivationClauseV(nt::Arithmetic) && impl::is_divide_assignable_v<BaseTypeT>,
-                            new_type<BaseTypeT, TagTypeT, DerivationClauseV> &>;
+               new_type<BaseTypeT, TagTypeT, DerivationClauseV> const & rhs) noexcept(nt::concepts::nothrow_compound_divisible<BaseTypeT>)
+        -> new_type<BaseTypeT, TagTypeT, DerivationClauseV> &;
 
     template<nt::concepts::free_begin BaseTypeT, typename TagTypeT, nt::contains<nt::Iterable> auto DerivationClauseV>
     auto constexpr friend begin(new_type<BaseTypeT, TagTypeT, DerivationClauseV> & obj) ->
@@ -338,11 +333,11 @@ namespace nt
     return {lhs.decay() + rhs.decay()};
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
-  auto constexpr operator+=(new_type<BaseType, TagType, DerivationClause> & lhs,
-                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_add_assignable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_add_assignable_v<BaseType>,
-                          new_type<BaseType, TagType, DerivationClause> &>
+  template<nt::concepts::compound_addable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  auto constexpr
+  operator+=(new_type<BaseType, TagType, DerivationClause> & lhs,
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_addable<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause> &
   {
     lhs.m_value += rhs.m_value;
     return lhs;
@@ -357,12 +352,11 @@ namespace nt
     return {lhs.decay() - rhs.decay()};
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::compound_subtractable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator-=(new_type<BaseType, TagType, DerivationClause> & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_subtract_assignable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_subtract_assignable_v<BaseType>,
-                          new_type<BaseType, TagType, DerivationClause> &>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_subtractable<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause> &
   {
     lhs.m_value -= rhs.m_value;
     return lhs;
@@ -377,12 +371,11 @@ namespace nt
     return {lhs.decay() * rhs.decay()};
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
+  template<nt::concepts::compound_multipliable BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
   auto constexpr
   operator*=(new_type<BaseType, TagType, DerivationClause> & lhs,
-             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_multiply_assignable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_multiply_assignable_v<BaseType>,
-                          new_type<BaseType, TagType, DerivationClause> &>
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_multipliable<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause> &
   {
     lhs.m_value *= rhs.m_value;
     return lhs;
@@ -397,11 +390,11 @@ namespace nt
     return {lhs.decay() / rhs.decay()};
   }
 
-  template<typename BaseType, typename TagType, auto DerivationClause>
-  auto constexpr operator/=(new_type<BaseType, TagType, DerivationClause> & lhs,
-                            new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(impl::is_nothrow_divide_assignable_v<BaseType>)
-      -> std::enable_if_t<DerivationClause(nt::Arithmetic) && impl::is_divide_assignable_v<BaseType>,
-                          new_type<BaseType, TagType, DerivationClause> &>
+  template<nt::concepts::compound_divisible BaseType, typename TagType, nt::contains<nt::Arithmetic> auto DerivationClause>
+  auto constexpr
+  operator/=(new_type<BaseType, TagType, DerivationClause> & lhs,
+             new_type<BaseType, TagType, DerivationClause> const & rhs) noexcept(nt::concepts::nothrow_compound_divisible<BaseType>)
+      -> new_type<BaseType, TagType, DerivationClause> &
   {
     lhs.m_value /= rhs.m_value;
     return lhs;

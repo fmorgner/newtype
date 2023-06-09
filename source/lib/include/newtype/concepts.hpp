@@ -169,6 +169,69 @@ namespace nt::concepts
 
   }  // namespace comparability
 
+  inline namespace compound_arithmetic
+  {
+    template<typename SubjectType>
+    concept compound_addable = requires(SubjectType & lhs, SubjectType const & rhs) {
+      {
+        lhs += rhs
+      } -> std::convertible_to<SubjectType &>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_compound_addable = requires(SubjectType & lhs, SubjectType const & rhs) {
+      requires compound_addable<SubjectType>;
+      {
+        lhs += rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept compound_divisible = requires(SubjectType & lhs, SubjectType const & rhs) {
+      {
+        lhs /= rhs
+      } -> std::convertible_to<SubjectType &>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_compound_divisible = requires(SubjectType & lhs, SubjectType const & rhs) {
+      requires compound_divisible<SubjectType>;
+      {
+        lhs /= rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept compound_multipliable = requires(SubjectType & lhs, SubjectType const & rhs) {
+      {
+        lhs *= rhs
+      } -> std::convertible_to<SubjectType &>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_compound_multipliable = requires(SubjectType & lhs, SubjectType const & rhs) {
+      requires compound_multipliable<SubjectType>;
+      {
+        lhs *= rhs
+      } noexcept;
+    };
+
+    template<typename SubjectType>
+    concept compound_subtractable = requires(SubjectType & lhs, SubjectType const & rhs) {
+      {
+        lhs -= rhs
+      } -> std::convertible_to<SubjectType &>;
+    };
+
+    template<typename SubjectType>
+    concept nothrow_compound_subtractable = requires(SubjectType & lhs, SubjectType const & rhs) {
+      requires compound_subtractable<SubjectType>;
+      {
+        lhs -= rhs
+      } noexcept;
+    };
+  }  // namespace compound_arithmetic
+
   inline namespace iostreamable
   {
 

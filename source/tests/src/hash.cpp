@@ -1,7 +1,6 @@
 #include "newtype/concepts.hpp"
 #include "newtype/derivable.hpp"
 #include "newtype/deriving.hpp"
-#include "newtype/impl/type_traits_extensions.hpp"
 #include "newtype/newtype.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
