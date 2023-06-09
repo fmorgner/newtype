@@ -928,26 +928,30 @@ namespace nt
       return this->m_value;
     }
 
-    template<typename NewType = new_type, std::enable_if_t<NewType::derivation_clause(nt::ImplicitConversion)> * = nullptr>
+    template<typename DerivationClauseT = decltype(DerivationClause)>
     constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
+      requires(nt::contains<DerivationClauseT, nt::ImplicitConversion>)
     {
       return decay();
     }
 
-    template<typename NewType = new_type, std::enable_if_t<!NewType::derivation_clause(nt::ImplicitConversion)> * = nullptr>
+    template<typename DerivationClauseT = decltype(DerivationClause)>
     explicit constexpr operator base_type() const noexcept(std::is_nothrow_copy_constructible_v<base_type>)
+      requires(!nt::contains<DerivationClauseT, nt::ImplicitConversion>)
     {
       return decay();
     }
 
-    template<typename NewType = new_type>
-    auto constexpr operator->() noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType *>
+    template<typename DerivationClauseT = decltype(DerivationClause)>
+      requires(nt::contains<DerivationClauseT, nt::Indirection>)
+    auto constexpr operator->() noexcept -> BaseType *
     {
       return std::addressof(this->m_value);
     }
 
-    template<typename NewType = new_type>
-    auto constexpr operator->() const noexcept -> std::enable_if_t<NewType::derivation_clause(nt::Indirection), BaseType const *>
+    template<typename DerivationClauseT = decltype(DerivationClause)>
+      requires(nt::contains<DerivationClauseT, nt::Indirection>)
+    auto constexpr operator->() const noexcept -> BaseType const *
     {
       return std::addressof(this->m_value);
     }
