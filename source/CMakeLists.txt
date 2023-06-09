@@ -13,6 +13,7 @@ option(BUILD_EXAMPLES "Build the library examples" OFF)
 
 # Project Components
 
+add_subdirectory("doc")
+add_subdirectory("examples")
 add_subdirectory("lib")
 add_subdirectory("tests")
-add_subdirectory("examples")
