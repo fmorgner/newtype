@@ -11,6 +11,23 @@
 
 namespace nt
 {
+  inline namespace lib
+  {
+    constexpr struct
+    {
+      int const major;
+      int const minor;
+      int const patch;
+
+      char const * const name;
+    } version{
+        .major = 2,
+        .minor = 0,
+        .patch = 0,
+        .name = "Brynn",
+    };
+
+  }  // namespace lib
 
   namespace impl
   {
@@ -37,38 +54,21 @@ namespace nt
         using iterator = typename T::iterator;
       };
 
-      template<typename T, bool Enabled = false, typename = std::void_t<>>
-      struct new_type_const_iterator : new_type_iterator<T, Enabled>
-      {
-      };
+#define NEWTYPE_MAKE_ITERATOR_BASE(NAME, BASE)                                                                                                 \
+  template<typename T, bool Enabled = false, typename = std::void_t<>>                                                                         \
+  struct new_type_##NAME : new_type_##BASE<T, Enabled>                                                                                         \
+  {                                                                                                                                            \
+  };                                                                                                                                           \
+  template<typename T>                                                                                                                         \
+  struct new_type_##NAME<T, true, std::void_t<typename T::NAME>> : new_type_##BASE<T, true>                                                    \
+  {                                                                                                                                            \
+    using NAME = typename T::NAME;                                                                                                             \
+  };
 
-      template<typename T>
-      struct new_type_const_iterator<T, true, std::void_t<typename T::const_iterator>> : new_type_iterator<T, true>
-      {
-        using const_iterator = typename T::const_iterator;
-      };
-
-      template<typename T, bool Enabled = false, typename = std::void_t<>>
-      struct new_type_reverse_iterator : new_type_const_iterator<T, Enabled>
-      {
-      };
-
-      template<typename T>
-      struct new_type_reverse_iterator<T, true, std::void_t<typename T::reverse_iterator>> : new_type_const_iterator<T, true>
-      {
-        using reverse_iterator = typename T::reverse_iterator;
-      };
-
-      template<typename T, bool Enabled = false, typename = std::void_t<>>
-      struct new_type_const_reverse_iterator : new_type_reverse_iterator<T, Enabled>
-      {
-      };
-
-      template<typename T>
-      struct new_type_const_reverse_iterator<T, true, std::void_t<typename T::const_reverse_iterator>> : new_type_reverse_iterator<T, true>
-      {
-        using const_reverse_iterator = typename T::const_reverse_iterator;
-      };
+      NEWTYPE_MAKE_ITERATOR_BASE(const_iterator, iterator)
+      NEWTYPE_MAKE_ITERATOR_BASE(reverse_iterator, const_iterator)
+      NEWTYPE_MAKE_ITERATOR_BASE(const_reverse_iterator, reverse_iterator)
+#undef NEWTYPE_MAKE_ITERATOR_BASE
 
       template<typename T, bool Enabled>
       struct new_type_iterator_types : new_type_const_reverse_iterator<T, Enabled>
@@ -79,90 +79,35 @@ namespace nt
 
   }  // namespace impl
 
-  inline namespace lib
-  {
-    constexpr struct
-    {
-      int const major;
-      int const minor;
-      int const patch;
-
-      char const * const name;
-    } version{
-        .major = 2,
-        .minor = 0,
-        .patch = 0,
-        .name = "Brynn",
-    };
-
-  }  // namespace lib
-
   namespace concepts
   {
 
     inline namespace arithmetic
     {
+#define NEWTYPE_MAKE_ARITHMETIC_CONCEPT(NAME, OPERATOR, REF)                                                                                   \
+  template<typename SubjectType>                                                                                                               \
+  concept NAME = requires(SubjectType lhs, SubjectType rhs) {                                                                                  \
+    {                                                                                                                                          \
+      lhs OPERATOR rhs                                                                                                                         \
+    } -> std::same_as<SubjectType REF>;                                                                                                        \
+  };                                                                                                                                           \
+  template<typename SubjectType>                                                                                                               \
+  concept nothrow_##NAME = requires(SubjectType lhs, SubjectType rhs) {                                                                        \
+    requires NAME<SubjectType>;                                                                                                                \
+    {                                                                                                                                          \
+      lhs OPERATOR rhs                                                                                                                         \
+    } noexcept;                                                                                                                                \
+  };
 
-      template<typename SubjectType>
-      concept addable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs + rhs
-        } -> std::same_as<SubjectType>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_addable = requires(SubjectType lhs, SubjectType rhs) {
-        requires addable<SubjectType>;
-        {
-          lhs + rhs
-        } noexcept;
-      };
-
-      template<typename SubjectType>
-      concept divisible = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs / rhs
-        } -> std::same_as<SubjectType>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_divisible = requires(SubjectType lhs, SubjectType rhs) {
-        requires divisible<SubjectType>;
-        {
-          lhs / rhs
-        } noexcept;
-      };
-
-      template<typename SubjectType>
-      concept multipliable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs * rhs
-        } -> std::same_as<SubjectType>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_multipliable = requires(SubjectType lhs, SubjectType rhs) {
-        requires multipliable<SubjectType>;
-        {
-          lhs / rhs
-        } noexcept;
-      };
-
-      template<typename SubjectType>
-      concept subtractable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs - rhs
-        } -> std::same_as<SubjectType>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_subtractable = requires(SubjectType lhs, SubjectType rhs) {
-        requires subtractable<SubjectType>;
-        {
-          lhs - rhs
-        } noexcept;
-      };
-
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(addable, +, /*no-ref*/)
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(divisible, /, /*no-ref*/)
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(multipliable, *, /*no-ref*/)
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(subtractable, -, /*no-ref*/)
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(compound_addable, +=, &)
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(compound_divisible, /=, &)
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(compound_multipliable, *=, &)
+      NEWTYPE_MAKE_ARITHMETIC_CONCEPT(compound_subtractable, -=, &)
+#undef NEWTYPE_MAKE_ARITHMETIC_CONCEPT
     }  // namespace arithmetic
 
     inline namespace comparability
@@ -267,69 +212,6 @@ namespace nt
       };
 
     }  // namespace comparability
-
-    inline namespace compound_arithmetic
-    {
-      template<typename SubjectType>
-      concept compound_addable = requires(SubjectType & lhs, SubjectType const & rhs) {
-        {
-          lhs += rhs
-        } -> std::convertible_to<SubjectType &>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_compound_addable = requires(SubjectType & lhs, SubjectType const & rhs) {
-        requires compound_addable<SubjectType>;
-        {
-          lhs += rhs
-        } noexcept;
-      };
-
-      template<typename SubjectType>
-      concept compound_divisible = requires(SubjectType & lhs, SubjectType const & rhs) {
-        {
-          lhs /= rhs
-        } -> std::convertible_to<SubjectType &>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_compound_divisible = requires(SubjectType & lhs, SubjectType const & rhs) {
-        requires compound_divisible<SubjectType>;
-        {
-          lhs /= rhs
-        } noexcept;
-      };
-
-      template<typename SubjectType>
-      concept compound_multipliable = requires(SubjectType & lhs, SubjectType const & rhs) {
-        {
-          lhs *= rhs
-        } -> std::convertible_to<SubjectType &>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_compound_multipliable = requires(SubjectType & lhs, SubjectType const & rhs) {
-        requires compound_multipliable<SubjectType>;
-        {
-          lhs *= rhs
-        } noexcept;
-      };
-
-      template<typename SubjectType>
-      concept compound_subtractable = requires(SubjectType & lhs, SubjectType const & rhs) {
-        {
-          lhs -= rhs
-        } -> std::convertible_to<SubjectType &>;
-      };
-
-      template<typename SubjectType>
-      concept nothrow_compound_subtractable = requires(SubjectType & lhs, SubjectType const & rhs) {
-        requires compound_subtractable<SubjectType>;
-        {
-          lhs -= rhs
-        } noexcept;
-      };
-    }  // namespace compound_arithmetic
 
     inline namespace iostreamable
     {
@@ -741,21 +623,6 @@ namespace nt
       return out << obj.m_value;
     }
 
-    /**
-     * @brief Check two instances of nt::new_type<BaseType, TagType, DerivationClause> for equality.
-     *
-     * @param lhs The left-hand side of the comparison.
-     * @param rhs The right-hand side of the comparison.
-     *
-     * @note This overload is available iff. the underlying type is equality-comparable and this nt::new_type does not derive
-     * nt::ThreewayCompare.
-     *
-     * @return The value returned by the comparison of the underlying objects.
-     *
-     * @throws Any exception thrown by the comparison operator of the underlying objects of @ref lhs and @ref rhs. `noexcept` iff.
-     * new_type::base_type is nothrow equality-comparable.
-     */
-
     // THREE-WAY ORDER AND EQUAL
 
     auto constexpr operator<=>(new_type const & rhs) const noexcept(nt::concepts::nothrow_three_way_comparable<BaseType>)
@@ -794,88 +661,63 @@ namespace nt
       return decay() != rhs.decay();
     }
 
-    // NOT THREE-WAY ORDER
+#define NEWTYPE_MAKE_LOGICAL_OPERATOR(OPERATOR, CONCEPT)                                                                                       \
+  auto constexpr operator OPERATOR(new_type const & rhs) const noexcept(nt::concepts::nothrow_##CONCEPT##_comparable<BaseType>) -> bool        \
+    requires(nt::concepts::CONCEPT##_comparable<BaseType> && nt::doesnt_derive<derivation_clause_type, nt::ThreewayCompare> &&                 \
+             nt::derives<derivation_clause_type, nt::Relational>)                                                                              \
+  {                                                                                                                                            \
+    return decay() OPERATOR rhs.decay();                                                                                                       \
+  }
 
-    auto constexpr operator<(new_type const & rhs) const noexcept(nt::concepts::nothrow_less_than_comparable<BaseType>) -> bool
-      requires(nt::concepts::less_than_comparable<BaseType> &&                    //
-               nt::doesnt_derive<derivation_clause_type, nt::ThreewayCompare> &&  //
-               nt::derives<derivation_clause_type, nt::Relational>)
-    {
-      return decay() < rhs.decay();
-    }
+    NEWTYPE_MAKE_LOGICAL_OPERATOR(<, less_than)
+    NEWTYPE_MAKE_LOGICAL_OPERATOR(<=, less_than_equal)
+    NEWTYPE_MAKE_LOGICAL_OPERATOR(>, greater_than)
+    NEWTYPE_MAKE_LOGICAL_OPERATOR(>=, greater_than_equal)
+#undef NEWTYPE_MAKE_LOGICAL_OPERATOR
 
-    auto constexpr operator<=(new_type const & rhs) const noexcept(nt::concepts::nothrow_less_than_equal_comparable<BaseType>) -> bool
-      requires(nt::concepts::less_than_equal_comparable<BaseType> &&              //
-               nt::doesnt_derive<derivation_clause_type, nt::ThreewayCompare> &&  //
-               nt::derives<derivation_clause_type, nt::Relational>)
-    {
-      return decay() <= rhs.decay();
-    }
+#define NEWTYPE_MAKE_ARITHMETIC_OPERATOR(OPERATOR, CONCEPT)                                                                                    \
+  auto constexpr operator OPERATOR(new_type const & rhs) const noexcept(nt::concepts::nothrow_##CONCEPT<BaseType>) -> new_type                 \
+    requires(nt::concepts::CONCEPT<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>)                                           \
+  {                                                                                                                                            \
+    return {decay() OPERATOR rhs.decay()};                                                                                                     \
+  }                                                                                                                                            \
+  auto constexpr operator OPERATOR##=(new_type const & rhs) const noexcept(nt::concepts::nothrow_compound_##CONCEPT<BaseType>) -> new_type &   \
+      requires(nt::concepts::compound_##CONCEPT<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>) {                            \
+        return this->m_value OPERATOR## = rhs.decay(), *this;                                                                                  \
+      };
 
-    auto constexpr operator>(new_type const & rhs) const noexcept(nt::concepts::nothrow_greater_than_comparable<BaseType>) -> bool
-      requires(nt::concepts::greater_than_comparable<BaseType> &&                 //
-               nt::doesnt_derive<derivation_clause_type, nt::ThreewayCompare> &&  //
-               nt::derives<derivation_clause_type, nt::Relational>)
-    {
-      return decay() > rhs.decay();
-    }
+    NEWTYPE_MAKE_ARITHMETIC_OPERATOR(+, addable)
+    NEWTYPE_MAKE_ARITHMETIC_OPERATOR(-, subtractable)
+    NEWTYPE_MAKE_ARITHMETIC_OPERATOR(*, multipliable)
+    NEWTYPE_MAKE_ARITHMETIC_OPERATOR(/, divisible)
+#undef NEWTYPE_MAKE_ARITHMETIC_OPERATOR
 
-    auto constexpr operator>=(new_type const & rhs) const noexcept(nt::concepts::nothrow_greater_than_equal_comparable<BaseType>) -> bool
-      requires(nt::concepts::greater_than_equal_comparable<BaseType> &&           //
-               nt::doesnt_derive<derivation_clause_type, nt::ThreewayCompare> &&  //
-               nt::derives<derivation_clause_type, nt::Relational>)
-    {
-      return decay() >= rhs.decay();
-    }
+#define NEWTYPE_MAKE_ITERATOR_FACTORY_HELPER(NAME, QUALIFICATION, ITERATOR)                                                                    \
+  template<nt::concepts::free_##NAME BaseTypeT = BaseType>                                                                                     \
+  auto constexpr friend NAME(new_type QUALIFICATION & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::ITERATOR                         \
+    requires nt::derives<decltype(DerivationClause), nt::Iterable>                                                                             \
+  {                                                                                                                                            \
+    using std::NAME;                                                                                                                           \
+    return NAME(obj.m_value);                                                                                                                  \
+  }                                                                                                                                            \
+  template<nt::concepts::member_##NAME BaseTypeT = BaseType>                                                                                   \
+  auto constexpr NAME() QUALIFICATION->new_type<BaseTypeT, TagType, DerivationClause>::ITERATOR                                                \
+    requires nt::derives<derivation_clause_type, nt::Iterable>                                                                                 \
+  {                                                                                                                                            \
+    return this->m_value.NAME();                                                                                                               \
+  }
 
-    // ARITHMETIC
+#define NEWTYPE_MAKE_ITERATOR_FACTORY(NAME, ITERATOR)                                                                                          \
+  NEWTYPE_MAKE_ITERATOR_FACTORY_HELPER(NAME, /*non-const*/, ITERATOR)                                                                          \
+  NEWTYPE_MAKE_ITERATOR_FACTORY_HELPER(NAME, const, const_##ITERATOR)                                                                          \
+  NEWTYPE_MAKE_ITERATOR_FACTORY_HELPER(c##NAME, const, const_##ITERATOR)
 
-    auto constexpr operator+(new_type const & rhs) const noexcept(nt::concepts::nothrow_addable<BaseType>) -> new_type
-      requires(nt::concepts::addable<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>)
-    {
-      return {decay() + rhs.decay()};
-    }
-
-    auto constexpr operator+=(new_type const & rhs) const noexcept(nt::concepts::nothrow_compound_addable<BaseType>)
-        -> new_type & requires(nt::concepts::compound_addable<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>) {
-          return this->m_value += rhs.decay();
-        }
-
-    auto constexpr
-    operator-(new_type const & rhs) const noexcept(nt::concepts::nothrow_subtractable<BaseType>) -> new_type
-      requires(nt::concepts::subtractable<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>)
-    {
-      return {decay() - rhs.decay()};
-    }
-
-    auto constexpr operator-=(new_type const & rhs) const noexcept(nt::concepts::nothrow_compound_subtractable<BaseType>)
-        -> new_type & requires(nt::concepts::compound_subtractable<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>) {
-          return this->m_value -= rhs.decay();
-        }
-
-    auto constexpr
-    operator*(new_type const & rhs) const noexcept(nt::concepts::nothrow_multipliable<BaseType>) -> new_type
-      requires(nt::concepts::multipliable<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>)
-    {
-      return {decay() * rhs.decay()};
-    }
-
-    auto constexpr operator*=(new_type const & rhs) const noexcept(nt::concepts::nothrow_compound_multipliable<BaseType>)
-        -> new_type & requires(nt::concepts::compound_multipliable<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>) {
-          return this->m_value *= rhs.decay();
-        }
-
-    auto constexpr
-    operator/(new_type const & rhs) const noexcept(nt::concepts::nothrow_divisible<BaseType>) -> new_type
-      requires(nt::concepts::divisible<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>)
-    {
-      return {decay() / rhs.decay()};
-    }
-
-    auto constexpr operator/=(new_type const & rhs) const noexcept(nt::concepts::nothrow_compound_divisible<BaseType>)
-        -> new_type & requires(nt::concepts::compound_divisible<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>) {
-          return this->m_value /= rhs.decay();
-        }
+    NEWTYPE_MAKE_ITERATOR_FACTORY(begin, iterator)
+    NEWTYPE_MAKE_ITERATOR_FACTORY(rbegin, reverse_iterator)
+    NEWTYPE_MAKE_ITERATOR_FACTORY(end, iterator)
+    NEWTYPE_MAKE_ITERATOR_FACTORY(rend, reverse_iterator)
+#undef NEWTYPE_MAKE_ITERATOR_FACTORY
+#undef NEWTYPE_MAKE_ITERATOR_FACTORY_HELPER
 
     // INDIRECTION
 
@@ -892,190 +734,6 @@ namespace nt
     // {
     //   return std::addressof(this->m_value);
     // }
-
-    // FREE ITERATORS
-
-    template<nt::concepts::free_begin BaseTypeT = BaseType>
-    auto constexpr friend begin(new_type & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::begin;
-      return begin(obj.m_value);
-    }
-
-    template<nt::concepts::const_free_begin BaseTypeT = BaseType>
-    auto constexpr friend begin(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::begin;
-      return begin(obj.m_value);
-    }
-
-    template<nt::concepts::free_cbegin BaseTypeT = BaseType>
-    auto constexpr friend cbegin(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::cbegin;
-      return cbegin(obj.m_value);
-    }
-
-    template<nt::concepts::free_rbegin BaseTypeT = BaseType>
-    auto constexpr friend rbegin(new_type & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::reverse_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::rbegin;
-      return rbegin(obj.m_value);
-    }
-
-    template<nt::concepts::const_free_rbegin BaseTypeT = BaseType>
-    auto constexpr friend rbegin(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::rbegin;
-      return rbegin(obj.m_value);
-    }
-
-    template<nt::concepts::free_crbegin BaseTypeT = BaseType>
-    auto constexpr friend crbegin(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::crbegin;
-      return crbegin(obj.m_value);
-    }
-
-    template<nt::concepts::free_end BaseTypeT = BaseType>
-    auto constexpr friend end(new_type & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::end;
-      return end(obj.m_value);
-    }
-
-    template<nt::concepts::const_free_end BaseTypeT = BaseType>
-    auto constexpr friend end(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::end;
-      return end(obj.m_value);
-    }
-
-    template<nt::concepts::free_cend BaseTypeT = BaseType>
-    auto constexpr friend cend(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::cend;
-      return cend(obj.m_value);
-    }
-
-    template<nt::concepts::free_rend BaseTypeT = BaseType>
-    auto constexpr friend rend(new_type & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::reverse_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::rend;
-      return rend(obj.m_value);
-    }
-
-    template<nt::concepts::const_free_rend BaseTypeT = BaseType>
-    auto constexpr friend rend(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::rend;
-      return rend(obj.m_value);
-    }
-
-    template<nt::concepts::free_crend BaseTypeT = BaseType>
-    auto constexpr friend crend(new_type const & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<decltype(DerivationClause), nt::Iterable>
-    {
-      using std::crend;
-      return crend(obj.m_value);
-    }
-
-    // MEMBER ITERATORS
-
-    template<nt::concepts::member_begin BaseTypeT = BaseType>
-    auto constexpr begin() -> new_type<BaseTypeT, TagType, DerivationClause>::iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.begin();
-    }
-
-    template<nt::concepts::const_member_begin BaseTypeT = BaseType>
-    auto constexpr begin() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.begin();
-    }
-
-    template<nt::concepts::member_cbegin BaseTypeT = BaseType>
-    auto constexpr cbegin() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.cbegin();
-    }
-
-    template<nt::concepts::member_rbegin BaseTypeT = BaseType>
-    auto constexpr rbegin() -> new_type<BaseTypeT, TagType, DerivationClause>::reverse_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.rbegin();
-    }
-
-    template<nt::concepts::const_member_rbegin BaseTypeT = BaseType>
-    auto constexpr rbegin() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.rbegin();
-    }
-
-    template<nt::concepts::member_crbegin BaseTypeT = BaseType>
-    auto constexpr crbegin() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.crbegin();
-    }
-
-    template<nt::concepts::member_end BaseTypeT = BaseType>
-    auto constexpr end() -> new_type<BaseTypeT, TagType, DerivationClause>::iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.end();
-    }
-
-    template<nt::concepts::const_member_end BaseTypeT = BaseType>
-    auto constexpr end() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.end();
-    }
-
-    template<nt::concepts::member_cend BaseTypeT = BaseType>
-    auto constexpr cend() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.cend();
-    }
-
-    template<nt::concepts::member_rend BaseTypeT = BaseType>
-    auto constexpr rend() -> new_type<BaseTypeT, TagType, DerivationClause>::reverse_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.rend();
-    }
-
-    template<nt::concepts::const_member_rend BaseTypeT = BaseType>
-    auto constexpr rend() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.rend();
-    }
-
-    template<nt::concepts::member_crend BaseTypeT = BaseType>
-    auto constexpr crend() const -> new_type<BaseTypeT, TagType, DerivationClause>::const_reverse_iterator
-      requires nt::derives<derivation_clause_type, nt::Iterable>
-    {
-      return this->m_value.crend();
-    }
   };
 
 }  // namespace nt
