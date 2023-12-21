@@ -16,7 +16,7 @@ TEMPLATE_TEST_CASE("Scenario: Three-way Comparison", "[comparison]", int, std::s
 
     THEN("it is equality-comparable")
     {
-      STATIC_REQUIRE(std::equality_comparable<type_alias>);
+      STATIC_REQUIRE(nt::concepts::equality_comparable<type_alias>);
     }
 
     THEN("it is inequality-comparable")

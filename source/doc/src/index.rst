@@ -22,8 +22,8 @@ Example Usage
 
    All examples shown in this section can be found in the directory :literal:`examples/src` within the source root.
 
-:ref:`new-type-usage-basic` below demonstrates the basic usage of :cpp:class:`new_type`.
-In it, :cpp:class:`new_type` is used to create thre new strong aliases :literal:`Width`, :literal:`Height`, and :literal:`Area` that all alias :literal:`unsigned int`.
+:ref:`new-type-usage-basic` below illustrates the basic usage of :cpp:class:`new_type`.
+In it, :cpp:class:`new_type` is used to create three new strong aliases :literal:`Width`, :literal:`Height`, and :literal:`Area`, all aliasing :literal:`unsigned int`.
 
 .. literalinclude:: ../../examples/src/basic_usage.cpp
    :language: c++
@@ -31,22 +31,22 @@ In it, :cpp:class:`new_type` is used to create thre new strong aliases :literal:
    :name: new-type-usage-basic
    :caption: Basic usage of :cpp:class:`new_type`
 
-However, using :cpp:class:`new_type` in this fashion seem quite cumbersome.
+However, using :cpp:class:`new_type` in this fashion is quite cumbersome.
 Starting from the bottom, :literal:`unsigned int` can normally be shifted on to any :cpp:class:`std::basic_ostream`, like :cpp:var:`std::cout` in this example.
-Since printing values, among other things, is a common scenario, ``newtype`` provides facilities to support automatic derivation of supporting functions.
+Since printing values, among others, is a common use case, ``newtype`` provides facilities to support automatic derivation of supporting functions.
 
 .. literalinclude:: ../../examples/src/basic_usage_with_show.cpp
-   :emphasize-lines: 1,2,9
+   :emphasize-lines: 7,38
    :language: c++
    :linenos:
    :name: new-type-usage-basic-show
    :caption: Improved usability using the :cpp:var:`Show` derivation tag
 
-:ref:`new-type-usage-basic-show` demonstrates how the function template :cpp:func:`deriving` can be used to enable automatic derivation of the stream output operator for :literal:`Area`.
+:ref:`new-type-usage-basic-show` illustrates how the function template :cpp:func:`deriving` can be used to enable automatic derivation of the stream output operator for :literal:`Area`.
 Similarly, it is possible to derive the stream input operators of :literal:`Width` and :literal:`Height`, as shown in :ref:`new-type-usage-basic-read` below.
 
 .. literalinclude:: ../../examples/src/basic_usage_with_read.cpp
-   :emphasize-lines: 7,8,31,32,34
+   :emphasize-lines: 5,6,29,30,32
    :language: c++
    :linenos:
    :name: new-type-usage-basic-read
@@ -71,7 +71,10 @@ Class template :cpp:class:`new_type`
                new_type
 
    The class template :cpp:class:`new_type` is designed to allow the creation of new types based on existing types.
-   Similarly to the Haskell newtype, this class template creates a new type that is layout equivalent to the underlying type.
+   Similarly to the newtype keyword in Haskell, this class template creates a new type that is layout equivalent to the underlying type.
+   During creation of the of new strong type, features can be derived using :cpp:any:`nt::deriving`.
+   Actual feature availability depends on the :cpp:any:`BaseType` chosen for :cpp:class:`new_type` instance.
+   For example, deriving :cpp:any:`nt::Show` for a :cpp:class:`new_type` instance over a type not supporting output on a standard output stream, will not cause the instance to be output-streamable.
 
    :tparam BaseType: |BaseTypeDoc|
    :tparam TagType: |TagTypeDoc|
@@ -89,25 +92,25 @@ Class template :cpp:class:`new_type`
 
    .. cpp:type:: iterator = typename BaseType::iterator
 
-      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`iterator <new_type::base_type::iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+      :enablement: This type alias is defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`iterator <new_type::base_type::iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
 
       .. versionadded:: 1.1.0
 
    .. cpp:type:: const_iterator = typename BaseType::const_iterator
 
-      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`const_iterator <new_type::base_type::const_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+      :enablement: This type alias is defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`const_iterator <new_type::base_type::const_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
 
       .. versionadded:: 1.1.0
 
    .. cpp:type:: reverse_iterator = typename BaseType::reverse_iterator
 
-      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`reverse_iterator <new_type::base_type::reverse_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+      :enablement: This type alias is defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`reverse_iterator <new_type::base_type::reverse_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
 
       .. versionadded:: 1.1.0
 
    .. cpp:type:: const_reverse_iterator = typename BaseType::const_reverse_iterator
 
-      :enablement: This type alias shall be defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`const_reverse_iterator <new_type::base_type::const_reverse_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
+      :enablement: This type alias is defined iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` has a member type :cpp:type:`const_reverse_iterator <new_type::base_type::const_reverse_iterator>` and the :cpp:var:`derivation clause <derivation_clause>` contains :cpp:var:`Iterable`.
 
       .. versionadded:: 1.1.0
 
@@ -117,18 +120,18 @@ Class template :cpp:class:`new_type`
 
    **Constructors**
 
-   .. cpp:function:: constexpr new_type()
+   .. cpp:function:: constexpr new_type() noexcept(std::is_nothrow_default_constructible_v<base_type>)
 
       Construct a new instance of this :cpp:class:`new_type` by default constructing the contained object.
 
       :throws: Any exception thrown by the default constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.
-               This constructor shall be noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow default-construtible*.
-      :enablement: This constructor shall be defined as :literal:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *default-construtible*.
-                   Otherwise, this constructor shall be explicitely deleted.
+               This constructor is noexcept iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *nothrow default-construtible*.
+      :enablement: This constructor is defined as :cpp:expr:`= default` iff. this :cpp:class:`new_type`'s :cpp:type:`base_type` is *default-construtible*.
+                   Otherwise, this constructor is declared as explicitely deleted.
 
-   .. cpp:function:: constexpr new_type(new_type const & other)
+   .. cpp:function:: constexpr new_type(new_type const & other) noexcept(std::is_nothrow_copy_constructible_v<base_type>)
 
-      Construct a new instance of this :cpp:class:`new_type` by copy-constructing the contained object using the value contained by :literal:`other`.
+      Construct a new instance of this :cpp:class:`new_type` by copy-constructing the contained object using the value contained by :cpp:any:`other`.
 
       :param other: An existing instance of this :cpp:class:`new_type`
       :throws: Any exception thrown by the copy-constructor of this :cpp:class:`new_type`'s :cpp:type:`base_type`.

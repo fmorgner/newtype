@@ -37,8 +37,8 @@ class NewtypeConan(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("cmake/[>3.25]")
-        self.tool_requires("ninja/[~1.11]")
-        self.test_requires("catch2/[~3.3]")
+        self.tool_requires("ninja/[>1.11]")
+        self.test_requires("catch2/[>3.3]")
 
     def generate(self):
         toolchain = CMakeToolchain(self, generator="Ninja Multi-Config")

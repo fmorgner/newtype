@@ -1,9 +1,8 @@
 {
     // CMake Configuration
-    "cmake.configureOnOpen": false,
+    "cmake.configureOnOpen": true,
     "cmake.useCMakePresets": "always",
     "cmake.sourceDirectory": "${workspaceFolder}/source",
-    "cmake.skipConfigureIfCachePresent": true,
 
     // C++ Configuration
     "[cpp]": {
@@ -11,7 +10,7 @@
     },
     "C_Cpp.autoAddFileAssociations": false,
     "C_Cpp.intelliSenseEngine": "default",
-    "C_Cpp.errorSquiggles": "enabledIfIncludesResolve",
+    "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.autocomplete": "default",
 
     // RST Configuration

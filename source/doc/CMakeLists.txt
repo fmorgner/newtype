@@ -44,9 +44,10 @@ add_custom_target("docs"
 
 add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
     COMMAND "${DOCENV_DIR}/bin/sphinx-build"
+    "-q"
     "-b"
     "singlehtml"
-    "-q"
+    "-E"
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_BINARY_DIR}/html"
     DEPENDS ${SOURCES}
@@ -56,9 +57,10 @@ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
 
 add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/man/newtype.3"
     COMMAND "${DOCENV_DIR}/bin/sphinx-build"
+    "-q"
     "-b"
     "man"
-    "-q"
+    "-E"
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_BINARY_DIR}/man"
     DEPENDS ${SOURCES}
@@ -66,7 +68,7 @@ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/man/newtype.3"
     COMMENT "Compiling man page"
 )
 
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html"
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/singlehtml"
   TYPE DOC
   PATTERN ".doctrees" EXCLUDE
   PATTERN ".buildinfo" EXCLUDE
