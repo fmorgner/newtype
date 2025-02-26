@@ -12,6 +12,7 @@
 #include <istream>
 #include <ostream>
 #endif
+#include <iterator>
 #include <type_traits>
 #include <utility>
 
