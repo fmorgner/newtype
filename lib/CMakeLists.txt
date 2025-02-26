@@ -6,7 +6,7 @@ target_include_directories("newtype" INTERFACE
 )
 
 target_compile_features("newtype" INTERFACE
-  "cxx_std_20"
+  "cxx_std_23"
 )
 
 set_target_properties("newtype" PROPERTIES
