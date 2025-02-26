@@ -7,7 +7,7 @@ file(GLOB SOURCES
 foreach(EXAMPLE IN LISTS SOURCES)
   get_filename_component(NAME "${EXAMPLE}" NAME_WE)
   add_executable("ex_${NAME}" "${EXAMPLE}")
-  target_link_libraries("ex_${NAME}" "newtype::newtype")
+  target_link_libraries("ex_${NAME}" "newtype::lib")
 endforeach()
 
 install(DIRECTORY "src/"
