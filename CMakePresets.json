@@ -11,7 +11,8 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "CMAKE_CONFIGURATION_TYPES": "Debug;MinSizeRel"
+                "CMAKE_CONFIGURATION_TYPES": "Debug;MinSizeRel",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
             }
         }
     ],

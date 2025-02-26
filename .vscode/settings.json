@@ -11,6 +11,7 @@
     "C_Cpp.intelliSenseEngine": "disabled",
     "C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.autocomplete": "disabled",
+    "clangd.enable": true,
 
     // RST Configuration
     "[python]": {
