@@ -1,11 +1,17 @@
 #ifndef NEWTYPE_NEWTYPE_HPP
 #define NEWTYPE_NEWTYPE_HPP
 
+#if __has_include(<istream>) && __has_include(<ostream>)
+#define HAS_I_O_STREAM
+#endif
+
 #include <algorithm>
 #include <compare>
 #include <functional>
+#ifdef HAS_I_O_STREAM
 #include <istream>
 #include <ostream>
+#endif
 #include <type_traits>
 #include <utility>
 
@@ -87,16 +93,12 @@ namespace nt
 #define NEWTYPE_MAKE_ARITHMETIC_CONCEPT(NAME, OPERATOR, REF)                                                                                   \
   template<typename SubjectType>                                                                                                               \
   concept NAME = requires(SubjectType lhs, SubjectType rhs) {                                                                                  \
-    {                                                                                                                                          \
-      lhs OPERATOR rhs                                                                                                                         \
-    } -> std::same_as<SubjectType REF>;                                                                                                        \
+    { lhs OPERATOR rhs } -> std::same_as<SubjectType REF>;                                                                                     \
   };                                                                                                                                           \
   template<typename SubjectType>                                                                                                               \
   concept nothrow_##NAME = requires(SubjectType lhs, SubjectType rhs) {                                                                        \
     requires NAME<SubjectType>;                                                                                                                \
-    {                                                                                                                                          \
-      lhs OPERATOR rhs                                                                                                                         \
-    } noexcept;                                                                                                                                \
+    { lhs OPERATOR rhs } noexcept;                                                                                                             \
   };
 
       NEWTYPE_MAKE_ARITHMETIC_CONCEPT(addable, +, /*no-ref*/)
@@ -116,103 +118,78 @@ namespace nt
       template<typename SubjectType>
       concept nothrow_three_way_comparable = requires(SubjectType lhs, SubjectType rhs) {
         requires std::three_way_comparable<SubjectType>;
-        {
-          lhs <=> rhs
-        } noexcept;
+        { lhs <=> rhs } noexcept;
       };
 
       template<typename SubjectType>
       concept equality_comparable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs == rhs
-        } -> std::convertible_to<bool>;
+        { lhs == rhs } -> std::convertible_to<bool>;
       };
 
       template<typename SubjectType>
       concept nothrow_equality_comparable = requires(SubjectType lhs, SubjectType rhs) {
         requires equality_comparable<SubjectType>;
-        {
-          lhs == rhs
-        } noexcept;
+        { lhs == rhs } noexcept;
       };
 
       template<typename SubjectType>
       concept inequality_comparable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs != rhs
-        } -> std::convertible_to<bool>;
+        { lhs != rhs } -> std::convertible_to<bool>;
       };
 
       template<typename SubjectType>
       concept nothrow_inequality_comparable = requires(SubjectType lhs, SubjectType rhs) {
         requires inequality_comparable<SubjectType>;
-        {
-          lhs != rhs
-        } noexcept;
+        { lhs != rhs } noexcept;
       };
 
       template<typename SubjectType>
       concept less_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs < rhs
-        } -> std::convertible_to<bool>;
+        { lhs < rhs } -> std::convertible_to<bool>;
       };
 
       template<typename SubjectType>
       concept nothrow_less_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
         requires less_than_comparable<SubjectType>;
-        {
-          lhs < rhs
-        } noexcept;
+        { lhs < rhs } noexcept;
       };
 
       template<typename SubjectType>
       concept less_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs <= rhs
-        } -> std::convertible_to<bool>;
+        { lhs <= rhs } -> std::convertible_to<bool>;
       };
 
       template<typename SubjectType>
       concept nothrow_less_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
         requires less_than_equal_comparable<SubjectType>;
-        {
-          lhs <= rhs
-        } noexcept;
+        { lhs <= rhs } noexcept;
       };
 
       template<typename SubjectType>
       concept greater_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs > rhs
-        } -> std::convertible_to<bool>;
+        { lhs > rhs } -> std::convertible_to<bool>;
       };
 
       template<typename SubjectType>
       concept nothrow_greater_than_comparable = requires(SubjectType lhs, SubjectType rhs) {
         requires greater_than_comparable<SubjectType>;
-        {
-          lhs > rhs
-        } noexcept;
+        { lhs > rhs } noexcept;
       };
 
       template<typename SubjectType>
       concept greater_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
-        {
-          lhs >= rhs
-        } -> std::convertible_to<bool>;
+        { lhs >= rhs } -> std::convertible_to<bool>;
       };
 
       template<typename SubjectType>
       concept nothrow_greater_than_equal_comparable = requires(SubjectType lhs, SubjectType rhs) {
         requires greater_than_equal_comparable<SubjectType>;
-        {
-          lhs >= rhs
-        } noexcept;
+        { lhs >= rhs } noexcept;
       };
 
     }  // namespace comparability
 
+#ifdef HAS_I_O_STREAM
     inline namespace iostreamable
     {
 
@@ -226,9 +203,7 @@ namespace nt
       template<typename SubjectType, typename CharType, typename StreamTraits>
       concept nothrow_input_streamable = requires(SubjectType subject) {
         requires input_streamable<SubjectType, CharType, StreamTraits>;
-        {
-          std::declval<std::basic_istream<CharType, StreamTraits> &>() >> subject
-        } noexcept;
+        { std::declval<std::basic_istream<CharType, StreamTraits> &>() >> subject } noexcept;
       };
 
       template<typename SubjectType, typename CharType, typename StreamTraits>
@@ -241,12 +216,11 @@ namespace nt
       template<typename SubjectType, typename CharType, typename StreamTraits>
       concept nothrow_output_streamable = requires(SubjectType subject) {
         requires output_streamable<SubjectType, CharType, StreamTraits>;
-        {
-          std::declval<std::basic_ostream<CharType, StreamTraits> &>() << subject
-        } noexcept;
+        { std::declval<std::basic_ostream<CharType, StreamTraits> &>() << subject } noexcept;
       };
 
     }  // namespace iostreamable
+#endif
 
     inline namespace iterable
     {
@@ -254,33 +228,25 @@ namespace nt
       template<typename SubjectType>
       concept free_begin = requires(SubjectType & subject) {
         typename SubjectType::iterator;
-        {
-          begin(subject)
-        } -> std::same_as<typename SubjectType::iterator>;
+        { begin(subject) } -> std::same_as<typename SubjectType::iterator>;
       };
 
       template<typename SubjectType>
       concept const_free_begin = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          begin(subject)
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { begin(subject) } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
       concept member_begin = requires(SubjectType & subject) {
         typename SubjectType::iterator;
-        {
-          subject.begin()
-        } -> std::same_as<typename SubjectType::iterator>;
+        { subject.begin() } -> std::same_as<typename SubjectType::iterator>;
       };
 
       template<typename SubjectType>
       concept const_member_begin = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          subject.begin()
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { subject.begin() } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
@@ -292,17 +258,13 @@ namespace nt
       template<typename SubjectType>
       concept free_cbegin = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          cbegin(subject)
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { cbegin(subject) } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
       concept member_cbegin = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          subject.cbegin()
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { subject.cbegin() } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
@@ -311,33 +273,25 @@ namespace nt
       template<typename SubjectType>
       concept free_rbegin = requires(SubjectType & subject) {
         typename SubjectType::reverse_iterator;
-        {
-          rbegin(subject)
-        } -> std::same_as<typename SubjectType::reverse_iterator>;
+        { rbegin(subject) } -> std::same_as<typename SubjectType::reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept const_free_rbegin = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          rbegin(subject)
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { rbegin(subject) } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept member_rbegin = requires(SubjectType & subject) {
         typename SubjectType::reverse_iterator;
-        {
-          subject.rbegin()
-        } -> std::same_as<typename SubjectType::reverse_iterator>;
+        { subject.rbegin() } -> std::same_as<typename SubjectType::reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept const_member_rbegin = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          subject.rbegin()
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { subject.rbegin() } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
@@ -349,17 +303,13 @@ namespace nt
       template<typename SubjectType>
       concept free_crbegin = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          crbegin(subject)
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { crbegin(subject) } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept member_crbegin = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          subject.crbegin()
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { subject.crbegin() } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
@@ -368,33 +318,25 @@ namespace nt
       template<typename SubjectType>
       concept free_end = requires(SubjectType & subject) {
         typename SubjectType::iterator;
-        {
-          end(subject)
-        } -> std::same_as<typename SubjectType::iterator>;
+        { end(subject) } -> std::same_as<typename SubjectType::iterator>;
       };
 
       template<typename SubjectType>
       concept const_free_end = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          end(subject)
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { end(subject) } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
       concept member_end = requires(SubjectType & subject) {
         typename SubjectType::iterator;
-        {
-          subject.end()
-        } -> std::same_as<typename SubjectType::iterator>;
+        { subject.end() } -> std::same_as<typename SubjectType::iterator>;
       };
 
       template<typename SubjectType>
       concept const_member_end = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          subject.end()
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { subject.end() } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
@@ -406,17 +348,13 @@ namespace nt
       template<typename SubjectType>
       concept free_cend = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          cend(subject)
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { cend(subject) } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
       concept member_cend = requires(SubjectType const & subject) {
         typename SubjectType::const_iterator;
-        {
-          subject.cend()
-        } -> std::same_as<typename SubjectType::const_iterator>;
+        { subject.cend() } -> std::same_as<typename SubjectType::const_iterator>;
       };
 
       template<typename SubjectType>
@@ -425,33 +363,25 @@ namespace nt
       template<typename SubjectType>
       concept free_rend = requires(SubjectType & subject) {
         typename SubjectType::reverse_iterator;
-        {
-          rend(subject)
-        } -> std::same_as<typename SubjectType::reverse_iterator>;
+        { rend(subject) } -> std::same_as<typename SubjectType::reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept const_free_rend = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          rend(subject)
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { rend(subject) } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept member_rend = requires(SubjectType & subject) {
         typename SubjectType::reverse_iterator;
-        {
-          subject.rend()
-        } -> std::same_as<typename SubjectType::reverse_iterator>;
+        { subject.rend() } -> std::same_as<typename SubjectType::reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept const_member_rend = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          subject.rend()
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { subject.rend() } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
@@ -463,17 +393,13 @@ namespace nt
       template<typename SubjectType>
       concept free_crend = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          crend(subject)
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { crend(subject) } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
       concept member_crend = requires(SubjectType const & subject) {
         typename SubjectType::const_reverse_iterator;
-        {
-          subject.crend()
-        } -> std::same_as<typename SubjectType::const_reverse_iterator>;
+        { subject.crend() } -> std::same_as<typename SubjectType::const_reverse_iterator>;
       };
 
       template<typename SubjectType>
@@ -485,12 +411,10 @@ namespace nt
 
       template<typename SubjectType>
       concept hashable = requires(SubjectType subject) {
-        {
-          std::hash<SubjectType>{}(subject)
-        } -> std::convertible_to<std::size_t>;
+        { std::hash<SubjectType>{}(subject) } -> std::convertible_to<std::size_t>;
       };
 
-    }
+    }  // namespace standard_extensions
 
   }  // namespace concepts
 
@@ -509,9 +433,13 @@ namespace nt
     auto constexpr ImplicitConversion = derivable<struct implicit_conversion_tag>{};
     auto constexpr Indirection = derivable<struct indirection_tag>{};
     auto constexpr Iterable = derivable<struct iterable_tag>{};
+#ifdef HAS_I_O_STREAM
     auto constexpr Read = derivable<struct read_tag>{};
+#endif
     auto constexpr Relational = derivable<struct relational_tag>{};
+#ifdef HAS_I_O_STREAM
     auto constexpr Show = derivable<struct show_tag>{};
+#endif
     auto constexpr ThreewayCompare = derivable<struct threeway_compare_tag>{};
 
   }  // namespace derivables
@@ -605,6 +533,7 @@ namespace nt
       return decay();
     }
 
+#ifdef HAS_I_O_STREAM
     template<typename CharType, typename StreamTraits, nt::concepts::input_streamable<CharType, StreamTraits> BaseTypeT = BaseType>
     auto friend operator>>(std::basic_istream<CharType, StreamTraits> & in,
                            new_type & obj) noexcept(nt::concepts::nothrow_input_streamable<BaseTypeT, CharType, StreamTraits>)
@@ -622,7 +551,7 @@ namespace nt
     {
       return out << obj.m_value;
     }
-
+#endif
     // THREE-WAY ORDER AND EQUAL
 
     auto constexpr operator<=>(new_type const & rhs) const noexcept(nt::concepts::nothrow_three_way_comparable<BaseType>)
@@ -662,7 +591,8 @@ namespace nt
     }
 
 #define NEWTYPE_MAKE_LOGICAL_OPERATOR(OPERATOR, CONCEPT)                                                                                       \
-  auto constexpr operator OPERATOR(new_type const & rhs) const noexcept(nt::concepts::nothrow_##CONCEPT##_comparable<BaseType>) -> bool        \
+  auto constexpr operator OPERATOR(new_type const & rhs) const noexcept(nt::concepts::nothrow_##CONCEPT##_comparable<BaseType>)                \
+      ->bool                                                                                                                                   \
     requires(nt::concepts::CONCEPT##_comparable<BaseType> && nt::doesnt_derive<derivation_clause_type, nt::ThreewayCompare> &&                 \
              nt::derives<derivation_clause_type, nt::Relational>)                                                                              \
   {                                                                                                                                            \
@@ -676,12 +606,13 @@ namespace nt
 #undef NEWTYPE_MAKE_LOGICAL_OPERATOR
 
 #define NEWTYPE_MAKE_ARITHMETIC_OPERATOR(OPERATOR, CONCEPT)                                                                                    \
-  auto constexpr operator OPERATOR(new_type const & rhs) const noexcept(nt::concepts::nothrow_##CONCEPT<BaseType>) -> new_type                 \
+  auto constexpr operator OPERATOR(new_type const & rhs) const noexcept(nt::concepts::nothrow_##CONCEPT<BaseType>)                             \
+      ->new_type                                                                                                                               \
     requires(nt::concepts::CONCEPT<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>)                                           \
   {                                                                                                                                            \
     return {decay() OPERATOR rhs.decay()};                                                                                                     \
   }                                                                                                                                            \
-  auto constexpr operator OPERATOR##=(new_type const & rhs) const noexcept(nt::concepts::nothrow_compound_##CONCEPT<BaseType>) -> new_type &   \
+  auto constexpr operator OPERATOR##=(new_type const & rhs) const noexcept(nt::concepts::nothrow_compound_##CONCEPT<BaseType>)->new_type &     \
       requires(nt::concepts::compound_##CONCEPT<BaseType> && nt::derives<derivation_clause_type, nt::Arithmetic>) {                            \
         return this->m_value OPERATOR## = rhs.decay(), *this;                                                                                  \
       };
@@ -694,7 +625,8 @@ namespace nt
 
 #define NEWTYPE_MAKE_ITERATOR_FACTORY_HELPER(NAME, QUALIFICATION, ITERATOR)                                                                    \
   template<nt::concepts::free_##NAME BaseTypeT = BaseType>                                                                                     \
-  auto constexpr friend NAME(new_type QUALIFICATION & obj) -> new_type<BaseTypeT, TagType, DerivationClause>::ITERATOR                         \
+  auto constexpr friend NAME(new_type QUALIFICATION & obj)                                                                                     \
+      ->new_type<BaseTypeT, TagType, DerivationClause>::ITERATOR                                                                               \
     requires nt::derives<decltype(DerivationClause), nt::Iterable>                                                                             \
   {                                                                                                                                            \
     using std::NAME;                                                                                                                           \
