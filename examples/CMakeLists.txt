@@ -1,14 +1,6 @@
-file(GLOB SOURCES
-  RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-  CONFIGURE_DEPENDS
-  "src/*.cpp"
-)
-
-foreach(EXAMPLE IN LISTS SOURCES)
-  get_filename_component(NAME "${EXAMPLE}" NAME_WE)
-  add_executable("ex_${NAME}" "${EXAMPLE}")
-  target_link_libraries("ex_${NAME}" "newtype::lib")
-endforeach()
+newtype_add_example("src/basic_usage.cpp")
+newtype_add_example("src/basic_usage_with_show.cpp")
+newtype_add_example("src/basic_usage_with_read.cpp")
 
 install(DIRECTORY "src/"
   TYPE DOC

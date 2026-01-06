@@ -1,5 +1,13 @@
 add_library("newtype" INTERFACE)
 
+target_sources("newtype" PUBLIC
+  FILE_SET HEADERS
+  FILES
+  "include/newtype/newtype.hpp"
+  BASE_DIRS
+  "${CMAKE_CURRENT_SOURCE_DIR}/include"
+)
+
 target_include_directories("newtype" INTERFACE
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   "$<INSTALL_INTERFACE:include>"
